@@ -68,8 +68,14 @@ export default function DriverAccueil() {
         Ma course active
       </button>
       <button
+        onClick={() => navigate("/driver/historique")}
+        style={{ display: "block", width: "100%", padding: "0.75rem", marginBottom: "1rem", cursor: "pointer" }}
+      >
+        Historique
+      </button>
+      <button
         onClick={() => { logout(); navigate("/login") }}
-        style={{ marginBottom: "1rem", cursor: "pointer" }}
+        style={{ display: "block", width: "100%", padding: "0.75rem", marginBottom: "1rem", cursor: "pointer" }}
       >
         Déconnexion
       </button>
