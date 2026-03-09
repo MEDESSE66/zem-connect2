@@ -19,10 +19,9 @@ export default function DriverAccueil() {
           filter: `status = "pending"`,
           sort: "-created",
           requestKey: null,
-
         })
         setTrips(records.items as unknown as Trip[])
-      } catch (err){
+      } catch (err) {
         console.error("Erreur chargement courses", err)
       } finally {
         setIsLoading(false)
@@ -62,6 +61,12 @@ export default function DriverAccueil() {
   return (
     <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
       <h2>Courses disponibles</h2>
+      <button
+        onClick={() => navigate("/driver/ma-course")}
+        style={{ display: "block", width: "100%", padding: "0.75rem", marginBottom: "1rem", cursor: "pointer" }}
+      >
+        Ma course active
+      </button>
       <button
         onClick={() => { logout(); navigate("/login") }}
         style={{ marginBottom: "1rem", cursor: "pointer" }}

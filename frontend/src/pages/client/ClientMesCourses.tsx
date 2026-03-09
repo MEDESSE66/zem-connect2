@@ -2,12 +2,13 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
-import type { Trip } from "../../types"
+import type { Trip, Offre } from "../../types"
 
 export default function ClientMesCourses() {
   const { user } = useAuthStore()
   const navigate = useNavigate()
   const [trips, setTrips] = useState<Trip[]>([])
+  const [offres, setOffres] = useState<Record<string, Offre[]>>({})
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -20,11 +21,35 @@ export default function ClientMesCourses() {
           sort: "-created",
           requestKey: null,
         })
-        setTrips(records.items as unknown as Trip[])
+        const tripList = records.items as unknown as Trip[]
+        setTrips(tripList)
+
+        // Charger les offres pour chaque trip pending
+        for (const trip of tripList) {
+          if (trip.status === "pending") {
+            loadOffres(trip.id)
+          }
+        }
       } catch (err) {
         console.error("Erreur chargement courses", err)
       } finally {
         setIsLoading(false)
+      }
+    }
+
+    const loadOffres = async (tripId: string) => {
+      try {
+        const records = await pb.collection("offres").getList(1, 50, {
+          filter: `trip = "${tripId}" && status = "pending"`,
+          sort: "-created",
+          requestKey: null,
+        })
+        setOffres((prev) => ({
+          ...prev,
+          [tripId]: records.items as unknown as Offre[],
+        }))
+      } catch (err) {
+        console.error("Erreur chargement offres", err)
       }
     }
 
@@ -41,10 +66,39 @@ export default function ClientMesCourses() {
       }
     })
 
+    pb.collection("offres").subscribe("*", (e) => {
+      if (e.action === "create") {
+        setOffres((prev) => ({
+          ...prev,
+          [e.record.trip]: [
+            e.record as unknown as Offre,
+            ...(prev[e.record.trip] || []),
+          ],
+        }))
+      }
+    })
+
     return () => {
       pb.collection("trips").unsubscribe("*")
+      pb.collection("offres").unsubscribe("*")
     }
   }, [user?.id])
+
+  const acceptOffre = async (offre: Offre) => {
+    try {
+      // Accepter l'offre
+      await pb.collection("offres").update(offre.id, { status: "accepted" })
+      // Mettre à jour le trip
+      await pb.collection("trips").update(offre.trip, {
+        status: "active",
+        conducteur: offre.conducteur,
+        finalPrice: offre.proposedPrice,
+      })
+    } catch (err) {
+      console.error("Erreur acceptation offre", err)
+      alert("Erreur lors de l'acceptation de l'offre")
+    }
+  }
 
   const statusLabel: Record<string, string> = {
     pending: "En attente",
@@ -80,6 +134,31 @@ export default function ClientMesCourses() {
           <p><strong>À :</strong> {trip.destinationAddress}</p>
           <p><strong>Prix proposé :</strong> {trip.clientPrice} FCFA</p>
           <p><strong>Statut :</strong> {statusLabel[trip.status] || trip.status}</p>
+
+          {trip.status === "pending" && offres[trip.id]?.length > 0 && (
+            <div style={{ marginTop: "1rem" }}>
+              <strong>Offres reçues :</strong>
+              {offres[trip.id].map((offre) => (
+                <div
+                  key={offre.id}
+                  style={{
+                    border: "1px solid #aaa",
+                    padding: "0.5rem",
+                    marginTop: "0.5rem",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <p>Prix proposé : {offre.proposedPrice} FCFA</p>
+                  <button
+                    onClick={() => acceptOffre(offre)}
+                    style={{ width: "100%", padding: "0.5rem", cursor: "pointer" }}
+                  >
+                    Accepter cette offre
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>
