@@ -18,10 +18,11 @@ export default function ClientMesCourses() {
         const records = await pb.collection("trips").getList(1, 50, {
           filter: `client = "${user.id}"`,
           sort: "-created",
+          requestKey: null,
         })
         setTrips(records.items as unknown as Trip[])
-      } catch {
-        console.error("Erreur chargement courses")
+      } catch (err) {
+        console.error("Erreur chargement courses", err)
       } finally {
         setIsLoading(false)
       }
