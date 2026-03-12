@@ -5,6 +5,8 @@ import { ProtectedRoute } from "./components/ProtectedRoute"
 
 // Pages
 import Login from "./pages/Login"
+import Inscription from "./pages/Inscription"
+import LandingPage from "./pages/LandingPage"
 import ClientAccueil from "./pages/client/ClientAccueil"
 import ClientNouvelleCourse from "./pages/client/ClientNouvelleCourse"
 import ClientMesCourses from "./pages/client/ClientMesCourses"
@@ -26,7 +28,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/inscription" element={<Inscription />} />
 
         {/* Routes Client */}
         <Route path="/client" element={

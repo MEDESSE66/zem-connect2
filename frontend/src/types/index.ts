@@ -23,6 +23,7 @@ export interface User {
   totalRating: number
   subscriptionType: SubscriptionType
   subscriptionExpiry?: string
+  conducteur_verifie?: boolean
   name?: string
   avatar?: string
   created: string

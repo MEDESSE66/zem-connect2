@@ -128,3 +128,26 @@ cronAdd("expire_pending_trips", "* * * * *", () => {
         $app.save(trip)
     }
 })
+// HOOK 5 — Wallet bienvenue 200 FCFA après validation admin
+onRecordAfterUpdateSuccess((e) => {
+    e.next()
+    const record = e.record
+    if (record.collection().name !== "users") return
+    if (record.get("role") !== "conducteur") return
+
+    const wasVerified = e.oldRecord && !e.oldRecord.get("conducteur_verifie")
+    const isNowVerified = record.get("conducteur_verifie") === true
+    if (!wasVerified || !isNowVerified) return
+
+    const currentBalance = record.get("walletBalance") || 0
+    record.set("walletBalance", currentBalance + 200)
+    $app.save(record)
+
+    const transactionsCollection = $app.findCollectionByNameOrId("transactions")
+    const transaction = new Record(transactionsCollection)
+    transaction.set("user", record.id)
+    transaction.set("type", "recharge")
+    transaction.set("amount", 200)
+    transaction.set("status", "completed")
+    $app.save(transaction)
+})
