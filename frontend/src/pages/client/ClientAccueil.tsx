@@ -50,13 +50,42 @@ export default function ClientAccueil() {
           alignItems: "center",
           marginBottom: "20px",
         }}>
-          <div>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem", marginBottom: "2px" }}>
-              Bonjour 👋
-            </p>
-            <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.1rem" }}>
-              {user?.name || user?.email?.split("@")[0] || "Client"}
-            </p>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem", marginBottom: "2px" }}>
+                Bonjour 👋
+              </p>
+              <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.1rem" }}>
+                {user?.name || user?.email?.split("@")[0] || "Client"}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/client/profil")}
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "rgba(255,255,255,0.8)",
+                borderRadius: "50%",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                fontSize: "16px",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.15)"
+                e.currentTarget.style.transform = "scale(1.05)"
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.08)"
+                e.currentTarget.style.transform = "scale(1)"
+              }}
+            >
+              👤
+            </button>
           </div>
           <button
             onClick={() => { logout(); navigate("/login") }}

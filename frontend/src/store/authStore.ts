@@ -39,7 +39,7 @@ export const useAuthStore = create<AuthState>((set) => {
     login: async (phone: string, password: string) => {
       set({ isLoading: true })
       try {
-        const email = phoneToEmail(phone)
+        const email = phone.includes("@") ? phone : phoneToEmail(phone)
         await pb.collection("users").authWithPassword(email, password, { requestKey: null })
         set({ user: pb.authStore.record as unknown as User, isLoading: false })
       } catch (error) {
@@ -68,7 +68,9 @@ export const useAuthStore = create<AuthState>((set) => {
           ...extraData,
         }, { requestKey: null })
         await pb.collection("users").authWithPassword(email, password, { requestKey: null })
-        set({ user: pb.authStore.record as unknown as User, isLoading: false })
+        // Recharge l'enregistrement complet avec tous les champs personnalisés
+        const fullRecord = await pb.collection("users").getOne(pb.authStore.record!.id, { requestKey: null })
+        set({ user: fullRecord as unknown as User, isLoading: false })
       } catch (error) {
         set({ isLoading: false })
         throw error

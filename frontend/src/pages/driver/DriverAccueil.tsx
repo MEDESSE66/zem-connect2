@@ -59,6 +59,10 @@ export default function DriverAccueil() {
   }, [user?.id])
 
   const handleOffre = async (trip: Trip) => {
+    if (!user?.conducteur_verifie) {
+      alert("Votre compte n'est pas encore validé par l'admin.")
+      return
+    }
     try {
       await pb.collection("offres").create({
         trip: trip.id,
@@ -101,13 +105,42 @@ export default function DriverAccueil() {
           alignItems: "center",
           marginBottom: "16px",
         }}>
-          <div>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem", marginBottom: "2px" }}>
-              Conducteur 🏍️
-            </p>
-            <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.1rem" }}>
-              {user?.name || user?.email?.split("@")[0] || "Conducteur"}
-            </p>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem", marginBottom: "2px" }}>
+                Conducteur 🏍️
+              </p>
+              <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.1rem" }}>
+                {user?.name || user?.email?.split("@")[0] || "Conducteur"}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/driver/profil")}
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "rgba(255,255,255,0.8)",
+                borderRadius: "50%",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                fontSize: "16px",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.15)"
+                e.currentTarget.style.transform = "scale(1.05)"
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.08)"
+                e.currentTarget.style.transform = "scale(1)"
+              }}
+            >
+              👤
+            </button>
           </div>
           <button
             onClick={() => { logout(); navigate("/login") }}

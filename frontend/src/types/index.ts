@@ -24,6 +24,7 @@ export interface User {
   subscriptionType: SubscriptionType
   subscriptionExpiry?: string
   conducteur_verifie?: boolean
+  plaque?: string
   name?: string
   avatar?: string
   created: string

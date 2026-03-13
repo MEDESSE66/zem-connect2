@@ -10,9 +10,11 @@ import LandingPage from "./pages/LandingPage"
 import ClientAccueil from "./pages/client/ClientAccueil"
 import ClientNouvelleCourse from "./pages/client/ClientNouvelleCourse"
 import ClientMesCourses from "./pages/client/ClientMesCourses"
+import ClientProfil from "./pages/client/ClientProfil"
 import DriverAccueil from "./pages/driver/DriverAccueil"
 import DriverMaCourse from "./pages/driver/DriverMaCourse"
 import DriverHistorique from "./pages/driver/DriverHistorique"
+import DriverProfil from "./pages/driver/DriverProfil"
 import AdminStats from "./pages/admin/AdminStats"
 import AdminUsers from "./pages/admin/AdminUsers"
 import AdminCourses from "./pages/admin/AdminCourses"
@@ -48,6 +50,11 @@ export default function App() {
             <ClientMesCourses />
           </ProtectedRoute>
         } />
+        <Route path="/client/profil" element={
+          <ProtectedRoute allowedRoles={["client"]}>
+            <ClientProfil />
+          </ProtectedRoute>
+        } />
 
         {/* Routes Conducteur */}
         <Route path="/driver" element={
@@ -63,6 +70,11 @@ export default function App() {
         <Route path="/driver/historique" element={
           <ProtectedRoute allowedRoles={["conducteur"]}>
             <DriverHistorique />
+          </ProtectedRoute>
+        } />
+        <Route path="/driver/profil" element={
+          <ProtectedRoute allowedRoles={["conducteur"]}>
+            <DriverProfil />
           </ProtectedRoute>
         } />
 
