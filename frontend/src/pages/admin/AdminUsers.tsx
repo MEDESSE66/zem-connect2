@@ -31,6 +31,7 @@ export default function AdminUsers() {
   const [users, setUsers]         = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter]       = useState<"all" | "client" | "conducteur">("all")
+  const [suspendingId, setSuspendingId] = useState<string | null>(null)
 
   useEffect(() => {
     pb.collection("users").getList(1, 100, {
@@ -42,12 +43,17 @@ export default function AdminUsers() {
   }, [])
 
   const toggleSuspend = async (user: User) => {
-    await pb.collection("users").update(user.id, {
-      isSuspended: !user.isSuspended,
-    }, { requestKey: null })
-    setUsers(prev => prev.map(u =>
-      u.id === user.id ? { ...u, isSuspended: !u.isSuspended } : u
-    ))
+    setSuspendingId(user.id)
+    try {
+      await pb.collection("users").update(user.id, {
+        isSuspended: !user.isSuspended,
+      }, { requestKey: null })
+      setUsers(prev => prev.map(u =>
+        u.id === user.id ? { ...u, isSuspended: !u.isSuspended } : u
+      ))
+    } finally {
+      setSuspendingId(null)
+    }
   }
 
   const filtered = users.filter(u => filter === "all" || u.role === filter)
@@ -193,6 +199,7 @@ export default function AdminUsers() {
               {/* Action */}
               <Button
                 onClick={() => toggleSuspend(user)}
+                disabled={suspendingId === user.id}
                 style={{
                   width: "100%",
                   background: user.isSuspended ? C.vert : "rgba(239,35,60,0.08)",
@@ -202,9 +209,11 @@ export default function AdminUsers() {
                   fontSize: "14px",
                   height: "40px",
                   borderRadius: "10px",
+                  opacity: suspendingId === user.id ? 0.6 : 1,
+                  cursor: suspendingId === user.id ? "not-allowed" : "pointer",
                 }}
               >
-                {user.isSuspended ? "✓ Réactiver le compte" : "Suspendre le compte"}
+                {suspendingId === user.id ? "..." : (user.isSuspended ? "✓ Réactiver le compte" : "Suspendre le compte")}
               </Button>
             </div>
           )

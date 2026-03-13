@@ -31,6 +31,7 @@ export default function AdminLitiges() {
   const navigate                    = useNavigate()
   const [litiges, setLitiges]       = useState<Litige[]>([])
   const [isLoading, setIsLoading]   = useState(true)
+  const [processingId, setProcessingId] = useState<string | null>(null)
 
   useEffect(() => {
     pb.collection("litiges").getList(1, 100, {
@@ -43,13 +44,23 @@ export default function AdminLitiges() {
   }, [])
 
   const resoudre = async (id: string) => {
-    await pb.collection("litiges").update(id, { status: "resolved" }, { requestKey: null })
-    setLitiges(prev => prev.filter(l => l.id !== id))
+    setProcessingId(id)
+    try {
+      await pb.collection("litiges").update(id, { status: "resolved" }, { requestKey: null })
+      setLitiges(prev => prev.filter(l => l.id !== id))
+    } finally {
+      setProcessingId(null)
+    }
   }
 
   const rejeter = async (id: string) => {
-    await pb.collection("litiges").update(id, { status: "dismissed" }, { requestKey: null })
-    setLitiges(prev => prev.filter(l => l.id !== id))
+    setProcessingId(id)
+    try {
+      await pb.collection("litiges").update(id, { status: "dismissed" }, { requestKey: null })
+      setLitiges(prev => prev.filter(l => l.id !== id))
+    } finally {
+      setProcessingId(null)
+    }
   }
 
   return (
@@ -157,6 +168,7 @@ export default function AdminLitiges() {
             <div style={{ display: "flex", gap: "10px" }}>
               <Button
                 onClick={() => resoudre(litige.id)}
+                disabled={processingId === litige.id}
                 style={{
                   flex: 1,
                   background: C.vert,
@@ -165,12 +177,15 @@ export default function AdminLitiges() {
                   fontSize: "14px",
                   height: "42px",
                   borderRadius: "10px",
+                  opacity: processingId === litige.id ? 0.6 : 1,
+                  cursor: processingId === litige.id ? "not-allowed" : "pointer",
                 }}
               >
-                ✓ Résoudre
+                {processingId === litige.id ? "..." : "✓ Résoudre"}
               </Button>
               <Button
                 onClick={() => rejeter(litige.id)}
+                disabled={processingId === litige.id}
                 style={{
                   flex: 1,
                   background: "rgba(239,35,60,0.08)",
@@ -180,9 +195,11 @@ export default function AdminLitiges() {
                   fontSize: "14px",
                   height: "42px",
                   borderRadius: "10px",
+                  opacity: processingId === litige.id ? 0.6 : 1,
+                  cursor: processingId === litige.id ? "not-allowed" : "pointer",
                 }}
               >
-                ✕ Rejeter
+                {processingId === litige.id ? "..." : "✕ Rejeter"}
               </Button>
             </div>
           </div>

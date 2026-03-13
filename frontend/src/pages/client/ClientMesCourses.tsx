@@ -34,6 +34,7 @@ export default function ClientMesCourses() {
   const [trips, setTrips]                 = useState<Trip[]>([])
   const [offres, setOffres]               = useState<Record<string, Offre[]>>({})
   const [isLoading, setIsLoading]         = useState(true)
+  const [isAccepting, setIsAccepting]     = useState<string | null>(null)
 
   useEffect(() => {
     if (!user?.id) return
@@ -94,6 +95,7 @@ export default function ClientMesCourses() {
   }, [user?.id])
 
   const acceptOffre = async (offre: Offre) => {
+    setIsAccepting(offre.id)
     try {
       await pb.collection("offres").update(offre.id, { status: "accepted" }, { requestKey: null })
       await pb.collection("trips").update(offre.trip, {
@@ -104,6 +106,8 @@ export default function ClientMesCourses() {
     } catch (err) {
       console.error("Erreur acceptation offre", err)
       alert("Erreur lors de l'acceptation de l'offre.")
+    } finally {
+      setIsAccepting(null)
     }
   }
 
@@ -262,14 +266,17 @@ export default function ClientMesCourses() {
                       </div>
                       <Button
                         onClick={() => acceptOffre(offre)}
+                        disabled={isAccepting === offre.id}
                         style={{
                           background: C.jaune, color: C.noir,
                           fontWeight: 800, fontSize: "13px",
                           padding: "8px 16px", height: "auto",
                           borderRadius: "100px",
+                          opacity: isAccepting === offre.id ? 0.6 : 1,
+                          cursor: isAccepting === offre.id ? "not-allowed" : "pointer",
                         }}
                       >
-                        Accepter
+                        {isAccepting === offre.id ? "..." : "Accepter"}
                       </Button>
                     </div>
                   ))}
