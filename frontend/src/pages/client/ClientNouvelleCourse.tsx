@@ -6,17 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import BottomNav from "../../components/BottomNav"
-
-const C = {
-  jaune:  "#F5C518",
-  noir:   "#1A1A2E",
-  orange: "#E85D04",
-  fond:   "#F8F9FA",
-}
+import { motion } from "motion/react"
+import { Home, Bike, ArrowLeft, MapPin, Flag, Coins, ArrowDown, Clock } from "lucide-react"
 
 const NAV_ITEMS = [
-  { icon: "🏠", label: "Accueil", path: "/client" },
-  { icon: "🏍️", label: "Courses", path: "/client/mes-courses" },
+  { icon: <Home className="size-[22px]" />, label: "Accueil", path: "/client" },
+  { icon: <Bike className="size-[22px]" />, label: "Courses", path: "/client/mes-courses" },
 ]
 
 export default function ClientNouvelleCourse() {
@@ -62,151 +57,94 @@ export default function ClientNouvelleCourse() {
   }
 
   return (
-    <div style={{
-      minHeight: "100svh",
-      background: C.fond,
-      fontFamily: "Inter, sans-serif",
-      paddingBottom: "80px",
-    }}>
+    <div className="min-h-svh bg-brand-bg pb-20 font-sans">
 
       {/* Header */}
-      <div style={{
-        background: C.noir,
-        padding: "20px 24px 24px",
-        display: "flex",
-        alignItems: "center",
-        gap: "14px",
-      }}>
+      <div className="flex items-center gap-3.5 bg-brand-black px-6 pt-5 pb-6">
         <button
           onClick={() => navigate("/client")}
-          style={{
-            background: "rgba(255,255,255,0.08)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            color: "#fff", borderRadius: "10px",
-            width: "38px", height: "38px",
-            fontSize: "18px", cursor: "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            flexShrink: 0,
-          }}
+          className="flex size-[38px] shrink-0 items-center justify-center rounded-[10px] border border-white/12 bg-white/8 text-white"
         >
-          ←
+          <ArrowLeft className="size-[18px]" />
         </button>
         <div>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem" }}>Client</p>
-          <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.05rem" }}>Nouvelle course</p>
+          <p className="text-[0.8rem] text-white/50">Client</p>
+          <p className="text-[1.05rem] font-extrabold text-white">Nouvelle course</p>
         </div>
       </div>
 
       {/* Formulaire */}
-      <div style={{ padding: "24px" }}>
-
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="px-6 pt-6"
+      >
         {/* Erreur */}
         {error && (
-          <div style={{
-            background: "rgba(239,35,60,0.08)",
-            border: "1px solid rgba(239,35,60,0.25)",
-            color: "#e8364a",
-            borderRadius: "12px",
-            padding: "12px 16px",
-            fontSize: "0.88rem",
-            marginBottom: "20px",
-          }}>
+          <div className="mb-5 rounded-xl border border-red-500/25 bg-red-500/8 px-4 py-3 text-[0.88rem] text-red-500">
             {error}
           </div>
         )}
 
         {/* Carte formulaire */}
-        <div style={{
-          background: "#fff",
-          borderRadius: "20px",
-          padding: "24px",
-          boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-        }}>
+        <div className="flex flex-col gap-5 rounded-[20px] bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.07)]">
 
           {/* Départ */}
           <div>
-            <Label style={{
-              color: "#444", fontSize: "0.88rem",
-              fontWeight: 700, marginBottom: "8px", display: "block",
-            }}>
-              📍 Point de départ
+            <Label className="mb-2 flex items-center gap-1.5 text-[0.88rem] font-bold text-gray-600">
+              <MapPin className="size-4 text-brand-yellow" /> Point de départ
             </Label>
             <Input
               type="text"
               placeholder="Ex: Carrefour Cadjehoun"
               value={departureAddress}
               onChange={e => setDepartureAddress(e.target.value)}
-              style={{
-                height: "48px", borderRadius: "10px",
-                fontSize: "0.95rem", border: "1.5px solid #e5e7eb",
-              }}
+              className="h-12 rounded-[10px] border-[1.5px] border-gray-200 text-[0.95rem]"
             />
           </div>
 
           {/* Séparateur */}
-          <div style={{
-            display: "flex", alignItems: "center", gap: "12px",
-          }}>
-            <div style={{ flex: 1, height: "1px", background: "#f0f0f0" }} />
-            <div style={{
-              width: "32px", height: "32px", borderRadius: "50%",
-              background: `${C.jaune}20`, border: `2px solid ${C.jaune}`,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "14px",
-            }}>↓</div>
-            <div style={{ flex: 1, height: "1px", background: "#f0f0f0" }} />
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-gray-100" />
+            <div className="flex size-8 items-center justify-center rounded-full border-2 border-brand-yellow bg-brand-yellow/12">
+              <ArrowDown className="size-3.5 text-brand-yellow" />
+            </div>
+            <div className="h-px flex-1 bg-gray-100" />
           </div>
 
           {/* Destination */}
           <div>
-            <Label style={{
-              color: "#444", fontSize: "0.88rem",
-              fontWeight: 700, marginBottom: "8px", display: "block",
-            }}>
-              🏁 Destination
+            <Label className="mb-2 flex items-center gap-1.5 text-[0.88rem] font-bold text-gray-600">
+              <Flag className="size-4 text-brand-green" /> Destination
             </Label>
             <Input
               type="text"
               placeholder="Ex: Marché Dantokpa"
               value={destinationAddress}
               onChange={e => setDestinationAddress(e.target.value)}
-              style={{
-                height: "48px", borderRadius: "10px",
-                fontSize: "0.95rem", border: "1.5px solid #e5e7eb",
-              }}
+              className="h-12 rounded-[10px] border-[1.5px] border-gray-200 text-[0.95rem]"
             />
           </div>
 
           {/* Prix */}
           <div>
-            <Label style={{
-              color: "#444", fontSize: "0.88rem",
-              fontWeight: 700, marginBottom: "8px", display: "block",
-            }}>
-              💰 Votre prix (FCFA)
+            <Label className="mb-2 flex items-center gap-1.5 text-[0.88rem] font-bold text-gray-600">
+              <Coins className="size-4 text-brand-orange" /> Votre prix (FCFA)
             </Label>
-            <div style={{ position: "relative" }}>
+            <div className="relative">
               <Input
                 type="number"
                 placeholder="Ex: 500"
                 value={clientPrice}
                 onChange={e => setClientPrice(e.target.value)}
-                style={{
-                  height: "48px", borderRadius: "10px",
-                  fontSize: "0.95rem", border: "1.5px solid #e5e7eb",
-                  paddingRight: "70px",
-                }}
+                className="h-12 rounded-[10px] border-[1.5px] border-gray-200 pr-[70px] text-[0.95rem]"
               />
-              <span style={{
-                position: "absolute", right: "14px",
-                top: "50%", transform: "translateY(-50%)",
-                color: "#aaa", fontSize: "0.85rem", fontWeight: 600,
-              }}>FCFA</span>
+              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[0.85rem] font-semibold text-gray-400">
+                FCFA
+              </span>
             </div>
-            <p style={{ color: "#aaa", fontSize: "0.78rem", marginTop: "6px" }}>
+            <p className="mt-1.5 text-[0.78rem] text-gray-400">
               Les conducteurs feront leurs offres autour de ce prix.
             </p>
           </div>
@@ -216,32 +154,16 @@ export default function ClientNouvelleCourse() {
         <Button
           onClick={handleSubmit}
           disabled={isLoading}
-          style={{
-            width: "100%",
-            background: C.jaune,
-            color: C.noir,
-            fontWeight: 800,
-            fontSize: "16px",
-            height: "52px",
-            borderRadius: "14px",
-            marginTop: "20px",
-            fontFamily: "Inter, sans-serif",
-            opacity: isLoading ? 0.7 : 1,
-            cursor: isLoading ? "not-allowed" : "pointer",
-            boxShadow: `0 4px 20px ${C.jaune}40`,
-          }}
+          className="mt-5 h-[52px] w-full rounded-[14px] bg-brand-yellow text-base font-extrabold text-brand-black shadow-[0_4px_20px_var(--brand-yellow)40] hover:bg-brand-yellow/90 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isLoading ? "Envoi en cours..." : "🏍️ Demander une course"}
+          {isLoading ? "Envoi en cours..." : <><Bike className="mr-2 size-5" /> Demander une course</>}
         </Button>
 
         {/* Info expiry */}
-        <p style={{
-          textAlign: "center", color: "#aaa",
-          fontSize: "0.8rem", marginTop: "12px",
-        }}>
-          ⏱ Votre demande expire après 2 minutes sans réponse.
+        <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-[0.8rem] text-gray-400">
+          <Clock className="size-3.5" /> Votre demande expire après 2 minutes sans réponse.
         </p>
-      </div>
+      </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
     </div>

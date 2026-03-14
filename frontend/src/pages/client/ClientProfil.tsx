@@ -2,18 +2,12 @@ import { useNavigate } from "react-router-dom"
 import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
-
-const C = {
-  jaune:  "#F5C518",
-  noir:   "#1A1A2E",
-  orange: "#E85D04",
-  vert:   "#06D6A0",
-  fond:   "#F8F9FA",
-}
+import { motion } from "motion/react"
+import { Home, Bike, ArrowLeft, Phone, User, Wallet, LogOut } from "lucide-react"
 
 const NAV_ITEMS = [
-  { icon: "🏠", label: "Accueil",  path: "/client" },
-  { icon: "🏍️", label: "Courses",  path: "/client/mes-courses" },
+  { icon: <Home className="size-[22px]" />,  label: "Accueil",  path: "/client" },
+  { icon: <Bike className="size-[22px]" />,  label: "Courses",  path: "/client/mes-courses" },
 ]
 
 export default function ClientProfil() {
@@ -37,244 +31,83 @@ export default function ClientProfil() {
   }
 
   return (
-    <div style={{
-      minHeight: "100svh",
-      background: C.fond,
-      fontFamily: "Inter, sans-serif",
-      paddingBottom: "80px",
-    }}>
+    <div className="min-h-svh bg-brand-bg pb-20 font-sans">
 
       {/* Header */}
-      <div style={{
-        background: C.noir,
-        padding: "20px 24px 28px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        {/* Déco */}
-        <div style={{
-          position: "absolute", top: "-40px", right: "-40px",
-          width: "180px", height: "180px", borderRadius: "50%",
-          background: `radial-gradient(circle, ${C.jaune}20 0%, transparent 70%)`,
-          pointerEvents: "none",
-        }} />
+      <div className="relative overflow-hidden bg-brand-black px-6 pt-5 pb-7">
+        <div className="pointer-events-none absolute -top-10 -right-10 size-[180px] rounded-full bg-[radial-gradient(circle,_var(--brand-yellow)20_0%,_transparent_70%)]" />
 
-        {/* Bouton retour */}
         <button
           onClick={() => navigate("/client")}
-          style={{
-            background: "rgba(255,255,255,0.08)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            color: "rgba(255,255,255,0.8)",
-            borderRadius: "10px",
-            padding: "8px 12px",
-            fontSize: "14px",
-            fontWeight: 600,
-            cursor: "pointer",
-            fontFamily: "Inter, sans-serif",
-            marginBottom: "20px",
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-          }}
+          className="mb-5 flex items-center gap-1.5 rounded-[10px] border border-white/12 bg-white/8 px-3 py-2 text-sm font-semibold text-white/80"
         >
-          <span>←</span> Retour
+          <ArrowLeft className="size-4" /> Retour
         </button>
 
-        {/* Titre */}
-        <h1 style={{
-          color: "#fff",
-          fontWeight: 800,
-          fontSize: "1.4rem",
-          marginBottom: "4px",
-        }}>
-          Mon profil
-        </h1>
-        <p style={{
-          color: "rgba(255,255,255,0.5)",
-          fontSize: "0.85rem",
-        }}>
-          Informations de votre compte
-        </p>
+        <h1 className="mb-1 text-[1.4rem] font-extrabold text-white">Mon profil</h1>
+        <p className="text-[0.85rem] text-white/50">Informations de votre compte</p>
       </div>
 
       {/* Contenu */}
-      <div style={{ padding: "24px" }}>
-
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="px-6 pt-6"
+      >
         {/* Avatar + Nom */}
-        <div style={{
-          background: "#fff",
-          borderRadius: "20px",
-          padding: "24px",
-          marginBottom: "16px",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-        }}>
-          {/* Avatar avec initiales */}
-          <div style={{
-            width: "80px",
-            height: "80px",
-            borderRadius: "50%",
-            background: `linear-gradient(135deg, ${C.jaune} 0%, ${C.orange} 100%)`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "2rem",
-            fontWeight: 800,
-            color: "#fff",
-            marginBottom: "16px",
-            boxShadow: `0 4px 20px ${C.jaune}40`,
-          }}>
+        <div className="mb-4 flex flex-col items-center rounded-[20px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="mb-4 flex size-20 items-center justify-center rounded-full bg-gradient-to-br from-brand-yellow to-brand-orange text-[2rem] font-extrabold text-white shadow-[0_4px_20px_var(--brand-yellow)40]">
             {getInitials(user?.name)}
           </div>
-
-          {/* Nom complet */}
-          <h2 style={{
-            fontWeight: 800,
-            fontSize: "1.3rem",
-            color: C.noir,
-            marginBottom: "4px",
-          }}>
+          <h2 className="mb-1 text-[1.3rem] font-extrabold text-brand-black">
             {user?.name || "Utilisateur"}
           </h2>
-
-          {/* Rôle */}
-          <div style={{
-            background: `${C.jaune}20`,
-            border: `1px solid ${C.jaune}40`,
-            borderRadius: "100px",
-            padding: "4px 14px",
-            fontSize: "0.8rem",
-            fontWeight: 700,
-            color: C.noir,
-          }}>
+          <div className="rounded-full border border-brand-yellow/25 bg-brand-yellow/12 px-3.5 py-1 text-[0.8rem] font-bold text-brand-black">
             {formatRole(user?.role || "client")}
           </div>
         </div>
 
         {/* Informations */}
-        <div style={{
-          background: "#fff",
-          borderRadius: "20px",
-          padding: "20px",
-          marginBottom: "16px",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-        }}>
-          <h3 style={{
-            fontWeight: 800,
-            fontSize: "0.95rem",
-            color: C.noir,
-            marginBottom: "16px",
-          }}>
+        <div className="mb-4 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <h3 className="mb-4 text-[0.95rem] font-extrabold text-brand-black">
             Informations personnelles
           </h3>
 
-          {/* Téléphone */}
-          <div style={{ marginBottom: "16px" }}>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "6px",
-            }}>
-              <span style={{ fontSize: "1.2rem" }}>📱</span>
-              <span style={{
-                fontSize: "0.8rem",
-                color: "#999",
-                fontWeight: 600,
-              }}>
-                Numéro de téléphone
-              </span>
+          <div className="mb-4">
+            <div className="mb-1.5 flex items-center gap-2.5">
+              <Phone className="size-5 text-brand-yellow" />
+              <span className="text-[0.8rem] font-semibold text-gray-400">Numéro de téléphone</span>
             </div>
-            <div style={{
-              fontSize: "0.95rem",
-              fontWeight: 600,
-              color: C.noir,
-              paddingLeft: "32px",
-            }}>
+            <div className="pl-8 text-[0.95rem] font-semibold text-brand-black">
               {user?.phone || "Non renseigné"}
             </div>
           </div>
 
-          {/* Rôle détaillé */}
           <div>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "6px",
-            }}>
-              <span style={{ fontSize: "1.2rem" }}>👤</span>
-              <span style={{
-                fontSize: "0.8rem",
-                color: "#999",
-                fontWeight: 600,
-              }}>
-                Type de compte
-              </span>
+            <div className="mb-1.5 flex items-center gap-2.5">
+              <User className="size-5 text-brand-yellow" />
+              <span className="text-[0.8rem] font-semibold text-gray-400">Type de compte</span>
             </div>
-            <div style={{
-              fontSize: "0.95rem",
-              fontWeight: 600,
-              color: C.noir,
-              paddingLeft: "32px",
-            }}>
+            <div className="pl-8 text-[0.95rem] font-semibold text-brand-black">
               {formatRole(user?.role || "client")}
             </div>
           </div>
         </div>
 
         {/* Wallet */}
-        <div style={{
-          background: "#fff",
-          borderRadius: "20px",
-          padding: "20px",
-          marginBottom: "24px",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-        }}>
-          <h3 style={{
-            fontWeight: 800,
-            fontSize: "0.95rem",
-            color: C.noir,
-            marginBottom: "16px",
-          }}>
+        <div className="mb-6 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <h3 className="mb-4 text-[0.95rem] font-extrabold text-brand-black">
             Portefeuille
           </h3>
-
-          <div style={{
-            background: `linear-gradient(135deg, ${C.jaune}15 0%, ${C.orange}10 100%)`,
-            border: `2px solid ${C.jaune}40`,
-            borderRadius: "14px",
-            padding: "18px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}>
+          <div className="flex items-center justify-between rounded-[14px] border-2 border-brand-yellow/25 bg-gradient-to-br from-brand-yellow/8 to-brand-orange/5 p-[18px]">
             <div>
-              <div style={{
-                fontSize: "0.8rem",
-                color: "#666",
-                marginBottom: "4px",
-                fontWeight: 600,
-              }}>
-                Solde actuel
-              </div>
-              <div style={{
-                fontSize: "1.8rem",
-                fontWeight: 900,
-                color: C.noir,
-              }}>
-                {user?.walletBalance ?? 0} <span style={{ fontSize: "1rem" }}>FCFA</span>
+              <div className="mb-1 text-[0.8rem] font-semibold text-gray-500">Solde actuel</div>
+              <div className="text-[1.8rem] font-black text-brand-black">
+                {user?.walletBalance ?? 0} <span className="text-base">FCFA</span>
               </div>
             </div>
-            <div style={{
-              fontSize: "2.5rem",
-            }}>
-              💰
-            </div>
+            <Wallet className="size-10 text-brand-yellow" />
           </div>
         </div>
 
@@ -284,22 +117,11 @@ export default function ClientProfil() {
             logout()
             navigate("/login")
           }}
-          style={{
-            width: "100%",
-            background: "#fff",
-            color: C.orange,
-            border: `2px solid ${C.orange}`,
-            fontWeight: 800,
-            fontSize: "15px",
-            height: "50px",
-            borderRadius: "14px",
-            fontFamily: "Inter, sans-serif",
-            cursor: "pointer",
-          }}
+          className="h-[50px] w-full rounded-[14px] border-2 border-brand-orange bg-white font-extrabold text-brand-orange hover:bg-brand-orange/5"
         >
-          🚪 Déconnexion
+          <LogOut className="mr-2 size-4" /> Déconnexion
         </Button>
-      </div>
+      </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
     </div>

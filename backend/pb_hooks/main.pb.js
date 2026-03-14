@@ -134,12 +134,11 @@ onRecordAfterUpdateSuccess((e) => {
     const record = e.record
     if (record.collection().name !== "users") return
     if (record.get("role") !== "conducteur") return
+    if (!record.get("conducteur_verifie")) return
 
-    const wasVerified = e.oldRecord && !e.oldRecord.get("conducteur_verifie")
-    const isNowVerified = record.get("conducteur_verifie") === true
-    if (!wasVerified || !isNowVerified) return
+    const currentBalance = parseFloat(record.get("walletBalance")) || 0
+    if (currentBalance >= 200) return
 
-    const currentBalance = record.get("walletBalance") || 0
     record.set("walletBalance", currentBalance + 200)
     $app.save(record)
 

@@ -52,7 +52,7 @@ export const useAuthStore = create<AuthState>((set) => {
       set({ isLoading: true })
       try {
         const email = phoneToEmail(phone)
-        await pb.collection("users").create({
+        const createdRecord = await pb.collection("users").create({
           email,
           password,
           passwordConfirm: password,
@@ -65,9 +65,15 @@ export const useAuthStore = create<AuthState>((set) => {
           rating: 0,
           totalRating: 0,
           subscriptionType: "none",
-          ...extraData,
         }, { requestKey: null })
         await pb.collection("users").authWithPassword(email, password, { requestKey: null })
+        try {
+          if (Object.keys(extraData).length > 0) {
+            await pb.collection("users").update(createdRecord.id, extraData, { requestKey: null })
+          }
+        } catch(err) {
+          console.error("Erreur update extraData:", err)
+        }
         // Recharge l'enregistrement complet avec tous les champs personnalisés
         const fullRecord = await pb.collection("users").getOne(pb.authStore.record!.id, { requestKey: null })
         set({ user: fullRecord as unknown as User, isLoading: false })

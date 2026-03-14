@@ -4,20 +4,14 @@ import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
+import { motion } from "motion/react"
+import { Home, Bike, ClipboardList, ArrowLeft, MapPin, Flag, Play, CheckCircle, Clock } from "lucide-react"
 import type { Trip } from "../../types"
 
-const C = {
-  jaune:  "#F5C518",
-  noir:   "#1A1A2E",
-  orange: "#E85D04",
-  vert:   "#06D6A0",
-  fond:   "#F8F9FA",
-}
-
 const NAV_ITEMS = [
-  { icon: "🏠", label: "Accueil",    path: "/driver" },
-  { icon: "🏍️", label: "Ma course",  path: "/driver/ma-course" },
-  { icon: "📋", label: "Historique", path: "/driver/historique" },
+  { icon: <Home className="size-[22px]" />,           label: "Accueil",    path: "/driver" },
+  { icon: <Bike className="size-[22px]" />,           label: "Ma course",  path: "/driver/ma-course" },
+  { icon: <ClipboardList className="size-[22px]" />,  label: "Historique", path: "/driver/historique" },
 ]
 
 export default function DriverMaCourse() {
@@ -80,69 +74,40 @@ export default function DriverMaCourse() {
   }
 
   return (
-    <div style={{
-      minHeight: "100svh",
-      background: C.fond,
-      fontFamily: "Inter, sans-serif",
-      paddingBottom: "80px",
-    }}>
+    <div className="min-h-svh bg-brand-bg pb-20 font-sans">
 
       {/* Header */}
-      <div style={{
-        background: C.noir,
-        padding: "20px 24px 24px",
-        display: "flex",
-        alignItems: "center",
-        gap: "14px",
-      }}>
+      <div className="flex items-center gap-3.5 bg-brand-black px-6 pt-5 pb-6">
         <button
           onClick={() => navigate("/driver")}
-          style={{
-            background: "rgba(255,255,255,0.08)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            color: "#fff", borderRadius: "10px",
-            width: "38px", height: "38px",
-            fontSize: "18px", cursor: "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            flexShrink: 0,
-          }}
+          className="flex size-[38px] shrink-0 items-center justify-center rounded-[10px] border border-white/12 bg-white/8 text-white"
         >
-          ←
+          <ArrowLeft className="size-[18px]" />
         </button>
         <div>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem" }}>Conducteur</p>
-          <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.05rem" }}>Ma course active</p>
+          <p className="text-[0.8rem] text-white/50">Conducteur</p>
+          <p className="text-[1.05rem] font-extrabold text-white">Ma course active</p>
         </div>
       </div>
 
-      <div style={{ padding: "24px" }}>
-
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="px-6 pt-6"
+      >
         {isLoading && (
-          <div style={{ textAlign: "center", color: "#aaa", padding: "48px 0" }}>
-            Chargement...
-          </div>
+          <div className="py-12 text-center text-gray-400">Chargement...</div>
         )}
 
         {!isLoading && !trip && (
-          <div style={{
-            textAlign: "center", padding: "48px 24px",
-            background: "#fff", borderRadius: "20px",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          }}>
-            <div style={{ fontSize: "3rem", marginBottom: "16px" }}>🏍️</div>
-            <p style={{ fontWeight: 700, color: C.noir, marginBottom: "8px" }}>
-              Aucune course active
-            </p>
-            <p style={{ color: "#aaa", fontSize: "0.88rem", marginBottom: "20px" }}>
-              Acceptez une course depuis l'accueil.
-            </p>
+          <div className="rounded-[20px] bg-white px-6 py-12 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <Bike className="mx-auto mb-4 size-12 text-brand-yellow" />
+            <p className="mb-2 font-bold text-brand-black">Aucune course active</p>
+            <p className="mb-5 text-[0.88rem] text-gray-400">Acceptez une course depuis l'accueil.</p>
             <Button
               onClick={() => navigate("/driver")}
-              style={{
-                background: C.jaune, color: C.noir,
-                fontWeight: 800, borderRadius: "100px",
-                padding: "10px 24px", height: "auto",
-              }}
+              className="h-auto rounded-full bg-brand-yellow px-6 py-2.5 font-extrabold text-brand-black hover:bg-brand-yellow/90"
             >
               Voir les courses
             </Button>
@@ -152,72 +117,52 @@ export default function DriverMaCourse() {
         {trip && (
           <div>
             {/* Statut */}
-            <div style={{
-              display: "inline-flex", alignItems: "center",
-              background: trip.status === "active" ? `${C.jaune}20` : `${C.vert}20`,
-              color: trip.status === "active" ? C.orange : C.vert,
-              borderRadius: "100px", padding: "6px 16px",
-              fontSize: "0.82rem", fontWeight: 700,
-              marginBottom: "20px",
-            }}>
-              {trip.status === "active" ? "⏳ En attente de démarrage" : "🚀 En cours"}
+            <div className={`mb-5 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[0.82rem] font-bold ${
+              trip.status === "active"
+                ? "bg-brand-yellow/12 text-brand-orange"
+                : "bg-brand-green/12 text-brand-green"
+            }`}>
+              {trip.status === "active"
+                ? <><Clock className="size-3.5" /> En attente de démarrage</>
+                : <><Play className="size-3.5" /> En cours</>
+              }
             </div>
 
             {/* Carte course */}
-            <div style={{
-              background: "#fff",
-              borderRadius: "20px",
-              padding: "24px",
-              boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
-              marginBottom: "20px",
-            }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "20px" }}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                  <div style={{
-                    width: "36px", height: "36px", borderRadius: "10px",
-                    background: `${C.jaune}20`, display: "flex",
-                    alignItems: "center", justifyContent: "center",
-                    fontSize: "16px", flexShrink: 0,
-                  }}>📍</div>
+            <div className="mb-5 rounded-[20px] bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.07)]">
+              <div className="mb-5 flex flex-col gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-brand-yellow/12">
+                    <MapPin className="size-4 text-brand-yellow" />
+                  </div>
                   <div>
-                    <p style={{ fontSize: "0.75rem", color: "#aaa", marginBottom: "2px" }}>Point de départ</p>
-                    <p style={{ fontWeight: 700, color: C.noir }}>{trip.departureAddress}</p>
+                    <p className="mb-0.5 text-[0.75rem] text-gray-400">Point de départ</p>
+                    <p className="font-bold text-brand-black">{trip.departureAddress}</p>
                   </div>
                 </div>
 
-                <div style={{ marginLeft: "18px", borderLeft: `2px dashed ${C.jaune}40`, height: "16px" }} />
+                <div className="ml-[18px] h-4 border-l-2 border-dashed border-brand-yellow/25" />
 
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                  <div style={{
-                    width: "36px", height: "36px", borderRadius: "10px",
-                    background: `${C.vert}20`, display: "flex",
-                    alignItems: "center", justifyContent: "center",
-                    fontSize: "16px", flexShrink: 0,
-                  }}>🏁</div>
+                <div className="flex items-start gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-brand-green/12">
+                    <Flag className="size-4 text-brand-green" />
+                  </div>
                   <div>
-                    <p style={{ fontSize: "0.75rem", color: "#aaa", marginBottom: "2px" }}>Destination</p>
-                    <p style={{ fontWeight: 700, color: C.noir }}>{trip.destinationAddress}</p>
+                    <p className="mb-0.5 text-[0.75rem] text-gray-400">Destination</p>
+                    <p className="font-bold text-brand-black">{trip.destinationAddress}</p>
                   </div>
                 </div>
               </div>
 
               {/* Prix */}
-              <div style={{
-                background: C.fond, borderRadius: "12px",
-                padding: "14px 16px",
-                display: "flex", justifyContent: "space-between",
-              }}>
+              <div className="flex justify-between rounded-xl bg-brand-bg px-4 py-3.5">
                 <div>
-                  <p style={{ fontSize: "0.75rem", color: "#aaa" }}>Prix de la course</p>
-                  <p style={{ fontWeight: 900, fontSize: "1.2rem", color: C.noir }}>
-                    {trip.finalPrice} FCFA
-                  </p>
+                  <p className="text-[0.75rem] text-gray-400">Prix de la course</p>
+                  <p className="text-[1.2rem] font-black text-brand-black">{trip.finalPrice} FCFA</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: "0.75rem", color: "#aaa" }}>Après commission</p>
-                  <p style={{ fontWeight: 900, fontSize: "1.2rem", color: C.vert }}>
-                    {(trip.finalPrice ?? 0) - 25} FCFA
-                  </p>
+                  <p className="text-[0.75rem] text-gray-400">Après commission</p>
+                  <p className="text-[1.2rem] font-black text-brand-green">{(trip.finalPrice ?? 0) - 25} FCFA</p>
                 </div>
               </div>
             </div>
@@ -226,35 +171,23 @@ export default function DriverMaCourse() {
             {trip.status === "active" && (
               <Button
                 onClick={demarrer}
-                style={{
-                  width: "100%", background: C.jaune,
-                  color: C.noir, fontWeight: 800,
-                  fontSize: "16px", height: "52px",
-                  borderRadius: "14px",
-                  boxShadow: `0 4px 20px ${C.jaune}40`,
-                }}
+                className="h-[52px] w-full rounded-[14px] bg-brand-yellow text-base font-extrabold text-brand-black shadow-[0_4px_20px_var(--brand-yellow)40] hover:bg-brand-yellow/90"
               >
-                🚀 Démarrer la course
+                <Play className="mr-2 size-5" /> Démarrer la course
               </Button>
             )}
 
             {trip.status === "in_progress" && (
               <Button
                 onClick={terminer}
-                style={{
-                  width: "100%", background: C.vert,
-                  color: "#fff", fontWeight: 800,
-                  fontSize: "16px", height: "52px",
-                  borderRadius: "14px",
-                  boxShadow: `0 4px 20px ${C.vert}40`,
-                }}
+                className="h-[52px] w-full rounded-[14px] bg-brand-green text-base font-extrabold text-white shadow-[0_4px_20px_var(--brand-green)40] hover:bg-brand-green/90"
               >
-                ✅ Terminer la course
+                <CheckCircle className="mr-2 size-5" /> Terminer la course
               </Button>
             )}
           </div>
         )}
-      </div>
+      </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
     </div>

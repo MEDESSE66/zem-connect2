@@ -1,22 +1,16 @@
-﻿import { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
 import BottomNav from "../../components/BottomNav"
-
-const C = {
-  jaune:  "#F5C518",
-  noir:   "#1A1A2E",
-  orange: "#E85D04",
-  vert:   "#06D6A0",
-  fond:   "#F8F9FA",
-}
+import { motion } from "motion/react"
+import { BarChart3, Users, Bike, Car, AlertTriangle, LogOut } from "lucide-react"
 
 const NAV_ITEMS = [
-  { icon: "📊", label: "Stats",         path: "/admin" },
-  { icon: "👥", label: "Utilisateurs",  path: "/admin/utilisateurs" },
-  { icon: "🏍️", label: "Courses",       path: "/admin/courses" },
-  { icon: "⚠️", label: "Litiges",       path: "/admin/litiges" },
+  { icon: <BarChart3 className="size-[22px]" />,       label: "Stats",         path: "/admin" },
+  { icon: <Users className="size-[22px]" />,            label: "Utilisateurs",  path: "/admin/utilisateurs" },
+  { icon: <Bike className="size-[22px]" />,             label: "Courses",       path: "/admin/courses" },
+  { icon: <AlertTriangle className="size-[22px]" />,    label: "Litiges",       path: "/admin/litiges" },
 ]
 
 export default function AdminStats() {
@@ -56,174 +50,93 @@ export default function AdminStats() {
   }, [])
 
   return (
-    <div style={{
-      minHeight: "100svh",
-      background: C.fond,
-      fontFamily: "Inter, sans-serif",
-      paddingBottom: "80px",
-    }}>
+    <div className="min-h-svh bg-brand-bg pb-20 font-sans">
 
       {/* Header */}
-      <div style={{
-        background: C.noir,
-        padding: "20px 24px 28px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", top: "-40px", right: "-40px",
-          width: "180px", height: "180px", borderRadius: "50%",
-          background: `radial-gradient(circle, ${C.jaune}20 0%, transparent 70%)`,
-          pointerEvents: "none",
-        }} />
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}>
+      <div className="relative overflow-hidden bg-brand-black px-6 pt-5 pb-7">
+        <div className="pointer-events-none absolute -top-10 -right-10 size-[180px] rounded-full bg-[radial-gradient(circle,_var(--brand-yellow)20_0%,_transparent_70%)]" />
+        <div className="flex items-center justify-between">
           <div>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem", marginBottom: "2px" }}>
-              Administration
-            </p>
-            <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.1rem" }}>
-              Tableau de bord
-            </p>
+            <p className="mb-0.5 text-[0.82rem] text-white/50">Administration</p>
+            <p className="text-[1.1rem] font-extrabold text-white">Tableau de bord</p>
           </div>
           <button
             onClick={() => { logout(); navigate("/login") }}
-            style={{
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              color: "rgba(255,255,255,0.6)",
-              borderRadius: "10px",
-              padding: "8px 14px",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-              fontFamily: "Inter, sans-serif",
-            }}
+            className="flex items-center gap-1.5 rounded-[10px] border border-white/12 bg-white/8 px-3.5 py-2 text-[13px] font-semibold text-white/60 transition-colors hover:bg-white/12"
           >
-            Déconnexion
+            <LogOut className="size-3.5" /> Déconnexion
           </button>
         </div>
       </div>
 
-      <div style={{ padding: "24px" }}>
-
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="px-6 pt-6"
+      >
         {isLoading && (
-          <div style={{ textAlign: "center", color: "#aaa", padding: "48px 0" }}>
-            Chargement...
-          </div>
+          <div className="py-12 text-center text-gray-400">Chargement...</div>
         )}
 
         {!isLoading && (
           <>
             {/* Stat principale */}
-            <div style={{
-              background: C.noir,
-              borderRadius: "20px",
-              padding: "24px",
-              marginBottom: "16px",
-              position: "relative",
-              overflow: "hidden",
-            }}>
-              <div style={{
-                position: "absolute", bottom: "-20px", right: "-20px",
-                width: "120px", height: "120px", borderRadius: "50%",
-                background: `${C.jaune}15`, pointerEvents: "none",
-              }} />
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem", marginBottom: "4px" }}>
-                Commissions collectées
-              </p>
-              <p style={{ color: C.jaune, fontWeight: 900, fontSize: "2rem" }}>
-                {totalCommissions} FCFA
-              </p>
-              <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.78rem", marginTop: "4px" }}>
-                25 FCFA par course terminée
-              </p>
+            <div className="relative mb-4 overflow-hidden rounded-[20px] bg-brand-black p-6">
+              <div className="pointer-events-none absolute -bottom-5 -right-5 size-[120px] rounded-full bg-brand-yellow/8" />
+              <p className="mb-1 text-[0.82rem] text-white/50">Commissions collectées</p>
+              <p className="text-[2rem] font-black text-brand-yellow">{totalCommissions} FCFA</p>
+              <p className="mt-1 text-[0.78rem] text-white/40">25 FCFA par course terminée</p>
             </div>
 
             {/* Grid stats */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "14px",
-              marginBottom: "24px",
-            }}>
+            <div className="mb-6 grid grid-cols-2 gap-3.5">
               {[
-                { icon: "🏍️", label: "Courses terminées", value: totalTrips,      color: C.vert   },
-                { icon: "👥", label: "Clients",            value: totalUsers,      color: "#3b82f6" },
-                { icon: "🚗", label: "Conducteurs",        value: totalConducteurs, color: C.orange },
-              ].map(({ icon, label, value, color }) => (
-                <div key={label} style={{
-                  background: "#fff",
-                  borderRadius: "16px",
-                  padding: "18px",
-                  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                }}>
-                  <div style={{ fontSize: "1.6rem", marginBottom: "8px" }}>{icon}</div>
-                  <div style={{ color, fontWeight: 900, fontSize: "1.4rem" }}>{value}</div>
-                  <div style={{ color: "#999", fontSize: "0.8rem", marginTop: "2px" }}>{label}</div>
+                { icon: <Bike className="size-7 text-brand-green" />,   label: "Courses terminées", value: totalTrips,       colorClass: "text-brand-green" },
+                { icon: <Users className="size-7 text-blue-500" />,     label: "Clients",            value: totalUsers,       colorClass: "text-blue-500" },
+                { icon: <Car className="size-7 text-brand-orange" />,   label: "Conducteurs",        value: totalConducteurs, colorClass: "text-brand-orange" },
+              ].map(({ icon, label, value, colorClass }) => (
+                <div key={label} className="rounded-2xl bg-white p-[18px] shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+                  <div className="mb-2">{icon}</div>
+                  <div className={`text-[1.4rem] font-black ${colorClass}`}>{value}</div>
+                  <div className="mt-0.5 text-[0.8rem] text-gray-400">{label}</div>
                 </div>
               ))}
 
               {/* Raccourci litiges */}
               <div
                 onClick={() => navigate("/admin/litiges")}
-                style={{
-                  background: `${C.orange}10`,
-                  border: `1px solid ${C.orange}25`,
-                  borderRadius: "16px",
-                  padding: "18px",
-                  cursor: "pointer",
-                }}
+                className="cursor-pointer rounded-2xl border border-brand-orange/15 bg-brand-orange/5 p-[18px] transition-colors hover:bg-brand-orange/10"
               >
-                <div style={{ fontSize: "1.6rem", marginBottom: "8px" }}>⚠️</div>
-                <div style={{ color: C.orange, fontWeight: 700, fontSize: "0.9rem" }}>
-                  Voir litiges
-                </div>
-                <div style={{ color: "#999", fontSize: "0.8rem", marginTop: "2px" }}>Ouverts</div>
+                <AlertTriangle className="mb-2 size-7 text-brand-orange" />
+                <div className="text-[0.9rem] font-bold text-brand-orange">Voir litiges</div>
+                <div className="mt-0.5 text-[0.8rem] text-gray-400">Ouverts</div>
               </div>
             </div>
 
             {/* Raccourcis */}
-            <h3 style={{ fontWeight: 800, fontSize: "1rem", color: C.noir, marginBottom: "14px" }}>
-              Actions rapides
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <h3 className="mb-3.5 text-base font-extrabold text-brand-black">Actions rapides</h3>
+            <div className="flex flex-col gap-3">
               {[
-                { icon: "👥", label: "Gérer les utilisateurs",  sub: "Suspendre, réactiver les comptes", path: "/admin/utilisateurs", border: C.jaune },
-                { icon: "🏍️", label: "Voir toutes les courses", sub: "Historique complet des trajets",    path: "/admin/courses",      border: C.vert  },
-              ].map(({ icon, label, sub, path, border }) => (
+                { icon: <Users className="size-8 text-brand-yellow" />,  label: "Gérer les utilisateurs",  sub: "Suspendre, réactiver les comptes", path: "/admin/utilisateurs", borderColor: "border-brand-yellow" },
+                { icon: <Bike className="size-8 text-brand-green" />,   label: "Voir toutes les courses", sub: "Historique complet des trajets",    path: "/admin/courses",      borderColor: "border-brand-green"  },
+              ].map(({ icon, label, sub, path, borderColor }) => (
                 <button
                   key={path}
                   onClick={() => navigate(path)}
-                  style={{
-                    background: "#fff",
-                    border: `2px solid ${border}`,
-                    borderRadius: "14px",
-                    padding: "16px 20px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    transition: "box-shadow 0.15s",
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 4px 16px ${border}30`)}
-                  onMouseLeave={e => (e.currentTarget.style.boxShadow = "none")}
+                  className={`flex items-center gap-3.5 rounded-[14px] border-2 ${borderColor} bg-white p-4 text-left transition-shadow hover:shadow-lg`}
                 >
-                  <span style={{ fontSize: "1.8rem" }}>{icon}</span>
+                  {icon}
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: "0.95rem", color: C.noir }}>{label}</div>
-                    <div style={{ fontSize: "0.82rem", color: "#999", marginTop: "2px" }}>{sub}</div>
+                    <div className="text-[0.95rem] font-bold text-brand-black">{label}</div>
+                    <div className="mt-0.5 text-[0.82rem] text-gray-400">{sub}</div>
                   </div>
                 </button>
               ))}
             </div>
           </>
         )}
-      </div>
+      </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
     </div>

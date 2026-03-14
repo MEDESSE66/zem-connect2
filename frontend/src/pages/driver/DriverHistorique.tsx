@@ -3,20 +3,14 @@ import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
 import BottomNav from "../../components/BottomNav"
+import { motion } from "motion/react"
+import { Home, Bike, ClipboardList, ArrowLeft, MapPin, Flag, Check, X } from "lucide-react"
 import type { Trip } from "../../types"
 
-const C = {
-  jaune:  "#F5C518",
-  noir:   "#1A1A2E",
-  orange: "#E85D04",
-  vert:   "#06D6A0",
-  fond:   "#F8F9FA",
-}
-
 const NAV_ITEMS = [
-  { icon: "🏠", label: "Accueil",    path: "/driver" },
-  { icon: "🏍️", label: "Ma course",  path: "/driver/ma-course" },
-  { icon: "📋", label: "Historique", path: "/driver/historique" },
+  { icon: <Home className="size-[22px]" />,           label: "Accueil",    path: "/driver" },
+  { icon: <Bike className="size-[22px]" />,           label: "Ma course",  path: "/driver/ma-course" },
+  { icon: <ClipboardList className="size-[22px]" />,  label: "Historique", path: "/driver/historique" },
 ]
 
 export default function DriverHistorique() {
@@ -47,61 +41,38 @@ export default function DriverHistorique() {
   }, [user?.id])
 
   return (
-    <div style={{
-      minHeight: "100svh",
-      background: C.fond,
-      fontFamily: "Inter, sans-serif",
-      paddingBottom: "80px",
-    }}>
+    <div className="min-h-svh bg-brand-bg pb-20 font-sans">
 
       {/* Header */}
-      <div style={{
-        background: C.noir,
-        padding: "20px 24px 24px",
-        display: "flex",
-        alignItems: "center",
-        gap: "14px",
-      }}>
+      <div className="flex items-center gap-3.5 bg-brand-black px-6 pt-5 pb-6">
         <button
           onClick={() => navigate("/driver")}
-          style={{
-            background: "rgba(255,255,255,0.08)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            color: "#fff", borderRadius: "10px",
-            width: "38px", height: "38px",
-            fontSize: "18px", cursor: "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            flexShrink: 0,
-          }}
+          className="flex size-[38px] shrink-0 items-center justify-center rounded-[10px] border border-white/12 bg-white/8 text-white"
         >
-          ←
+          <ArrowLeft className="size-[18px]" />
         </button>
         <div>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem" }}>Conducteur</p>
-          <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.05rem" }}>Historique des courses</p>
+          <p className="text-[0.8rem] text-white/50">Conducteur</p>
+          <p className="text-[1.05rem] font-extrabold text-white">Historique des courses</p>
         </div>
       </div>
 
-      <div style={{ padding: "24px" }}>
-
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="px-6 pt-6"
+      >
         {/* Résumé gains */}
         {!isLoading && trips.filter(t => t.status === "completed").length > 0 && (
-          <div style={{
-            background: C.noir,
-            borderRadius: "20px",
-            padding: "20px 24px",
-            marginBottom: "24px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}>
+          <div className="mb-6 flex items-center justify-between rounded-[20px] bg-brand-black px-6 py-5">
             <div>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem" }}>Total gagné</p>
-              <p style={{ color: C.jaune, fontWeight: 900, fontSize: "1.6rem" }}>{totalGagne} FCFA</p>
+              <p className="text-[0.82rem] text-white/50">Total gagné</p>
+              <p className="text-[1.6rem] font-black text-brand-yellow">{totalGagne} FCFA</p>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem" }}>Courses terminées</p>
-              <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.2rem" }}>
+            <div className="text-right">
+              <p className="text-[0.82rem] text-white/50">Courses terminées</p>
+              <p className="text-[1.2rem] font-extrabold text-white">
                 {trips.filter(t => t.status === "completed").length}
               </p>
             </div>
@@ -109,89 +80,69 @@ export default function DriverHistorique() {
         )}
 
         {isLoading && (
-          <div style={{ textAlign: "center", color: "#aaa", padding: "48px 0" }}>
-            Chargement...
-          </div>
+          <div className="py-12 text-center text-gray-400">Chargement...</div>
         )}
 
         {!isLoading && trips.length === 0 && (
-          <div style={{
-            textAlign: "center", padding: "48px 24px",
-            background: "#fff", borderRadius: "20px",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          }}>
-            <div style={{ fontSize: "3rem", marginBottom: "16px" }}>📋</div>
-            <p style={{ fontWeight: 700, color: C.noir, marginBottom: "8px" }}>
-              Aucune course dans l'historique
-            </p>
-            <p style={{ color: "#aaa", fontSize: "0.88rem" }}>
-              Vos courses terminées apparaîtront ici.
-            </p>
+          <div className="rounded-[20px] bg-white px-6 py-12 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <ClipboardList className="mx-auto mb-4 size-12 text-brand-yellow" />
+            <p className="mb-2 font-bold text-brand-black">Aucune course dans l'historique</p>
+            <p className="text-[0.88rem] text-gray-400">Vos courses terminées apparaîtront ici.</p>
           </div>
         )}
 
         {trips.map(trip => (
-          <div key={trip.id} style={{
-            background: "#fff",
-            borderRadius: "20px",
-            padding: "20px",
-            marginBottom: "14px",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          }}>
+          <div key={trip.id} className="mb-3.5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             {/* Badge statut */}
-            <div style={{
-              display: "inline-flex",
-              background: trip.status === "completed" ? `${C.vert}15` : "rgba(239,35,60,0.08)",
-              color: trip.status === "completed" ? C.vert : "#ef233c",
-              borderRadius: "100px", padding: "4px 12px",
-              fontSize: "0.78rem", fontWeight: 700,
-              marginBottom: "14px",
-            }}>
-              {trip.status === "completed" ? "✓ Terminée" : "✕ Annulée"}
+            <div className={`mb-3.5 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[0.78rem] font-bold ${
+              trip.status === "completed"
+                ? "bg-brand-green/10 text-brand-green"
+                : "bg-red-500/8 text-red-500"
+            }`}>
+              {trip.status === "completed"
+                ? <><Check className="size-3" /> Terminée</>
+                : <><X className="size-3" /> Annulée</>
+              }
             </div>
 
             {/* Trajet */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "14px" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <span style={{ fontSize: "1rem", marginTop: "1px" }}>📍</span>
+            <div className="mb-3.5 flex flex-col gap-2">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="mt-0.5 size-4 shrink-0 text-brand-yellow" />
                 <div>
-                  <p style={{ fontSize: "0.75rem", color: "#aaa", marginBottom: "1px" }}>Départ</p>
-                  <p style={{ fontWeight: 600, fontSize: "0.92rem", color: C.noir }}>{trip.departureAddress}</p>
+                  <p className="text-[0.75rem] text-gray-400">Départ</p>
+                  <p className="text-[0.92rem] font-semibold text-brand-black">{trip.departureAddress}</p>
                 </div>
               </div>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <span style={{ fontSize: "1rem", marginTop: "1px" }}>🏁</span>
+              <div className="flex items-start gap-2.5">
+                <Flag className="mt-0.5 size-4 shrink-0 text-brand-green" />
                 <div>
-                  <p style={{ fontSize: "0.75rem", color: "#aaa", marginBottom: "1px" }}>Destination</p>
-                  <p style={{ fontWeight: 600, fontSize: "0.92rem", color: C.noir }}>{trip.destinationAddress}</p>
+                  <p className="text-[0.75rem] text-gray-400">Destination</p>
+                  <p className="text-[0.92rem] font-semibold text-brand-black">{trip.destinationAddress}</p>
                 </div>
               </div>
             </div>
 
             {/* Prix */}
             {trip.finalPrice && (
-              <div style={{
-                display: "flex", gap: "12px",
-                background: C.fond, borderRadius: "10px",
-                padding: "12px 14px",
-              }}>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: "0.75rem", color: "#aaa" }}>Prix course</p>
-                  <p style={{ fontWeight: 800, color: C.noir }}>{trip.finalPrice} FCFA</p>
+              <div className="flex gap-3 rounded-[10px] bg-brand-bg px-3.5 py-3">
+                <div className="flex-1">
+                  <p className="text-[0.75rem] text-gray-400">Prix course</p>
+                  <p className="font-extrabold text-brand-black">{trip.finalPrice} FCFA</p>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: "0.75rem", color: "#aaa" }}>Commission</p>
-                  <p style={{ fontWeight: 800, color: C.orange }}>-25 FCFA</p>
+                <div className="flex-1">
+                  <p className="text-[0.75rem] text-gray-400">Commission</p>
+                  <p className="font-extrabold text-brand-orange">-25 FCFA</p>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: "0.75rem", color: "#aaa" }}>Gagné</p>
-                  <p style={{ fontWeight: 800, color: C.vert }}>{trip.finalPrice - 25} FCFA</p>
+                <div className="flex-1">
+                  <p className="text-[0.75rem] text-gray-400">Gagné</p>
+                  <p className="font-extrabold text-brand-green">{trip.finalPrice - 25} FCFA</p>
                 </div>
               </div>
             )}
           </div>
         ))}
-      </div>
+      </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
     </div>

@@ -38,6 +38,15 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+
+    /* Brand colors */
+    --brand-yellow: #F5C518;
+    --brand-black: #1A1A2E;
+    --brand-orange: #E85D04;
+    --brand-green: #06D6A0;
+    --brand-bg: #F8F9FA;
+    --brand-dark: #0d0d1a;
+    --brand-navy: #16213e;
 }
 
 .dark {
@@ -114,6 +123,15 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    /* Brand tokens for Tailwind v4 */
+    --color-brand-yellow: var(--brand-yellow);
+    --color-brand-black: var(--brand-black);
+    --color-brand-orange: var(--brand-orange);
+    --color-brand-green: var(--brand-green);
+    --color-brand-bg: var(--brand-bg);
+    --color-brand-dark: var(--brand-dark);
+    --color-brand-navy: var(--brand-navy);
 }
 
 @layer base {
@@ -126,4 +144,38 @@
   html {
     @apply font-sans;
     }
+}
+
+/* Global keyframes */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: scale(0.5); }
+  60%  { transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes bounceBas {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(8px); }
+}
+
+/* Utility: dark glass card */
+.glass-dark {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(20px);
+}
+
+/* Input focus overrides for dark backgrounds */
+.dark-input::placeholder { color: rgba(255,255,255,0.25); }
+.dark-input:focus {
+  border-color: color-mix(in srgb, var(--brand-yellow) 50%, transparent) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-yellow) 12%, transparent) !important;
 }

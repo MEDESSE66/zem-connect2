@@ -4,20 +4,14 @@ import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
+import { motion } from "motion/react"
+import { Home, Bike, ClipboardList, User, MapPin, Flag, LogOut, Hourglass, Clock } from "lucide-react"
 import type { Trip } from "../../types"
 
-const C = {
-  jaune:  "#F5C518",
-  noir:   "#1A1A2E",
-  orange: "#E85D04",
-  vert:   "#06D6A0",
-  fond:   "#F8F9FA",
-}
-
 const NAV_ITEMS = [
-  { icon: "🏠", label: "Accueil",    path: "/driver" },
-  { icon: "🏍️", label: "Ma course",  path: "/driver/ma-course" },
-  { icon: "📋", label: "Historique", path: "/driver/historique" },
+  { icon: <Home className="size-[22px]" />,           label: "Accueil",    path: "/driver" },
+  { icon: <Bike className="size-[22px]" />,           label: "Ma course",  path: "/driver/ma-course" },
+  { icon: <ClipboardList className="size-[22px]" />,  label: "Historique", path: "/driver/historique" },
 ]
 
 export default function DriverAccueil() {
@@ -78,135 +72,59 @@ export default function DriverAccueil() {
   }
 
   return (
-    <div style={{
-      minHeight: "100svh",
-      background: C.fond,
-      fontFamily: "Inter, sans-serif",
-      paddingBottom: "80px",
-    }}>
+    <div className="min-h-svh bg-brand-bg pb-20 font-sans">
 
       {/* Header */}
-      <div style={{
-        background: C.noir,
-        padding: "20px 24px 28px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", top: "-40px", right: "-40px",
-          width: "180px", height: "180px", borderRadius: "50%",
-          background: `radial-gradient(circle, ${C.orange}20 0%, transparent 70%)`,
-          pointerEvents: "none",
-        }} />
+      <div className="relative overflow-hidden bg-brand-black px-6 pt-5 pb-7">
+        <div className="pointer-events-none absolute -top-10 -right-10 size-[180px] rounded-full bg-[radial-gradient(circle,_var(--brand-orange)20_0%,_transparent_70%)]" />
 
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "16px",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <div>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.82rem", marginBottom: "2px" }}>
-                Conducteur 🏍️
+              <p className="mb-0.5 text-[0.82rem] text-white/50">
+                Conducteur <Bike className="mb-0.5 inline size-3.5" />
               </p>
-              <p style={{ color: "#fff", fontWeight: 800, fontSize: "1.1rem" }}>
-                {user?.name || user?.email?.split("@")[0] || "Conducteur"}
+              <p className="text-[1.1rem] font-extrabold text-white">
+                {user?.name || "Utilisateur"}
               </p>
             </div>
             <button
               onClick={() => navigate("/driver/profil")}
-              style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                color: "rgba(255,255,255,0.8)",
-                borderRadius: "50%",
-                width: "36px",
-                height: "36px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                fontSize: "16px",
-                transition: "all 0.2s",
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = "rgba(255,255,255,0.15)"
-                e.currentTarget.style.transform = "scale(1.05)"
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = "rgba(255,255,255,0.08)"
-                e.currentTarget.style.transform = "scale(1)"
-              }}
+              className="flex size-9 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white/80 transition-all hover:scale-105 hover:bg-white/15"
             >
-              👤
+              <User className="size-4" />
             </button>
           </div>
           <button
             onClick={() => { logout(); navigate("/login") }}
-            style={{
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              color: "rgba(255,255,255,0.6)",
-              borderRadius: "10px",
-              padding: "8px 14px",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-              fontFamily: "Inter, sans-serif",
-            }}
+            className="flex items-center gap-1.5 rounded-[10px] border border-white/12 bg-white/8 px-3.5 py-2 text-[13px] font-semibold text-white/60 transition-colors hover:bg-white/12"
           >
-            Déconnexion
+            <LogOut className="size-3.5" /> Déconnexion
           </button>
         </div>
 
         {/* Wallet */}
-        <div style={{
-          background: "rgba(255,255,255,0.07)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          borderRadius: "14px",
-          padding: "14px 18px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}>
+        <div className="flex items-center justify-between rounded-[14px] border border-white/10 bg-white/7 px-[18px] py-3.5">
           <div>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.78rem" }}>Solde wallet</p>
-            <p style={{ color: C.jaune, fontWeight: 900, fontSize: "1.4rem" }}>
+            <p className="text-[0.78rem] text-white/50">Solde wallet</p>
+            <p className="text-[1.4rem] font-black text-brand-yellow">
               {user?.walletBalance ?? 0} FCFA
             </p>
           </div>
-          <div style={{
-            background: `${C.jaune}20`,
-            border: `1px solid ${C.jaune}40`,
-            borderRadius: "10px",
-            padding: "8px 14px",
-            color: C.jaune,
-            fontSize: "0.78rem",
-            fontWeight: 700,
-          }}>
+          <div className="rounded-[10px] border border-brand-yellow/25 bg-brand-yellow/12 px-3.5 py-2 text-[0.78rem] font-bold text-brand-yellow">
             Commission : 25 FCFA
           </div>
         </div>
       </div>
-      
+
       {!user?.conducteur_verifie && (
-        <div style={{
-          background: "#E85D0415",
-          border: "1px solid #E85D0440",
-          borderRadius: "16px",
-          margin: "16px",
-          padding: "16px 20px",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "12px",
-        }}>
-          <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>⏳</span>
+        <div className="mx-4 mt-4 flex items-start gap-3 rounded-2xl border border-brand-orange/25 bg-brand-orange/8 px-5 py-4">
+          <Clock className="mt-0.5 size-6 shrink-0 text-brand-orange" />
           <div>
-            <p style={{ fontWeight: 800, color: "#E85D04", fontSize: "0.95rem", marginBottom: "4px" }}>
+            <p className="mb-1 text-[0.95rem] font-extrabold text-brand-orange">
               Compte en attente de validation
             </p>
-            <p style={{ color: "#666", fontSize: "0.83rem", lineHeight: 1.5 }}>
+            <p className="text-[0.83rem] leading-relaxed text-gray-500">
               Votre dossier est en cours de vérification. Vous recevrez 200 FCFA de bienvenue dès l'activation.
             </p>
           </div>
@@ -214,47 +132,30 @@ export default function DriverAccueil() {
       )}
 
       {/* Contenu */}
-      <div style={{ padding: "24px" }}>
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "16px",
-        }}>
-          <h3 style={{ fontWeight: 800, fontSize: "1rem", color: C.noir }}>
-            Courses disponibles
-          </h3>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="px-6 pt-6"
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-base font-extrabold text-brand-black">Courses disponibles</h3>
           {!isLoading && (
-            <span style={{
-              background: `${C.orange}15`,
-              color: C.orange,
-              borderRadius: "100px",
-              padding: "4px 12px",
-              fontSize: "0.78rem",
-              fontWeight: 700,
-            }}>
+            <span className="rounded-full bg-brand-orange/10 px-3 py-1 text-[0.78rem] font-bold text-brand-orange">
               {trips.length} disponible{trips.length > 1 ? "s" : ""}
             </span>
           )}
         </div>
 
         {isLoading && (
-          <div style={{ textAlign: "center", color: "#aaa", padding: "48px 0" }}>
-            Chargement...
-          </div>
+          <div className="py-12 text-center text-gray-400">Chargement...</div>
         )}
 
         {!isLoading && trips.length === 0 && (
-          <div style={{
-            textAlign: "center", padding: "48px 24px",
-            background: "#fff", borderRadius: "20px",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          }}>
-            <div style={{ fontSize: "3rem", marginBottom: "16px" }}>⏳</div>
-            <p style={{ fontWeight: 700, color: C.noir, marginBottom: "8px" }}>
-              Aucune course disponible
-            </p>
-            <p style={{ color: "#aaa", fontSize: "0.88rem" }}>
+          <div className="rounded-[20px] bg-white px-6 py-12 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <Hourglass className="mx-auto mb-4 size-12 text-brand-yellow" />
+            <p className="mb-2 font-bold text-brand-black">Aucune course disponible</p>
+            <p className="text-[0.88rem] text-gray-400">
               Les nouvelles demandes apparaîtront ici en temps réel.
             </p>
           </div>
@@ -263,61 +164,39 @@ export default function DriverAccueil() {
         {trips.map(trip => {
           const alreadySent = sentOffers.has(trip.id)
           return (
-            <div key={trip.id} style={{
-              background: "#fff",
-              borderRadius: "20px",
-              padding: "20px",
-              marginBottom: "14px",
-              boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-              border: alreadySent ? `1px solid ${C.vert}40` : "1px solid transparent",
-            }}>
+            <div key={trip.id} className={`mb-3.5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ${alreadySent ? "border border-brand-green/25" : "border border-transparent"}`}>
               {/* Trajet */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "14px" }}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                  <span style={{ fontSize: "1rem", marginTop: "1px" }}>📍</span>
+              <div className="mb-3.5 flex flex-col gap-2">
+                <div className="flex items-start gap-2.5">
+                  <MapPin className="mt-0.5 size-4 shrink-0 text-brand-yellow" />
                   <div>
-                    <p style={{ fontSize: "0.75rem", color: "#aaa", marginBottom: "1px" }}>Départ</p>
-                    <p style={{ fontWeight: 600, fontSize: "0.92rem", color: C.noir }}>{trip.departureAddress}</p>
+                    <p className="text-[0.75rem] text-gray-400">Départ</p>
+                    <p className="text-[0.92rem] font-semibold text-brand-black">{trip.departureAddress}</p>
                   </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                  <span style={{ fontSize: "1rem", marginTop: "1px" }}>🏁</span>
+                <div className="flex items-start gap-2.5">
+                  <Flag className="mt-0.5 size-4 shrink-0 text-brand-green" />
                   <div>
-                    <p style={{ fontSize: "0.75rem", color: "#aaa", marginBottom: "1px" }}>Destination</p>
-                    <p style={{ fontWeight: 600, fontSize: "0.92rem", color: C.noir }}>{trip.destinationAddress}</p>
+                    <p className="text-[0.75rem] text-gray-400">Destination</p>
+                    <p className="text-[0.92rem] font-semibold text-brand-black">{trip.destinationAddress}</p>
                   </div>
                 </div>
               </div>
 
               {/* Prix + bouton */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                background: C.fond,
-                borderRadius: "12px",
-                padding: "12px 16px",
-              }}>
+              <div className="flex items-center justify-between rounded-xl bg-brand-bg px-4 py-3">
                 <div>
-                  <p style={{ fontSize: "0.75rem", color: "#aaa" }}>Prix client</p>
-                  <p style={{ fontWeight: 900, fontSize: "1.1rem", color: C.noir }}>
-                    {trip.clientPrice} FCFA
-                  </p>
+                  <p className="text-[0.75rem] text-gray-400">Prix client</p>
+                  <p className="text-[1.1rem] font-black text-brand-black">{trip.clientPrice} FCFA</p>
                 </div>
                 <Button
                   onClick={() => !alreadySent && handleOffre(trip)}
                   disabled={alreadySent}
-                  style={{
-                    background: alreadySent ? C.vert : C.jaune,
-                    color: alreadySent ? "#fff" : C.noir,
-                    fontWeight: 800,
-                    fontSize: "13px",
-                    padding: "8px 18px",
-                    height: "auto",
-                    borderRadius: "100px",
-                    cursor: alreadySent ? "default" : "pointer",
-                    opacity: 1,
-                  }}
+                  className={`h-auto rounded-full px-[18px] py-2 text-[13px] font-extrabold ${
+                    alreadySent
+                      ? "bg-brand-green text-white"
+                      : "bg-brand-yellow text-brand-black hover:bg-brand-yellow/90"
+                  }`}
                 >
                   {alreadySent ? "✓ Offre envoyée" : "Accepter ce prix"}
                 </Button>
@@ -325,7 +204,7 @@ export default function DriverAccueil() {
             </div>
           )
         })}
-      </div>
+      </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
     </div>

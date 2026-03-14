@@ -4,14 +4,9 @@ import { useAuthStore } from "../store/authStore"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { motion, AnimatePresence } from "motion/react"
+import { Bike, User, Phone, IdCard } from "lucide-react"
 import type { UserRole } from "../types"
-
-const C = {
-  jaune:  "#F5C518",
-  noir:   "#1A1A2E",
-  orange: "#E85D04",
-  vert:   "#06D6A0",
-}
 
 export default function Inscription() {
   const navigate                = useNavigate()
@@ -75,63 +70,44 @@ export default function Inscription() {
   }
 
   return (
-    <div style={{
-      minHeight: "100svh",
-      background: `linear-gradient(135deg, ${C.noir} 0%, #0d0d1a 55%, #16213e 100%)`,
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "24px", fontFamily: "Inter, sans-serif",
-    }}>
-      <div style={{
-        position: "fixed", top: "-100px", right: "-80px",
-        width: "400px", height: "400px", borderRadius: "50%",
-        background: `radial-gradient(circle, ${C.jaune}20 0%, transparent 70%)`,
-        pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "fixed", bottom: "-60px", left: "-60px",
-        width: "300px", height: "300px", borderRadius: "50%",
-        background: `radial-gradient(circle, ${C.orange}18 0%, transparent 70%)`,
-        pointerEvents: "none",
-      }} />
+    <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-brand-black via-brand-dark to-brand-navy p-6 font-sans">
+      {/* Decorative blobs */}
+      <div className="pointer-events-none fixed -top-[100px] -right-20 size-[400px] rounded-full bg-[radial-gradient(circle,_var(--brand-yellow)20_0%,_transparent_70%)]" />
+      <div className="pointer-events-none fixed -bottom-[60px] -left-[60px] size-[300px] rounded-full bg-[radial-gradient(circle,_var(--brand-orange)18_0%,_transparent_70%)]" />
 
-      <div style={{
-        background: "rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.1)",
-        borderRadius: "24px",
-        padding: "clamp(32px, 5vw, 48px)",
-        width: "100%", maxWidth: "420px",
-        backdropFilter: "blur(20px)",
-        animation: "fadeUp 0.5s ease both",
-      }}>
-
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="glass-dark w-full max-w-[420px] rounded-3xl p-[clamp(32px,5vw,48px)]"
+      >
         {/* Logo */}
         <div
           onClick={() => navigate("/")}
-          style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer", marginBottom: "28px" }}
+          className="mb-7 flex cursor-pointer items-center gap-2.5"
         >
-          <div style={{
-            width: "36px", height: "36px", borderRadius: "10px",
-            background: C.jaune, display: "flex",
-            alignItems: "center", justifyContent: "center", fontSize: "18px",
-          }}>🏍️</div>
-          <span style={{ color: "#fff", fontWeight: 900, fontSize: "1.15rem" }}>
-            Zem<span style={{ color: C.jaune }}>Connect</span>
+          <div className="flex size-9 items-center justify-center rounded-[10px] bg-brand-yellow">
+            <Bike className="size-5 text-brand-black" />
+          </div>
+          <span className="text-lg font-black text-white">
+            Zem<span className="text-brand-yellow">Connect</span>
           </span>
         </div>
 
         {/* Titre + stepper conducteur */}
-        <div style={{ marginBottom: "24px" }}>
-          <h1 style={{ color: "#fff", fontWeight: 800, fontSize: "1.5rem", marginBottom: "6px" }}>
+        <div className="mb-6">
+          <h1 className="mb-1.5 text-2xl font-extrabold text-white">
             {step === 1 ? "Créer un compte" : "Infos conducteur"}
           </h1>
           {role === "conducteur" && (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "10px" }}>
+            <div className="mt-2.5 flex items-center gap-2">
               {[1, 2].map(s => (
-                <div key={s} style={{
-                  height: "4px", flex: 1, borderRadius: "100px",
-                  background: step >= s ? C.jaune : "rgba(255,255,255,0.15)",
-                  transition: "background 0.3s",
-                }} />
+                <div
+                  key={s}
+                  className={`h-1 flex-1 rounded-full transition-colors ${
+                    step >= s ? "bg-brand-yellow" : "bg-white/15"
+                  }`}
+                />
               ))}
             </div>
           )}
@@ -139,237 +115,176 @@ export default function Inscription() {
 
         {/* Erreur */}
         {error && (
-          <div style={{
-            background: "rgba(239,35,60,0.12)",
-            border: "1px solid rgba(239,35,60,0.3)",
-            color: "#ff6b7a", borderRadius: "10px",
-            padding: "12px 16px", fontSize: "0.88rem",
-            marginBottom: "20px",
-          }}>
+          <div className="mb-5 rounded-[10px] border border-red-500/30 bg-red-500/12 px-4 py-3 text-[0.88rem] text-[#ff6b7a]">
             {error}
           </div>
         )}
 
-        {/* ÉTAPE 1 */}
-        {step === 1 && (
-          <>
-            {/* Sélection rôle */}
-            <div style={{ marginBottom: "24px" }}>
-              <Label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", fontWeight: 600, marginBottom: "10px", display: "block" }}>
-                Je suis
-              </Label>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-                {[
-                  { key: "client",     icon: "👤", label: "Client" },
-                  { key: "conducteur", icon: "🏍️", label: "Conducteur" },
-                ].map(({ key, icon, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => setRole(key as UserRole)}
-                    style={{
-                      background: role === key ? C.jaune : "rgba(255,255,255,0.07)",
-                      border: role === key ? "none" : "1px solid rgba(255,255,255,0.12)",
-                      borderRadius: "12px", padding: "14px",
-                      cursor: "pointer", display: "flex",
-                      flexDirection: "column", alignItems: "center", gap: "6px",
-                      transition: "all 0.15s",
-                    }}
-                  >
-                    <span style={{ fontSize: "1.6rem" }}>{icon}</span>
-                    <span style={{
-                      fontWeight: 700, fontSize: "0.88rem",
-                      color: role === key ? C.noir : "rgba(255,255,255,0.7)",
-                      fontFamily: "Inter, sans-serif",
-                    }}>{label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Champs étape 1 */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "18px", marginBottom: "24px" }}>
-
-              <div>
-                <Label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", fontWeight: 600, marginBottom: "8px", display: "block" }}>
-                  Numéro de téléphone
+        <AnimatePresence mode="wait">
+          {/* ÉTAPE 1 */}
+          {step === 1 && (
+            <motion.div
+              key="step1"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.25 }}
+            >
+              {/* Sélection rôle */}
+              <div className="mb-6">
+                <Label className="mb-2.5 block text-[0.88rem] font-semibold text-white/70">
+                  Je suis
                 </Label>
-                <div style={{ position: "relative" }}>
-                  <div style={{
-                    position: "absolute", left: "14px", top: "50%",
-                    transform: "translateY(-50%)",
-                    color: "rgba(255,255,255,0.4)", fontSize: "0.9rem",
-                    fontWeight: 600, userSelect: "none" as const,
-                  }}>
-                    🇧🇯 +229
+                <div className="grid grid-cols-2 gap-2.5">
+                  {[
+                    { key: "client",     icon: <User className="size-7" />,   label: "Client" },
+                    { key: "conducteur", icon: <Bike className="size-7" />,   label: "Conducteur" },
+                  ].map(({ key, icon, label }) => (
+                    <button
+                      key={key}
+                      onClick={() => setRole(key as UserRole)}
+                      className={`flex min-h-[60px] cursor-pointer flex-col items-center gap-1.5 rounded-xl p-3.5 transition-all ${
+                        role === key
+                          ? "border-none bg-brand-yellow text-brand-black"
+                          : "border border-white/12 bg-white/7 text-white/70"
+                      }`}
+                    >
+                      {icon}
+                      <span className="text-[0.88rem] font-bold">{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Champs étape 1 */}
+              <div className="mb-6 flex flex-col gap-[18px]">
+                <div>
+                  <Label className="mb-2 block text-[0.88rem] font-semibold text-white/70">
+                    Numéro de téléphone
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute left-3.5 top-1/2 flex -translate-y-1/2 items-center gap-1 text-[0.9rem] font-semibold text-white/40 select-none">
+                      <Phone className="size-3.5" /> +229
+                    </div>
+                    <Input
+                      type="tel"
+                      placeholder="01 00 00 00 00"
+                      value={phone}
+                      onChange={e => setPhone(e.target.value)}
+                      className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 pl-[90px] text-[0.95rem] text-white"
+                    />
                   </div>
+                </div>
+
+                <div>
+                  <Label className="mb-2 block text-[0.88rem] font-semibold text-white/70">
+                    Nom complet
+                  </Label>
                   <Input
-                    type="tel"
-                    placeholder="01 00 00 00 00"
-                    value={phone}
-                    onChange={e => setPhone(e.target.value)}
-                    style={{
-                      background: "rgba(255,255,255,0.07)",
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      color: "#fff", borderRadius: "10px",
-                      height: "48px", fontSize: "0.95rem",
-                      paddingLeft: "90px",
-                    }}
+                    type="text"
+                    placeholder="Ex: Koffi Mensah"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 text-[0.95rem] text-white"
+                  />
+                </div>
+
+                <div>
+                  <Label className="mb-2 block text-[0.88rem] font-semibold text-white/70">
+                    Mot de passe
+                  </Label>
+                  <Input
+                    type="password"
+                    placeholder="8 caractères minimum"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 text-[0.95rem] text-white"
+                  />
+                </div>
+
+                <div>
+                  <Label className="mb-2 block text-[0.88rem] font-semibold text-white/70">
+                    Confirmer le mot de passe
+                  </Label>
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    value={confirm}
+                    onChange={e => setConfirm(e.target.value)}
+                    className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 text-[0.95rem] text-white"
                   />
                 </div>
               </div>
 
-              <div>
-                <Label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", fontWeight: 600, marginBottom: "8px", display: "block" }}>
-                  Nom complet
-                </Label>
-                <Input
-                  type="text"
-                  placeholder="Ex: Koffi Mensah"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  style={{
-                    background: "rgba(255,255,255,0.07)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "#fff", borderRadius: "10px",
-                    height: "48px", fontSize: "0.95rem",
-                  }}
-                />
-              </div>
-
-              <div>
-                <Label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", fontWeight: 600, marginBottom: "8px", display: "block" }}>
-                  Mot de passe
-                </Label>
-                <Input
-                  type="password"
-                  placeholder="8 caractères minimum"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  style={{
-                    background: "rgba(255,255,255,0.07)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "#fff", borderRadius: "10px",
-                    height: "48px", fontSize: "0.95rem",
-                  }}
-                />
-              </div>
-
-              <div>
-                <Label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", fontWeight: 600, marginBottom: "8px", display: "block" }}>
-                  Confirmer le mot de passe
-                </Label>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  value={confirm}
-                  onChange={e => setConfirm(e.target.value)}
-                  style={{
-                    background: "rgba(255,255,255,0.07)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "#fff", borderRadius: "10px",
-                    height: "48px", fontSize: "0.95rem",
-                  }}
-                />
-              </div>
-            </div>
-
-            <Button
-              onClick={validerEtape1}
-              disabled={isLoading}
-              style={{
-                width: "100%", background: C.jaune, color: C.noir,
-                fontWeight: 800, fontSize: "16px", height: "48px",
-                borderRadius: "100px",
-                opacity: isLoading ? 0.7 : 1,
-                cursor: isLoading ? "not-allowed" : "pointer",
-              }}
-            >
-              {role === "conducteur" ? "Continuer →" : isLoading ? "Création..." : "Créer mon compte"}
-            </Button>
-          </>
-        )}
-
-        {/* ÉTAPE 2 — Conducteur uniquement */}
-        {step === 2 && (
-          <>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.88rem", marginBottom: "24px" }}>
-              Ces informations seront vérifiées par notre équipe avant activation de votre compte.
-            </p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "28px" }}>
-              <div>
-                <Label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", fontWeight: 600, marginBottom: "8px", display: "block" }}>
-                  Numéro de plaque
-                </Label>
-                <Input
-                  type="text"
-                  placeholder="Ex: BJ 1234 AB"
-                  value={plaque}
-                  onChange={e => setPlaque(e.target.value)}
-                  style={{
-                    background: "rgba(255,255,255,0.07)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "#fff", borderRadius: "10px",
-                    height: "48px", fontSize: "0.95rem",
-                  }}
-                />
-              </div>
-            </div>
-
-            <div style={{ display: "flex", gap: "10px" }}>
               <Button
-                onClick={() => { setStep(1); setError("") }}
-                style={{
-                  flex: 1, background: "rgba(255,255,255,0.08)",
-                  color: "rgba(255,255,255,0.7)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  fontWeight: 700, height: "48px", borderRadius: "100px",
-                }}
-              >
-                ← Retour
-              </Button>
-              <Button
-                onClick={handleEtape2}
+                onClick={validerEtape1}
                 disabled={isLoading}
-                style={{
-                  flex: 2, background: C.jaune, color: C.noir,
-                  fontWeight: 800, fontSize: "15px", height: "48px",
-                  borderRadius: "100px",
-                  opacity: isLoading ? 0.7 : 1,
-                  cursor: isLoading ? "not-allowed" : "pointer",
-                }}
+                className="h-12 w-full rounded-full bg-brand-yellow text-base font-extrabold text-brand-black hover:bg-brand-yellow/90 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isLoading ? "Création..." : "Finaliser l'inscription"}
+                {role === "conducteur" ? "Continuer →" : isLoading ? "Création..." : "Créer mon compte"}
               </Button>
-            </div>
-          </>
-        )}
 
-        {step === 1 && (
-          <p style={{ textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "0.88rem", marginTop: "20px" }}>
-            Déjà un compte ?{" "}
-            <span
-              onClick={() => navigate("/login")}
-              style={{ color: C.jaune, fontWeight: 700, cursor: "pointer", textDecoration: "underline" }}
+              <p className="mt-5 text-center text-[0.88rem] text-white/40">
+                Déjà un compte ?{" "}
+                <span
+                  onClick={() => navigate("/login")}
+                  className="cursor-pointer font-bold text-brand-yellow underline"
+                >
+                  Se connecter
+                </span>
+              </p>
+            </motion.div>
+          )}
+
+          {/* ÉTAPE 2 — Conducteur uniquement */}
+          {step === 2 && (
+            <motion.div
+              key="step2"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.25 }}
             >
-              Se connecter
-            </span>
-          </p>
-        )}
-      </div>
+              <p className="mb-6 text-[0.88rem] text-white/50">
+                Ces informations seront vérifiées par notre équipe avant activation de votre compte.
+              </p>
 
-      <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        input::placeholder { color: rgba(255,255,255,0.25) !important; }
-        input:focus {
-          border-color: ${C.jaune}80 !important;
-          outline: none !important;
-          box-shadow: 0 0 0 3px ${C.jaune}20 !important;
-        }
-      `}</style>
+              <div className="mb-7 flex flex-col gap-5">
+                <div>
+                  <Label className="mb-2 block text-[0.88rem] font-semibold text-white/70">
+                    <span className="inline-flex items-center gap-1.5">
+                      <IdCard className="size-4" /> Numéro de plaque
+                    </span>
+                  </Label>
+                  <Input
+                    type="text"
+                    placeholder="Ex: BJ 1234 AB"
+                    value={plaque}
+                    onChange={e => setPlaque(e.target.value)}
+                    className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 text-[0.95rem] text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2.5">
+                <Button
+                  onClick={() => { setStep(1); setError("") }}
+                  className="h-12 flex-1 rounded-full border border-white/12 bg-white/8 font-bold text-white/70 hover:bg-white/12"
+                >
+                  ← Retour
+                </Button>
+                <Button
+                  onClick={handleEtape2}
+                  disabled={isLoading}
+                  className="h-12 flex-[2] rounded-full bg-brand-yellow text-[15px] font-extrabold text-brand-black hover:bg-brand-yellow/90 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isLoading ? "Création..." : "Finaliser l'inscription"}
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   )
 }
