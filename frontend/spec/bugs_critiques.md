@@ -7,12 +7,11 @@ Problème : bouton "Connexion" navigue vers /inscription au lieu de /login
 Solution : inverser navigate() aux lignes L58 et L64
 Impact : bloque les utilisateurs existants
 
-## BUG 2 — Hook 4 anti-doublon crédit bienvenue 🔴 CRITIQUE
+## BUG 2 — Hook 4 anti-doublon crédit bienvenue ✅ COMPLÉTÉ
 Fichier : backend/pb_hooks/main.pb.js
 Problème : hook vérifie conducteur_verifie = true sur tout update
   Si autre champ mis à jour → re-crédit possible
-Solution : vérifier transaction note="bienvenue" inexistante avant crédit
-  (voir spec/hooks.md Hook 4 pour le code exact)
+Solution : vérifier transaction reference="bienvenue" inexistante avant crédit
 Impact : financier direct — argent crédité en double
 
 ## BUG 3 — VITE_PB_URL non configuré Cloudflare Pages 🔴 CRITIQUE
@@ -21,12 +20,10 @@ Problème : app production pointe sur localhost:8090
 Solution : ajouter VITE_PB_URL = https://zem-connect2-pb.fly.dev
 Impact : app non fonctionnelle en production
 
-## BUG 4 — Hook 3 calcul totalRating incorrect 🔴 CRITIQUE
+## BUG 4 — Hook 3 calcul totalRating incorrect ✅ COMPLÉTÉ
 Fichier : backend/pb_hooks/main.pb.js
-Problème : calcul exclut la nouvelle notation du filtre puis la rajoute
-  manuellement — logique fragile, totalRating peut être incorrect
-Solution : inclure toutes les notations dans le filtre et calculer directement
-  (voir spec/hooks.md Hook 3 pour le code exact)
+Problème : calcul basé sur champs stockés potentiellement corrompus
+Solution : recalcul depuis toutes les notations en BD (findRecordsByFilter)
 Impact : notes conducteurs incorrectes
 
 ## BUG 5 — DriverAccueil bouton non désactivé visuellement 🟡 MOYEN
@@ -58,3 +55,6 @@ Impact : incohérence visuelle mineure
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v2.0 — ajout BUG 4 totalRating, réorganisation par priorité,
   bonus bienvenue corrigé à 250 FCFA
+- [2026-03-14] v3.0 — BUG 1 corrigé (LandingPage navigate)
+- [2026-03-14] v3.1 — BUG 4 corrigé (Hook 4 recalcul depuis BD)
+- [2026-03-14] v3.2 — BUG 2 corrigé (Hook 5 anti-doublon reference=bienvenue)
