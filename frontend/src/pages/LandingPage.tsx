@@ -55,13 +55,13 @@ function Navbar() {
       </div>
       <div className="flex items-center gap-2">
         <button
-          onClick={() => navigate("/inscription")}
+          onClick={() => navigate("/login")}
           className="cursor-pointer rounded-lg border-none bg-transparent px-4 py-2 text-[15px] font-semibold text-white/80 transition-colors hover:text-white"
         >
           Connexion
         </button>
         <Button
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/inscription")}
           className="h-auto rounded-full bg-brand-yellow px-5 py-2 text-sm font-extrabold text-brand-black hover:bg-brand-yellow/90"
         >
           S'inscrire

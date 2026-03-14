@@ -1,7 +1,7 @@
 # BUGS CRITIQUES — SPEC
 *Version 2.0 — 2026-03-14*
 
-## BUG 1 — LandingPage boutons inversés 🔴 CRITIQUE
+## BUG 1 — LandingPage boutons inversés ✅ COMPLÉTÉ
 Fichier : src/pages/LandingPage.tsx
 Problème : bouton "Connexion" navigue vers /inscription au lieu de /login
 Solution : inverser navigate() aux lignes L58 et L64
