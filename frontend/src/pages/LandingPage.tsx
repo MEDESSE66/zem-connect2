@@ -1,3 +1,4 @@
+import React from "react"
 import { useNavigate } from "react-router-dom"
 import { motion, useInView } from "motion/react"
 import { useRef } from "react"
@@ -295,7 +296,6 @@ function Footer() {
 }
 
 /* ─── Page ──────────────────────────────────────────── */
-import React from "react"
 
 export default function LandingPage() {
   return (

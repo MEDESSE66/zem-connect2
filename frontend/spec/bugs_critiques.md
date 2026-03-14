@@ -26,22 +26,17 @@ Problème : calcul basé sur champs stockés potentiellement corrompus
 Solution : recalcul depuis toutes les notations en BD (findRecordsByFilter)
 Impact : notes conducteurs incorrectes
 
-## BUG 5 — DriverAccueil bouton non désactivé visuellement 🟡 MOYEN
+## BUG 5 — DriverAccueil bouton non désactivé visuellement ✅ COMPLÉTÉ
 Fichier : src/pages/driver/DriverAccueil.tsx
-Problème : conducteur non-vérifié peut cliquer → alert() au clic
-Solution : disabled={!user?.conducteur_verifie} + opacity-50 cursor-not-allowed
-Impact : mauvaise UX
+Solution : disabled={alreadySent || !user?.conducteur_verifie} + style gris + label "Compte non vérifié"
 
-## BUG 6 — import React en bas de LandingPage 🟢 MINEUR
-Fichier : src/pages/LandingPage.tsx ligne L298
-Solution : déplacer import React en haut du fichier
-Impact : fonctionne mais non conventionnel
+## BUG 6 — import React en bas de LandingPage ✅ COMPLÉTÉ
+Fichier : src/pages/LandingPage.tsx
+Solution : import React déplacé ligne 1
 
-## BUG 7 — Police Geist vs Inter 🟢 MINEUR
-Fichier : package.json + index.css
-Problème : Geist installée, Inter définie dans specs
-Solution : choisir l'une et appliquer partout dans index.css
-Impact : incohérence visuelle mineure
+## BUG 7 — Police Geist vs Inter ✅ COMPLÉTÉ
+Fichier : index.css + package.json
+Solution : import Google Fonts Inter, --font-sans mis à jour, package Geist désinstallé
 
 ## Ordre de correction recommandé
 1. BUG 3 (VITE_PB_URL) — 2 minutes, Cloudflare dashboard
@@ -57,4 +52,5 @@ Impact : incohérence visuelle mineure
   bonus bienvenue corrigé à 250 FCFA
 - [2026-03-14] v3.0 — BUG 1 corrigé (LandingPage navigate)
 - [2026-03-14] v3.1 — BUG 4 corrigé (Hook 4 recalcul depuis BD)
-- [2026-03-14] v3.2 — BUG 2 corrigé (Hook 5 anti-doublon reference=bienvenue)
+- [2026-03-14] v3.3 — BUG 5 corrigé (DriverAccueil bouton désactivé visuellement)
+- [2026-03-14] v3.4 — BUG 6 corrigé (import React déplacé en haut LandingPage)

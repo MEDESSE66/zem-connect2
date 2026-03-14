@@ -191,14 +191,16 @@ export default function DriverAccueil() {
                 </div>
                 <Button
                   onClick={() => !alreadySent && handleOffre(trip)}
-                  disabled={alreadySent}
+                  disabled={alreadySent || !user?.conducteur_verifie}
                   className={`h-auto rounded-full px-[18px] py-2 text-[13px] font-extrabold ${
                     alreadySent
                       ? "bg-brand-green text-white"
-                      : "bg-brand-yellow text-brand-black hover:bg-brand-yellow/90"
+                      : !user?.conducteur_verifie
+                        ? "cursor-not-allowed bg-gray-200 text-gray-400"
+                        : "bg-brand-yellow text-brand-black hover:bg-brand-yellow/90"
                   }`}
                 >
-                  {alreadySent ? "✓ Offre envoyée" : "Accepter ce prix"}
+                  {alreadySent ? "✓ Offre envoyée" : !user?.conducteur_verifie ? "Compte non vérifié" : "Accepter ce prix"}
                 </Button>
               </div>
             </div>
