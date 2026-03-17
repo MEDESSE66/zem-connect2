@@ -16,7 +16,7 @@ const NAV_ITEMS = [
 
 const STATUS_CONFIG: Record<string, { label: string; colorClass: string; bgClass: string }> = {
   pending:     { label: "En attente",  colorClass: "text-brand-orange",  bgClass: "bg-brand-orange/10"  },
-  active:      { label: "Active",      colorClass: "text-brand-green",   bgClass: "bg-brand-green/10"   },
+  accepte:     { label: "Acceptée",    colorClass: "text-brand-green",   bgClass: "bg-brand-green/10"   },
   in_progress: { label: "En cours",    colorClass: "text-blue-500",      bgClass: "bg-blue-500/10"      },
   completed:   { label: "Terminée",    colorClass: "text-gray-500",      bgClass: "bg-gray-100"         },
   cancelled:   { label: "Annulée",     colorClass: "text-red-500",       bgClass: "bg-red-500/10"       },
@@ -89,7 +89,7 @@ export default function AdminCourses() {
           {[
             { key: "all",         label: "Toutes" },
             { key: "pending",     label: "En attente" },
-            { key: "active",      label: "Actives" },
+            { key: "accepte",     label: "Acceptées" },
             { key: "in_progress", label: "En cours" },
             { key: "completed",   label: "Terminées" },
           ].map(({ key, label }) => (

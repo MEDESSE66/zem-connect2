@@ -16,13 +16,12 @@
 ⚠️ MANQUANT : coordonnées GPS (departureLat/Lng/destinationLat/Lng = 0)
 - Post-MVP : intégrer navigator.geolocation ou API autocomplete adresses
 
-## ClientMesCourses (src/pages/client/ClientMesCourses.tsx) ✅ COMPLÉTÉ — annulation manquante
+## ClientMesCourses (src/pages/client/ClientMesCourses.tsx) ✅ COMPLÉTÉ
 - Liste toutes les courses du client
 - Pour chaque course "pending" : charge et affiche les offres reçues
 - Realtime subscriptions : trips + offres
-- acceptOffre() : update offre (est_choisi=true) + trip (statut=accepte, conducteur=id)
-⚠️ MANQUANT : bouton "Annuler la course" pour trips en statut pending
-  Solution : pb.collection("trips").update(id, { status: "cancelled" })
+- acceptOffre() : update offre (est_choisi=true) + trip (statut="accepte", conducteur=id)
+- annulerCourse() : update trip (statut="cancelled") disponible si pending ou accepte
 
 ## ClientProfil (src/pages/client/ClientProfil.tsx) ✅ COMPLÉTÉ
 - Avatar initiales
@@ -33,11 +32,16 @@
 ## Flux course client complet
 1. Crée course → statut "pending"
 2. Voit les offres des conducteurs en temps réel
-3. Accepte une offre → statut "accepte"
+3. Accepte une offre → statut exact : "accepte"
 4. Course démarre → statut "in_progress" (déclenché par conducteur)
 5. Course terminée → statut "completed" (déclenché par conducteur)
 6. Notation conducteur → post-MVP
 
 ## Règles
 - Un client ne peut pas annuler une course déjà "in_progress"
-- Un client peut annuler une course "pending" ou "accepte"
+- Un client peut annuler une course "pending" ou "accepte" (avant démarrage)
+
+## Changelog
+- [2026-03-14] v1.0 — création initiale
+- [2026-03-14] v1.1 — ajout bouton annulerCourse dans ClientMesCourses
+- [2026-03-17] v2.0 — alignement statut des courses acceptées sur la valeur exacte "accepte" (au lieu de "active").

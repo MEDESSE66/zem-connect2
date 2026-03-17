@@ -2,7 +2,7 @@
 export type UserRole = "client" | "conducteur" | "admin"
 
 // Statuts de course
-export type TripStatus = "pending" | "active" | "in_progress" | "completed" | "cancelled" | "expired"
+export type TripStatus = "pending" | "accepte" | "in_progress" | "completed" | "cancelled" | "expired"
 
 // Statuts d'offre
 export type OffreStatus = "pending" | "accepted" | "rejected" | "cancelled"

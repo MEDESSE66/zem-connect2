@@ -5,7 +5,7 @@ import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
-import { Home, Bike, ArrowLeft, MapPin, Flag, Hourglass } from "lucide-react"
+import { Home, Bike, ArrowLeft, MapPin, Flag, Hourglass, XCircle } from "lucide-react"
 import type { Trip, Offre } from "../../types"
 
 const NAV_ITEMS = [
@@ -15,7 +15,7 @@ const NAV_ITEMS = [
 
 const STATUS_CONFIG: Record<string, { label: string; colorClass: string; bgClass: string }> = {
   pending:     { label: "En attente",  colorClass: "text-brand-orange",  bgClass: "bg-brand-orange/10"     },
-  active:      { label: "Active",      colorClass: "text-brand-green",   bgClass: "bg-brand-green/10"      },
+  accepte:     { label: "Acceptée",    colorClass: "text-brand-green",   bgClass: "bg-brand-green/10"      },
   in_progress: { label: "En cours",    colorClass: "text-blue-500",      bgClass: "bg-blue-500/10"         },
   completed:   { label: "Terminée",    colorClass: "text-gray-500",      bgClass: "bg-gray-100"            },
   cancelled:   { label: "Annulée",     colorClass: "text-red-500",       bgClass: "bg-red-500/10"          },
@@ -29,6 +29,7 @@ export default function ClientMesCourses() {
   const [offres, setOffres]               = useState<Record<string, Offre[]>>({})
   const [isLoading, setIsLoading]         = useState(true)
   const [isAccepting, setIsAccepting]     = useState<string | null>(null)
+  const [isCancelling, setIsCancelling]   = useState<string | null>(null)
 
   useEffect(() => {
     if (!user?.id) return
@@ -93,7 +94,7 @@ export default function ClientMesCourses() {
     try {
       await pb.collection("offres").update(offre.id, { status: "accepted" }, { requestKey: null })
       await pb.collection("trips").update(offre.trip, {
-        status: "active",
+        status: "accepte",
         conducteur: offre.conducteur,
         finalPrice: offre.proposedPrice,
       }, { requestKey: null })
@@ -102,6 +103,19 @@ export default function ClientMesCourses() {
       alert("Erreur lors de l'acceptation de l'offre.")
     } finally {
       setIsAccepting(null)
+    }
+  }
+
+  const annulerCourse = async (tripId: string) => {
+    if (!window.confirm("Annuler cette course ?")) return
+    setIsCancelling(tripId)
+    try {
+      await pb.collection("trips").update(tripId, { status: "cancelled" }, { requestKey: null })
+    } catch (err) {
+      console.error("Erreur annulation course", err)
+      alert("Erreur lors de l'annulation.")
+    } finally {
+      setIsCancelling(null)
     }
   }
 
@@ -216,6 +230,18 @@ export default function ClientMesCourses() {
                 <p className="flex items-center justify-center gap-1.5 py-2 text-center text-[0.82rem] text-gray-400">
                   <Hourglass className="size-3.5" /> En attente d'offres des conducteurs...
                 </p>
+              )}
+
+              {/* Bouton Annuler — visible uniquement si pending ou accepte */}
+              {(trip.status === "pending" || trip.status === "accepte") && (
+                <button
+                  onClick={() => annulerCourse(trip.id)}
+                  disabled={isCancelling === trip.id}
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-[10px] border border-red-500/20 bg-red-500/6 py-2.5 text-[0.85rem] font-bold text-red-500 transition-colors hover:bg-red-500/12 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <XCircle className="size-4" />
+                  {isCancelling === trip.id ? "Annulation..." : "Annuler la course"}
+                </button>
               )}
             </div>
           )
