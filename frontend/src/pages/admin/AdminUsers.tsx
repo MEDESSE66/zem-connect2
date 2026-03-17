@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
+import { toast } from "sonner"
 import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
@@ -30,6 +31,12 @@ export default function AdminUsers() {
   const [searchQuery, setSearchQuery] = useState("")
   const [suspendingId, setSuspendingId] = useState<string | null>(null)
   const [validatingId, setValidatingId] = useState<string | null>(null)
+
+  const [showRechargeDialog, setShowRechargeDialog] = useState(false)
+  const [rechargeTargetId, setRechargeTargetId] = useState<string | null>(null)
+  const [rechargeTargetName, setRechargeTargetName] = useState("")
+  const [rechargeAmount, setRechargeAmount] = useState<number | "">("")
+  const [isRecharging, setIsRecharging] = useState(false)
 
   useEffect(() => {
     if (!user?.id) return
@@ -103,6 +110,44 @@ export default function AdminUsers() {
     
     return true
   })
+
+  const openRechargeDialog = (user: User) => {
+    setRechargeTargetId(user.id)
+    setRechargeTargetName(user.name || "Conducteur")
+    setRechargeAmount("")
+    setShowRechargeDialog(true)
+  }
+
+  const handleRecharge = async () => {
+    if (!rechargeTargetId || !rechargeAmount || Number(rechargeAmount) < 100) return
+    setIsRecharging(true)
+    
+    const amountNum = Number(rechargeAmount)
+
+    try {
+      const userToUpdate = users.find(u => u.id === rechargeTargetId)
+      if (!userToUpdate) return
+      
+      const newBalance = (userToUpdate.walletBalance ?? 0) + amountNum
+      await pb.collection("users").update(rechargeTargetId, { walletBalance: newBalance }, { requestKey: null })
+
+      await pb.collection("transactions").create({
+        user: rechargeTargetId,
+        type: "recharge",
+        amount: amountNum,
+        reference: "recharge_admin",
+        status: "completed"
+      }, { requestKey: null })
+
+      toast.success(`Wallet rechargé — ${amountNum} FCFA crédités`)
+      setShowRechargeDialog(false)
+    } catch (err) {
+      console.error("Erreur recharge wallet", err)
+      toast.error("Erreur lors de la recharge manuelle.")
+    } finally {
+      setIsRecharging(false)
+    }
+  }
 
   return (
     <div className="min-h-svh bg-brand-bg pb-20 font-sans">
@@ -220,6 +265,17 @@ export default function AdminUsers() {
                 </div>
               )}
 
+              {/* Recharge manuelle conducteur */}
+              {user.role === "conducteur" && (
+                <Button
+                  onClick={() => openRechargeDialog(user)}
+                  variant="outline"
+                  className="mb-3.5 h-[38px] w-full rounded-[10px] border-brand-yellow/30 bg-brand-yellow/10 text-sm font-bold text-brand-black hover:bg-brand-yellow/20"
+                >
+                  Recharger le wallet
+                </Button>
+              )}
+
               {/* Action */}
               <Button
                 onClick={() => toggleSuspend(user)}
@@ -242,6 +298,48 @@ export default function AdminUsers() {
       </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
+
+      {/* Dialog de recharge manuelle */}
+      {showRechargeDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-sm rounded-[24px] bg-white p-6 shadow-xl">
+            <h3 className="mb-2 text-center text-lg font-extrabold text-brand-black">Recharger le wallet</h3>
+            <p className="mb-5 text-center text-sm font-medium text-gray-500">
+              Conducteur : <span className="font-bold text-brand-black">{rechargeTargetName}</span>
+            </p>
+            
+            <label className="mb-2 block text-[0.85rem] font-bold text-gray-600">
+              Montant à créditer (FCFA)
+            </label>
+            <input
+              type="number"
+              min="100"
+              placeholder="Ex: 500"
+              value={rechargeAmount}
+              onChange={(e) => setRechargeAmount(e.target.value === "" ? "" : Number(e.target.value))}
+              className="mb-6 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50/50 px-4 py-3 text-[0.95rem] font-semibold text-brand-black outline-none focus:border-brand-yellow focus:bg-white"
+            />
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowRechargeDialog(false)}
+                className="flex-1 rounded-xl font-bold"
+                disabled={isRecharging}
+              >
+                Annuler
+              </Button>
+              <Button
+                onClick={handleRecharge}
+                disabled={isRecharging || !rechargeAmount || Number(rechargeAmount) < 100}
+                className="flex-1 rounded-xl bg-brand-yellow font-extrabold text-brand-black hover:bg-brand-yellow/90"
+              >
+                {isRecharging ? "Envoi..." : "Confirmer"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

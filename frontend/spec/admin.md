@@ -40,7 +40,7 @@ Page de configuration des paramètres financiers :
 - Route : /admin/settings
 
 ## Fonctionnalités post-MVP
-- Recharge wallet conducteur manuelle
+- Recharge wallet conducteur manuelle ✅ COMPLÉTÉ
 - Export données CSV
 - Statistiques avec graphiques
 - Simulateur gains conducteur (données réelles)
@@ -52,3 +52,4 @@ Page de configuration des paramètres financiers :
   pour prix configurables
 - [2026-03-14] v2.1 — implémentation de la barre de recherche dans AdminUsers
 - [2026-03-17] v3.0 — AdminLitiges : filtre statut et realtime ajoutés. AdminStats, AdminUsers, AdminCourses enrichis en realtime. AdminSettings : noms champs alignés au backend.
+- [2026-03-17] v3.1 — Ajout de la recharge manuelle du wallet conducteur dans AdminUsers. ✅ COMPLÉTÉ
