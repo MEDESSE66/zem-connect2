@@ -17,12 +17,12 @@
   → placeholder : "Rechercher par nom ou numéro..."
 - toggleSuspend() : suspend ou réactive
 - validateConducteur() : conducteur_verifie = true → déclenche hook 250 FCFA
-- Limitation MVP : max 100 utilisateurs (pagination post-MVP)
+- Pagination AdminUsers : non applicable — recherche frontend incompatible, limite 100
 - realtime ✅ COMPLÉTÉ
 
 ## AdminCourses (src/pages/admin/AdminCourses.tsx) ✅ COMPLÉTÉ
-- Liste 100 trips, filtre par statut
-- Limitation MVP : pas de pagination, pas d'actions admin
+- Pagination AdminCourses ✅ COMPLÉTÉ
+- filtre par statut
 - realtime ✅ COMPLÉTÉ
 
 ## AdminLitiges (src/pages/admin/AdminLitiges.tsx) ✅ COMPLÉTÉ
@@ -44,7 +44,6 @@ Page de configuration des paramètres financiers :
 - Export données CSV
 - Statistiques avec graphiques
 - Simulateur gains conducteur (données réelles)
-- Pagination utilisateurs et courses
 
 ## Changelog
 - [2026-03-14] v1.0 — création initiale
@@ -53,3 +52,4 @@ Page de configuration des paramètres financiers :
 - [2026-03-14] v2.1 — implémentation de la barre de recherche dans AdminUsers
 - [2026-03-17] v3.0 — AdminLitiges : filtre statut et realtime ajoutés. AdminStats, AdminUsers, AdminCourses enrichis en realtime. AdminSettings : noms champs alignés au backend.
 - [2026-03-17] v3.1 — Ajout de la recharge manuelle du wallet conducteur dans AdminUsers. ✅ COMPLÉTÉ
+- [2026-03-17] v3.2 — Pagination AdminUsers et AdminCourses (20 items par page) ✅ COMPLÉTÉ

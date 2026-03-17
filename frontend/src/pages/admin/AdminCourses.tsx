@@ -30,15 +30,20 @@ export default function AdminCourses() {
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter]       = useState<string>("all")
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const PAGE_SIZE = 20
+
   useEffect(() => {
     if (!user?.id) return
 
     const loadTrips = () => {
-      pb.collection("trips").getList(1, 100, {
+      pb.collection("trips").getList(currentPage, PAGE_SIZE, {
         sort: "-created",
         requestKey: null,
       }).then(r => {
         setTrips(r.items as unknown as Trip[])
+        setTotalPages(Math.ceil(r.totalItems / PAGE_SIZE))
       }).finally(() => setIsLoading(false))
     }
 
@@ -57,7 +62,7 @@ export default function AdminCourses() {
     return () => {
       if (unsubscribeTrips) unsubscribeTrips()
     }
-  }, [user?.id])
+  }, [user?.id, currentPage])
 
   const filtered = trips.filter(t => filter === "all" || t.status === filter)
 
@@ -161,6 +166,29 @@ export default function AdminCourses() {
             </div>
           )
         })}
+
+        {/* Pagination AdminCourses */}
+        {totalPages > 1 && (
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold disabled:opacity-40"
+            >
+              ← Précédent
+            </button>
+            <span className="text-sm font-bold text-gray-500">
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-bold disabled:opacity-40"
+            >
+              Suivant →
+            </button>
+          </div>
+        )}
       </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
