@@ -93,13 +93,10 @@ export interface Notation {
 export interface Litige {
   id: string
   trip: string
-  reportedBy: string
-  against: string
-  reason: "no_show" | "bad_behavior" | "fraud" | "other"
-  status: "open" | "resolved" | "dismissed"
+  auteur: string
   description?: string
-  resolvedBy?: string
-  resolvedAt?: string
+  status: "open" | "resolved" | "dismissed"
+  resolution?: string
   created: string
   updated: string
 }
