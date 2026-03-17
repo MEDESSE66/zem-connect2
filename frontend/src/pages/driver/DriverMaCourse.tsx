@@ -26,7 +26,7 @@ export default function DriverMaCourse() {
     const loadTrip = async () => {
       try {
         const records = await pb.collection("trips").getList(1, 1, {
-          filter: `conducteur = "${user.id}" && (status = "active" || status = "in_progress")`,
+          filter: `conducteur = "${user.id}" && (status = "accepte" || status = "in_progress")`,
           sort: "-created",
           requestKey: null,
         })
@@ -43,13 +43,13 @@ export default function DriverMaCourse() {
     pb.collection("trips").subscribe("*", e => {
       if (e.record.conducteur !== user.id) return
       if (e.action === "update") {
-        if (e.record.status === "active" || e.record.status === "in_progress") {
+        if (e.record.status === "accepte" || e.record.status === "in_progress") {
           setTrip(e.record as unknown as Trip)
         } else {
           setTrip(null)
         }
       }
-    })
+    }, { requestKey: null })
 
     return () => { pb.collection("trips").unsubscribe("*") }
   }, [user?.id])
@@ -65,6 +65,7 @@ export default function DriverMaCourse() {
 
   const terminer = async () => {
     if (!trip) return
+    if (!window.confirm("Confirmer la fin de cette course ?")) return
     try {
       await pb.collection("trips").update(trip.id, { status: "completed" }, { requestKey: null })
       setTrip(null)
@@ -118,11 +119,11 @@ export default function DriverMaCourse() {
           <div>
             {/* Statut */}
             <div className={`mb-5 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[0.82rem] font-bold ${
-              trip.status === "active"
+              trip.status === "accepte"
                 ? "bg-brand-yellow/12 text-brand-orange"
                 : "bg-brand-green/12 text-brand-green"
             }`}>
-              {trip.status === "active"
+              {trip.status === "accepte"
                 ? <><Clock className="size-3.5" /> En attente de démarrage</>
                 : <><Play className="size-3.5" /> En cours</>
               }
@@ -168,7 +169,7 @@ export default function DriverMaCourse() {
             </div>
 
             {/* Actions */}
-            {trip.status === "active" && (
+            {trip.status === "accepte" && (
               <Button
                 onClick={demarrer}
                 className="h-[52px] w-full rounded-[14px] bg-brand-yellow text-base font-extrabold text-brand-black shadow-[0_4px_20px_var(--brand-yellow)40] hover:bg-brand-yellow/90"

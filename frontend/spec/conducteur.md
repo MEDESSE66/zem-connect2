@@ -1,3 +1,4 @@
+
 # CONDUCTEUR — SPEC
 *Version 2.0 — 2026-03-14*
 
@@ -31,8 +32,7 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 ## DriverMaCourse (src/pages/driver/DriverMaCourse.tsx) ✅ COMPLÉTÉ
 - Trip actif en temps réel
 - demarrer() → statut "in_progress" → déclenche hook commission
-- terminer() → dialog confirmation obligatoire avant → statut "completed"
-  ⚠️ MANQUANT : dialog confirmation avant terminer()
+- terminer() → dialog confirmation natif → statut "completed"
 
 ## DriverHistorique (src/pages/driver/DriverHistorique.tsx) ✅ COMPLÉTÉ
 - Liste trips completed + cancelled
@@ -63,3 +63,5 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v2.0 — notifications solde ajoutées, bouton désactivé visuellement,
   contre-offre avec boutons rapides, wallet 250F à validation
+- [2026-03-14] v2.1 — ajout dialog de confirmation dans DriverMaCourse (terminer)
+- [2026-03-17] v2.2 — statut "active" remplacé par "accepte" dans DriverMaCourse
