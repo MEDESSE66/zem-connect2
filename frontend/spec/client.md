@@ -35,7 +35,7 @@
 3. Accepte une offre → statut exact : "accepte"
 4. Course démarre → statut "in_progress" (déclenché par conducteur)
 5. Course terminée → statut "completed" (déclenché par conducteur)
-6. Notation conducteur → post-MVP
+6. Notation conducteur ✅ COMPLÉTÉ
 
 ## Règles
 - Un client ne peut pas annuler une course déjà "in_progress"
@@ -45,3 +45,4 @@
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v1.1 — ajout bouton annulerCourse dans ClientMesCourses
 - [2026-03-17] v2.0 — alignement statut des courses acceptées sur la valeur exacte "accepte" (au lieu de "active").
+- [2026-03-17] v2.1 — implémentation complet du système de notation conducteur ✅ COMPLÉTÉ

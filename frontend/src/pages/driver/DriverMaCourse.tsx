@@ -20,8 +20,35 @@ export default function DriverMaCourse() {
   const [trip, setTrip]           = useState<Trip | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  // États pour la notation
+  const [showRatingDialog, setShowRatingDialog] = useState(false)
+  const [ratingTripId, setRatingTripId]         = useState<string | null>(null)
+  const [ratingTargetId, setRatingTargetId]     = useState<string | null>(null)
+  const [ratingScore, setRatingScore]           = useState(0)
+  const [ratingComment, setRatingComment]       = useState("")
+  const [isRating, setIsRating]                 = useState(false)
+
   useEffect(() => {
     if (!user?.id) return
+
+    const checkAndShowRating = async (t: Trip) => {
+      if (!t.client) return
+      try {
+        const records = await pb.collection("notations").getList(1, 1, {
+          filter: `auteur = "${user.id}" && trip = "${t.id}"`,
+          requestKey: null,
+        })
+        if (records.items.length === 0) {
+          setRatingTripId(t.id)
+          setRatingTargetId(t.client)
+          setRatingScore(0)
+          setRatingComment("")
+          setShowRatingDialog(true)
+        }
+      } catch (err) {
+        console.error("Erreur vérification notation", err)
+      }
+    }
 
     const loadTrip = async () => {
       try {
@@ -47,6 +74,9 @@ export default function DriverMaCourse() {
           setTrip(e.record as unknown as Trip)
         } else {
           setTrip(null)
+          if (e.record.status === "completed") {
+            checkAndShowRating(e.record as unknown as Trip)
+          }
         }
       }
     }, { requestKey: null })
@@ -71,6 +101,27 @@ export default function DriverMaCourse() {
       setTrip(null)
     } catch {
       alert("Erreur lors de la fin de course.")
+    }
+  }
+
+  const submitRating = async () => {
+    if (!user?.id || !ratingTargetId || !ratingTripId || ratingScore === 0) return
+    setIsRating(true)
+    try {
+      await pb.collection("notations").create({
+        auteur: user.id,
+        target: ratingTargetId,
+        trip: ratingTripId,
+        score: ratingScore,
+        commentaire: ratingComment || undefined
+      }, { requestKey: null })
+      setShowRatingDialog(false)
+      alert("Merci pour votre avis !")
+    } catch (err) {
+      console.error("Erreur envoi notation", err)
+      alert("Erreur lors de l'envoi de la notation.")
+    } finally {
+      setIsRating(false)
     }
   }
 
@@ -191,6 +242,54 @@ export default function DriverMaCourse() {
       </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
+
+      {/* Dialog de notation */}
+      {showRatingDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-sm rounded-[24px] bg-white p-6 shadow-xl">
+            <h3 className="mb-4 text-center text-lg font-extrabold text-brand-black">Notez votre client</h3>
+            
+            <div className="mb-6 flex justify-center gap-2">
+              {[1, 2, 3, 4, 5].map(star => (
+                <button
+                  key={star}
+                  onClick={() => setRatingScore(star)}
+                  className={`text-3xl transition-transform hover:scale-110 ${
+                    star <= ratingScore ? "text-brand-yellow" : "text-gray-300"
+                  }`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              value={ratingComment}
+              onChange={e => setRatingComment(e.target.value)}
+              placeholder="Votre commentaire (optionnel)"
+              className="mb-6 w-full rounded-xl border border-gray-200 p-3 text-[0.9rem] outline-none focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow"
+              rows={3}
+            />
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowRatingDialog(false)}
+                className="flex-1 rounded-xl font-bold"
+              >
+                Passer
+              </Button>
+              <Button
+                onClick={submitRating}
+                disabled={ratingScore === 0 || isRating}
+                className="flex-1 rounded-xl bg-brand-yellow font-extrabold text-brand-black hover:bg-brand-yellow/90"
+              >
+                {isRating ? "Envoi..." : "Envoyer"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
