@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
@@ -68,7 +69,7 @@ export default function DriverAccueil() {
 
   const handleOffre = async (trip: Trip) => {
     if (!user?.conducteur_verifie) {
-      alert("Votre compte n'est pas encore validé par l'admin.")
+      toast.warning("Votre compte n'est pas encore validé par l'admin.")
       return
     }
     
@@ -86,7 +87,7 @@ export default function DriverAccueil() {
       }, { requestKey: null })
       setSentOffers(prev => new Set(prev).add(trip.id))
     } catch {
-      alert("Erreur lors de l'envoi de l'offre.")
+      toast.error("Erreur lors de l'envoi de l'offre.")
     }
   }
 

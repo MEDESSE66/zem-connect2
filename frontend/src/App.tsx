@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { Toaster } from "sonner"
 import { useAuthStore } from "./store/authStore"
 import { ProtectedRoute } from "./components/ProtectedRoute"
 
@@ -19,6 +20,7 @@ import AdminStats from "./pages/admin/AdminStats"
 import AdminUsers from "./pages/admin/AdminUsers"
 import AdminCourses from "./pages/admin/AdminCourses"
 import AdminLitiges from "./pages/admin/AdminLitiges"
+import AdminSettings from "./pages/admin/AdminSettings"
 
 export default function App() {
   const { checkAuth } = useAuthStore()
@@ -29,6 +31,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <Toaster position="top-center" richColors />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
@@ -97,6 +100,11 @@ export default function App() {
         <Route path="/admin/litiges" element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <AdminLitiges />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/settings" element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminSettings />
           </ProtectedRoute>
         } />
 

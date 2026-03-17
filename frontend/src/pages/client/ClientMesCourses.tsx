@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
+import { toast } from "sonner"
 import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
@@ -133,7 +134,7 @@ export default function ClientMesCourses() {
       }, { requestKey: null })
     } catch (err) {
       console.error("Erreur acceptation offre", err)
-      alert("Erreur lors de l'acceptation de l'offre.")
+      toast.error("Erreur lors de l'acceptation de l'offre.")
     } finally {
       setIsAccepting(null)
     }
@@ -146,7 +147,7 @@ export default function ClientMesCourses() {
       await pb.collection("trips").update(tripId, { status: "cancelled" }, { requestKey: null })
     } catch (err) {
       console.error("Erreur annulation course", err)
-      alert("Erreur lors de l'annulation.")
+      toast.error("Erreur lors de l'annulation.")
     } finally {
       setIsCancelling(null)
     }
@@ -164,10 +165,10 @@ export default function ClientMesCourses() {
         commentaire: ratingComment || undefined
       }, { requestKey: null })
       setShowRatingDialog(false)
-      alert("Merci pour votre avis !")
+      toast.success("Merci pour votre avis !")
     } catch (err) {
       console.error("Erreur envoi notation", err)
-      alert("Erreur lors de l'envoi de la notation.")
+      toast.error("Erreur lors de l'envoi de la notation.")
     } finally {
       setIsRating(false)
     }

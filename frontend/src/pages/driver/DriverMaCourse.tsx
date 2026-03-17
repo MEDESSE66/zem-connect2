@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
@@ -89,7 +90,7 @@ export default function DriverMaCourse() {
     try {
       await pb.collection("trips").update(trip.id, { status: "in_progress" }, { requestKey: null })
     } catch {
-      alert("Erreur lors du démarrage.")
+      toast.error("Erreur lors du démarrage.")
     }
   }
 
@@ -100,7 +101,7 @@ export default function DriverMaCourse() {
       await pb.collection("trips").update(trip.id, { status: "completed" }, { requestKey: null })
       setTrip(null)
     } catch {
-      alert("Erreur lors de la fin de course.")
+      toast.error("Erreur lors de la fin de course.")
     }
   }
 
@@ -116,10 +117,10 @@ export default function DriverMaCourse() {
         commentaire: ratingComment || undefined
       }, { requestKey: null })
       setShowRatingDialog(false)
-      alert("Merci pour votre avis !")
+      toast.success("Merci pour votre avis !")
     } catch (err) {
       console.error("Erreur envoi notation", err)
-      alert("Erreur lors de l'envoi de la notation.")
+      toast.error("Erreur lors de l'envoi de la notation.")
     } finally {
       setIsRating(false)
     }

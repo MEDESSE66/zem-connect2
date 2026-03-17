@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
@@ -60,10 +61,10 @@ export default function AdminSettings() {
         const newRecord = await pb.collection("settings").create(data, { requestKey: null })
         setSettingsId(newRecord.id)
       }
-      alert("Paramètres enregistrés avec succès.")
+      toast.success("Paramètres enregistrés avec succès.")
     } catch (err) {
       console.error("Erreur sauvegarde settings", err)
-      alert("Erreur lors de la sauvegarde. Assurez-vous que la collection 'settings' existe dans PocketBase.")
+      toast.error("Erreur lors de la sauvegarde. Assurez-vous que la collection 'settings' existe dans PocketBase.")
     } finally {
       setIsSaving(false)
     }
