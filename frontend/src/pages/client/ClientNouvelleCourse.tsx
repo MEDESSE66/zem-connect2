@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -23,6 +24,37 @@ export default function ClientNouvelleCourse() {
   const [error, setError]                           = useState("")
   const [isLoading, setIsLoading]                   = useState(false)
 
+  const [departureLat, setDepartureLat]             = useState(0)
+  const [departureLng, setDepartureLng]             = useState(0)
+  const [isLocating, setIsLocating]                 = useState(false)
+  const [locationError, setLocationError]           = useState<string | null>(null)
+
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Géolocalisation non supportée sur cet appareil")
+      return
+    }
+    setIsLocating(true)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setDepartureLat(position.coords.latitude)
+        setDepartureLng(position.coords.longitude)
+        setIsLocating(false)
+        toast.success("Position détectée")
+      },
+      (error) => {
+        setIsLocating(false)
+        setLocationError("Position non détectée — saisie manuelle requise")
+        toast.warning("Position non détectée — saisie manuelle requise")
+      },
+      { timeout: 10000, enableHighAccuracy: true }
+    )
+  }
+
+  useEffect(() => {
+    getLocation()
+  }, [])
+
   const handleSubmit = async () => {
     setError("")
     if (!departureAddress || !destinationAddress || !clientPrice) {
@@ -41,8 +73,8 @@ export default function ClientNouvelleCourse() {
         status: "pending",
         departureAddress,
         destinationAddress,
-        departureLat: 0,
-        departureLng: 0,
+        departureLat: departureLat,
+        departureLng: departureLng,
         destinationLat: 0,
         destinationLng: 0,
         clientPrice: parseFloat(clientPrice),
@@ -102,6 +134,25 @@ export default function ClientNouvelleCourse() {
               onChange={e => setDepartureAddress(e.target.value)}
               className="h-12 rounded-[10px] border-[1.5px] border-gray-200 text-[0.95rem]"
             />
+            {isLocating && (
+              <p className="mt-1 text-[0.78rem] text-gray-400">Détection de votre position...</p>
+            )}
+            {!isLocating && departureLat !== 0 && (
+              <p className="mt-1 text-[0.78rem] text-brand-green">
+                ✓ Position GPS détectée
+              </p>
+            )}
+            {locationError && (
+              <p className="mt-1 text-[0.78rem] text-brand-orange">{locationError}</p>
+            )}
+            {locationError && (
+              <button
+                onClick={getLocation}
+                className="mt-1 text-[0.78rem] font-bold text-brand-yellow underline"
+              >
+                Relancer la détection
+              </button>
+            )}
           </div>
 
           {/* Séparateur */}
@@ -140,9 +191,29 @@ export default function ClientNouvelleCourse() {
                 onChange={e => setClientPrice(e.target.value)}
                 className="h-12 rounded-[10px] border-[1.5px] border-gray-200 pr-[70px] text-[0.95rem]"
               />
-              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[0.85rem] font-semibold text-gray-400">
-                FCFA
-              </span>
+              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
+                <span className="text-[0.85rem] font-bold text-gray-500">FCFA</span>
+              </div>
+            </div>
+
+            {/* Boutons d'ajustement rapide */}
+            <div className="mt-3 flex flex-wrap gap-2">
+              {[-100, -50, 50, 100, 200].map(delta => {
+                const currentPrice = parseInt(clientPrice) || 0;
+                const isDisabled = currentPrice + delta < 50;
+                
+                return (
+                  <button
+                    key={delta}
+                    type="button"
+                    onClick={() => setClientPrice(Math.max(50, currentPrice + delta).toString())}
+                    disabled={isDisabled}
+                    className="flex-1 rounded-[8px] bg-brand-yellow/10 py-1.5 text-[0.85rem] font-extrabold text-brand-black transition-colors hover:bg-brand-yellow/20 disabled:opacity-40 disabled:hover:bg-brand-yellow/10"
+                  >
+                    {delta > 0 ? `+${delta}` : delta}
+                  </button>
+                )
+              })}
             </div>
             <p className="mt-1.5 text-[0.78rem] text-gray-400">
               Les conducteurs feront leurs offres autour de ce prix.

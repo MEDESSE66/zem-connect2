@@ -13,8 +13,8 @@
 - Crée un trip en BD avec statut "pending"
 - expiresAt = now + 2 minutes
 - Redirection vers /client/mes-courses après création
-⚠️ MANQUANT : coordonnées GPS (departureLat/Lng/destinationLat/Lng = 0)
-- Post-MVP : intégrer navigator.geolocation ou API autocomplete adresses
+- GPS departureLat/Lng ✅ COMPLÉTÉ (partiel — départ uniquement, destination post-MVP)
+- Post-MVP : intégrer API autocomplete adresses
 
 ## ClientMesCourses (src/pages/client/ClientMesCourses.tsx) ✅ COMPLÉTÉ
 - Liste toutes les courses du client
@@ -49,3 +49,4 @@
 - [2026-03-17] v2.1 — implémentation complet du système de notation conducteur ✅ COMPLÉTÉ
 - [2026-03-17] v2.2 — affichage note moyenne dans ClientProfil ✅ COMPLÉTÉ
 - [2026-03-17] v2.3 — ajout de l'édition du profil inline (nom, mot de passe) ✅ COMPLÉTÉ
+- [2026-03-17] v2.4 — implémentation de la géolocalisation pour l'adresse de départ dans ClientNouvelleCourse ✅ COMPLÉTÉ
