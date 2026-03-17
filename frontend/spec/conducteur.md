@@ -36,14 +36,16 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - Notation client à la fin du trip ✅ COMPLÉTÉ
 
 ## DriverHistorique (src/pages/driver/DriverHistorique.tsx) ✅ COMPLÉTÉ
-- Liste trips completed + cancelled
+- Onglet Courses : Liste trips completed + cancelled
 - Calcul totalGagne : finalPrice - 25 par course
+- Onglet Transactions : Liste des transactions avec formatage des types (commission, recharge, refund)
 - Limitation MVP : max 50 items (pagination post-MVP)
 
 ## DriverProfil (src/pages/driver/DriverProfil.tsx) ✅ COMPLÉTÉ
 - Badge vérifié / en attente
 - Wallet + info commission
 - Affichage note moyenne conducteur ✅ COMPLÉTÉ
+- Formulaire d'édition de profil (nom, mot de passe) inline ✅ COMPLÉTÉ
 - Plaque affichée (optionnelle)
 - Lien vers recharge wallet
 
@@ -69,3 +71,4 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - [2026-03-17] v2.2 — statut "active" remplacé par "accepte" dans DriverMaCourse
 - [2026-03-17] v2.3 — ajout du système de notation client dans DriverMaCourse ✅ COMPLÉTÉ
 - [2026-03-17] v2.4 — affichage note moyenne dans DriverProfil et DriverAccueil ✅ COMPLÉTÉ
+- [2026-03-17] v2.5 — ajout de l'édition du profil inline et historique transactions ✅ COMPLÉTÉ

@@ -4,7 +4,7 @@ import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
-import { Home, Bike, ClipboardList, ArrowLeft, MapPin, Flag, Check, X } from "lucide-react"
+import { Home, Bike, ClipboardList, ArrowLeft, MapPin, Flag, Check, X, ArrowDownLeft, ArrowUpRight, Wallet } from "lucide-react"
 import type { Trip } from "../../types"
 
 const NAV_ITEMS = [
@@ -19,6 +19,10 @@ export default function DriverHistorique() {
   const [trips, setTrips]         = useState<Trip[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalGagne, setTotalGagne] = useState(0)
+
+  const [activeTab, setActiveTab] = useState<"courses" | "transactions">("courses")
+  const [transactions, setTransactions] = useState<any[]>([])
+  const [isLoadingTrans, setIsLoadingTrans] = useState(false)
 
   useEffect(() => {
     if (!user?.id) return
@@ -39,6 +43,38 @@ export default function DriverHistorique() {
       setIsLoading(false)
     })
   }, [user?.id])
+
+  useEffect(() => {
+    if (!user?.id) return
+    if (activeTab === "transactions" && transactions.length === 0) {
+      setIsLoadingTrans(true)
+      pb.collection("transactions").getList(1, 50, {
+        filter: `user = "${user.id}"`,
+        sort: "-created",
+        requestKey: null,
+      }).then(records => {
+        setTransactions(records.items)
+      }).catch(err => {
+        console.error(err)
+      }).finally(() => {
+        setIsLoadingTrans(false)
+      })
+    }
+  }, [user?.id, activeTab])
+
+  // Helpers transactions
+  const formatType = (type: string) => {
+    if (type === "commission") return { label: "Commission", color: "text-red-500", bg: "bg-red-500/10", icon: <ArrowDownLeft className="size-3" /> }
+    if (type === "recharge") return { label: "Recharge", color: "text-brand-green", bg: "bg-brand-green/10", icon: <ArrowUpRight className="size-3" /> }
+    if (type === "refund") return { label: "Remboursement", color: "text-blue-500", bg: "bg-blue-500/10", icon: <ArrowUpRight className="size-3" /> }
+    return { label: type, color: "text-gray-500", bg: "bg-gray-100", icon: null }
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("fr-FR", {
+      day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit"
+    })
+  }
 
   return (
     <div className="min-h-svh bg-brand-bg pb-20 font-sans">
@@ -63,7 +99,30 @@ export default function DriverHistorique() {
         transition={{ duration: 0.4 }}
         className="px-6 pt-6"
       >
-        {/* Résumé gains */}
+        {/* Onglets */}
+        <div className="mb-6 flex overflow-hidden rounded-[14px] border border-gray-200 bg-white p-1">
+          <button
+            onClick={() => setActiveTab("courses")}
+            className={`flex-1 rounded-[10px] py-2 text-[0.85rem] font-bold transition-all ${
+              activeTab === "courses" ? "bg-brand-orange text-white" : "text-gray-400 hover:text-brand-black"
+            }`}
+          >
+            Courses
+          </button>
+          <button
+            onClick={() => setActiveTab("transactions")}
+            className={`flex-1 rounded-[10px] py-2 text-[0.85rem] font-bold transition-all ${
+              activeTab === "transactions" ? "bg-brand-orange text-white" : "text-gray-400 hover:text-brand-black"
+            }`}
+          >
+            Transactions
+          </button>
+        </div>
+
+        {/* --- ONGLET COURSES --- */}
+        {activeTab === "courses" && (
+          <>
+            {/* Résumé gains */}
         {!isLoading && trips.filter(t => t.status === "completed").length > 0 && (
           <div className="mb-6 flex items-center justify-between rounded-[20px] bg-brand-black px-6 py-5">
             <div>
@@ -142,6 +201,54 @@ export default function DriverHistorique() {
             )}
           </div>
         ))}
+          </>
+        )}
+
+        {/* --- ONGLET TRANSACTIONS --- */}
+        {activeTab === "transactions" && (
+          <>
+            {isLoadingTrans && (
+              <div className="py-12 text-center text-gray-400">Chargement des transactions...</div>
+            )}
+
+            {!isLoadingTrans && transactions.length === 0 && (
+              <div className="rounded-[20px] bg-white px-6 py-12 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+                <Wallet className="mx-auto mb-4 size-12 text-brand-yellow" />
+                <p className="mb-2 font-bold text-brand-black">Aucune transaction</p>
+                <p className="text-[0.88rem] text-gray-400">Votre historique financier apparaîtra ici.</p>
+              </div>
+            )}
+
+            {transactions.map(tx => {
+              const style = formatType(tx.type)
+              const sign = tx.type === "commission" ? "-" : "+"
+              
+              return (
+                <div key={tx.id} className="mb-3.5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+                  <div className="mb-2 flex items-start justify-between">
+                    <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.75rem] font-bold ${style.bg} ${style.color}`}>
+                      {style.icon} {style.label}
+                    </div>
+                    <p className={`text-[1.1rem] font-black ${style.color}`}>
+                      {sign}{tx.amount} FCFA
+                    </p>
+                  </div>
+                  
+                  {tx.reference && (
+                    <div className="mb-3 text-[0.82rem] font-semibold text-gray-500">
+                      Réf: {tx.reference}
+                    </div>
+                  )}
+                  
+                  <div className="mt-2 text-[0.75rem] text-gray-400">
+                    {formatDate(tx.created)}
+                  </div>
+                </div>
+              )
+            })}
+          </>
+        )}
+
       </motion.div>
 
       <BottomNav items={NAV_ITEMS} />

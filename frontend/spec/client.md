@@ -27,8 +27,8 @@
 - Avatar initiales
 - Infos : téléphone, rôle, wallet balance
 - Affichage note moyenne client ✅ COMPLÉTÉ
+- Formulaire d'édition de profil (nom, mot de passe) inline ✅ COMPLÉTÉ
 - Déconnexion
-⚠️ MANQUANT : modification nom et mot de passe (post-MVP)
 
 ## Flux course client complet
 1. Crée course → statut "pending"
@@ -48,3 +48,4 @@
 - [2026-03-17] v2.0 — alignement statut des courses acceptées sur la valeur exacte "accepte" (au lieu de "active").
 - [2026-03-17] v2.1 — implémentation complet du système de notation conducteur ✅ COMPLÉTÉ
 - [2026-03-17] v2.2 — affichage note moyenne dans ClientProfil ✅ COMPLÉTÉ
+- [2026-03-17] v2.3 — ajout de l'édition du profil inline (nom, mot de passe) ✅ COMPLÉTÉ

@@ -1,9 +1,12 @@
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuthStore } from "../../store/authStore"
+import { pb } from "../../lib/pocketbase"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
-import { Home, Bike, ArrowLeft, Phone, User, Wallet, LogOut } from "lucide-react"
+import { Home, Bike, ArrowLeft, Phone, User as UserIcon, Wallet, LogOut, Save } from "lucide-react"
 
 const NAV_ITEMS = [
   { icon: <Home className="size-[22px]" />,  label: "Accueil",  path: "/client" },
@@ -12,7 +15,47 @@ const NAV_ITEMS = [
 
 export default function ClientProfil() {
   const navigate = useNavigate()
-  const { user, logout } = useAuthStore()
+  const { user, logout, checkAuth } = useAuthStore()
+
+  const [name, setName] = useState(user?.name || "")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [isSaving, setIsSaving] = useState(false)
+
+  useEffect(() => {
+    if (user?.name) setName(user.name)
+  }, [user?.name])
+
+  const handleSave = async () => {
+    if (!name.trim() || !user?.id) return
+    if (password && password !== confirmPassword) return
+    
+    setIsSaving(true)
+    const updateData: Record<string, unknown> = {}
+    if (name !== user.name) updateData.name = name
+    if (password && password.length >= 8) {
+      updateData.password = password
+      updateData.passwordConfirm = password
+    }
+    
+    if (Object.keys(updateData).length === 0) {
+      setIsSaving(false)
+      return
+    }
+    
+    try {
+      await pb.collection("users").update(user.id, updateData, { requestKey: null })
+      toast.success("Profil mis à jour")
+      await checkAuth()
+      setPassword("")
+      setConfirmPassword("")
+    } catch (err) {
+      console.error(err)
+      toast.error("Erreur lors de la mise à jour.")
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   // Génère les initiales à partir du nom
   const getInitials = (name?: string) => {
@@ -86,13 +129,60 @@ export default function ClientProfil() {
 
           <div>
             <div className="mb-1.5 flex items-center gap-2.5">
-              <User className="size-5 text-brand-yellow" />
+              <UserIcon className="size-5 text-brand-yellow" />
               <span className="text-[0.8rem] font-semibold text-gray-400">Type de compte</span>
             </div>
             <div className="pl-8 text-[0.95rem] font-semibold text-brand-black">
               {formatRole(user?.role || "client")}
             </div>
           </div>
+        </div>
+
+        {/* Edition de profil (inline) */}
+        <div className="mb-4 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <h3 className="mb-4 text-[0.95rem] font-extrabold text-brand-black">
+            Modifier mon profil
+          </h3>
+          
+          <div className="mb-3">
+            <label className="mb-1 block text-[0.8rem] font-semibold text-gray-500">Nom complet</label>
+            <input 
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="w-full rounded-[10px] border border-gray-200 bg-gray-50 px-3 py-2 text-[0.9rem] font-semibold text-brand-black outline-none focus:border-brand-yellow"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="mb-1 block text-[0.8rem] font-semibold text-gray-500">Nouveau mot de passe</label>
+            <input 
+              type="password"
+              placeholder="Nouveau mot de passe (8 chiffres min)"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="w-full rounded-[10px] border border-gray-200 bg-gray-50 px-3 py-2 text-[0.9rem] font-semibold text-brand-black outline-none focus:border-brand-yellow"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="mb-1 block text-[0.8rem] font-semibold text-gray-500">Confirmer le mot de passe</label>
+            <input 
+              type="password"
+              placeholder="Confirmer le mot de passe"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              className="w-full rounded-[10px] border border-gray-200 bg-gray-50 px-3 py-2 text-[0.9rem] font-semibold text-brand-black outline-none focus:border-brand-yellow"
+            />
+          </div>
+
+          <Button 
+            onClick={handleSave}
+            disabled={isSaving || !name.trim() || (password.length > 0 && password !== confirmPassword)}
+            className="w-full rounded-[10px] bg-brand-yellow font-bold text-brand-black hover:bg-brand-yellow/90 disabled:opacity-50"
+          >
+            <Save className="mr-2 size-4" /> {isSaving ? "Sauvegarde..." : "Sauvegarder"}
+          </Button>
         </div>
 
         {/* Wallet */}
