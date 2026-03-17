@@ -26,6 +26,7 @@
 ## ClientProfil (src/pages/client/ClientProfil.tsx) ✅ COMPLÉTÉ
 - Avatar initiales
 - Infos : téléphone, rôle, wallet balance
+- Affichage note moyenne client ✅ COMPLÉTÉ
 - Déconnexion
 ⚠️ MANQUANT : modification nom et mot de passe (post-MVP)
 
@@ -46,3 +47,4 @@
 - [2026-03-14] v1.1 — ajout bouton annulerCourse dans ClientMesCourses
 - [2026-03-17] v2.0 — alignement statut des courses acceptées sur la valeur exacte "accepte" (au lieu de "active").
 - [2026-03-17] v2.1 — implémentation complet du système de notation conducteur ✅ COMPLÉTÉ
+- [2026-03-17] v2.2 — affichage note moyenne dans ClientProfil ✅ COMPLÉTÉ

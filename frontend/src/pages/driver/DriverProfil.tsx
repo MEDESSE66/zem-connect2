@@ -140,6 +140,24 @@ export default function DriverProfil() {
           </div>
         </div>
 
+        {/* Note moyenne */}
+        <div className="mb-6">
+          {(user?.totalRating ?? 0) > 0 ? (
+            <div className="rounded-[14px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <p className="mb-1 text-[0.78rem] text-gray-400">Note moyenne</p>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-black text-brand-yellow">★</span>
+                <span className="text-xl font-extrabold text-brand-black">{user?.rating}</span>
+                <span className="text-[0.82rem] text-gray-400">({user?.totalRating} avis)</span>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-[14px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <p className="text-[0.82rem] text-gray-400">Aucun avis pour l'instant</p>
+            </div>
+          )}
+        </div>
+
         {/* Bouton Déconnexion */}
         <Button
           onClick={() => {

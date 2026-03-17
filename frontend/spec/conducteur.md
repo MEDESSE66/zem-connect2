@@ -43,6 +43,7 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 ## DriverProfil (src/pages/driver/DriverProfil.tsx) ✅ COMPLÉTÉ
 - Badge vérifié / en attente
 - Wallet + info commission
+- Affichage note moyenne conducteur ✅ COMPLÉTÉ
 - Plaque affichée (optionnelle)
 - Lien vers recharge wallet
 
@@ -67,3 +68,4 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - [2026-03-14] v2.1 — ajout dialog de confirmation dans DriverMaCourse (terminer)
 - [2026-03-17] v2.2 — statut "active" remplacé par "accepte" dans DriverMaCourse
 - [2026-03-17] v2.3 — ajout du système de notation client dans DriverMaCourse ✅ COMPLÉTÉ
+- [2026-03-17] v2.4 — affichage note moyenne dans DriverProfil et DriverAccueil ✅ COMPLÉTÉ
