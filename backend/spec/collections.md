@@ -36,8 +36,9 @@
 - amount (number)
 - trip (relation trips, optionnel)
 - status : completed | pending | failed
-- note (text, optionnel)
+- reference (text, optionnel)
   → valeur "bienvenue" pour le crédit de bienvenue (anti-doublon hook)
+  → valeur "recharge_admin" pour les recharges manuelles admin
 
 ## notations
 - id, auteur (relation users), target (relation users)
@@ -72,3 +73,4 @@
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v2.0 — ajout collection settings, ajout nombre_zem sur trips,
   ajout champ note sur transactions
+- [2026-03-17] v2.1 — renommage critique : transactions champ note devient reference
