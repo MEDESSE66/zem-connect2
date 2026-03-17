@@ -30,12 +30,13 @@ Objectif : lancement à Cotonou avec flux core fonctionnel
 - [x] Hook 4 anti-doublon fonctionnel (champ reference)
 - [x] Crash backend tripId supprimé
 - [x] Collection settings déployée en production
+- [x] Notation mutuelle client ↔ conducteur au statut "completed"
 
 ## Phase V2 (post-lancement)
 Objectif : amélioration UX + nouvelles fonctionnalités
 
 - [ ] Géolocalisation GPS (navigator.geolocation)
-- [ ] Système de notation (UI — backend déjà prêt)
+- [x] Système de notation (UI — backend déjà prêt)
 - [ ] Recharge wallet MTN/MOOV (FedaPay API)
 - [ ] OTP WhatsApp (360dialog)
 - [ ] OAuth2 Google
@@ -62,3 +63,4 @@ Toute modification de comportement → mise à jour de la spec correspondante.
 ## Changelog
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-17] v2.0 — corrections MVP finalisées (session)
+- [2026-03-17] v2.1 — ajout système de notation mutuelle (conducteur <-> client)
