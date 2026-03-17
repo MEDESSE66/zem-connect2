@@ -69,7 +69,6 @@ export default function DriverAccueil() {
 
   const handleOffre = async (trip: Trip) => {
     if (!user?.conducteur_verifie) {
-      toast.warning("Votre compte n'est pas encore validé par l'admin.")
       return
     }
     
