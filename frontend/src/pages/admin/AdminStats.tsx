@@ -4,7 +4,7 @@ import { pb } from "../../lib/pocketbase"
 import { useAuthStore } from "../../store/authStore"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
-import { BarChart3, Users, Bike, Car, AlertTriangle, LogOut } from "lucide-react"
+import { BarChart3, Users, Bike, Car, AlertTriangle, LogOut, Settings } from "lucide-react"
 
 const NAV_ITEMS = [
   { icon: <BarChart3 className="size-[22px]" />,       label: "Stats",         path: "/admin" },
@@ -14,7 +14,7 @@ const NAV_ITEMS = [
 ]
 
 export default function AdminStats() {
-  const { logout }                              = useAuthStore()
+  const { user, logout }                        = useAuthStore()
   const navigate                                = useNavigate()
   const [totalCommissions, setTotalCommissions] = useState(0)
   const [totalTrips, setTotalTrips]             = useState(0)
@@ -23,31 +23,56 @@ export default function AdminStats() {
   const [isLoading, setIsLoading]               = useState(true)
 
   useEffect(() => {
-    Promise.all([
-      pb.collection("transactions").getList(1, 1000, {
-        filter: `type = "commission" && status = "completed"`,
-        requestKey: null,
-      }),
-      pb.collection("trips").getList(1, 1, {
-        filter: `status = "completed"`,
-        requestKey: null,
-      }),
-      pb.collection("users").getList(1, 1, {
-        filter: `role = "client"`,
-        requestKey: null,
-      }),
-      pb.collection("users").getList(1, 1, {
-        filter: `role = "conducteur"`,
-        requestKey: null,
-      }),
-    ]).then(([transactions, trips, clients, conducteurs]) => {
-      const total = transactions.items.reduce((sum, t) => sum + (t as any).amount, 0)
-      setTotalCommissions(Math.abs(total))
-      setTotalTrips(trips.totalItems)
-      setTotalUsers(clients.totalItems)
-      setTotalConducteurs(conducteurs.totalItems)
-    }).finally(() => setIsLoading(false))
-  }, [])
+    if (!user?.id) return
+
+    const loadStats = () => {
+      Promise.all([
+        pb.collection("transactions").getList(1, 1000, {
+          filter: `type = "commission" && status = "completed"`,
+          requestKey: null,
+        }),
+        pb.collection("trips").getList(1, 1, {
+          filter: `status = "completed"`,
+          requestKey: null,
+        }),
+        pb.collection("users").getList(1, 1, {
+          filter: `role = "client"`,
+          requestKey: null,
+        }),
+        pb.collection("users").getList(1, 1, {
+          filter: `role = "conducteur"`,
+          requestKey: null,
+        }),
+      ]).then(([transactions, trips, clients, conducteurs]) => {
+        const total = transactions.items.reduce((sum, t) => sum + (t as any).amount, 0)
+        setTotalCommissions(Math.abs(total))
+        setTotalTrips(trips.totalItems)
+        setTotalUsers(clients.totalItems)
+        setTotalConducteurs(conducteurs.totalItems)
+      }).finally(() => setIsLoading(false))
+    }
+
+    loadStats()
+
+    let unsubscribeTrips: (() => void) | undefined
+    let unsubscribeTransactions: (() => void) | undefined
+
+    const initSubscriptions = async () => {
+      unsubscribeTrips = await pb.collection("trips").subscribe("*", () => {
+        loadStats()
+      }, { requestKey: null })
+      unsubscribeTransactions = await pb.collection("transactions").subscribe("*", () => {
+        loadStats()
+      }, { requestKey: null })
+    }
+
+    initSubscriptions()
+
+    return () => {
+      if (unsubscribeTrips) unsubscribeTrips()
+      if (unsubscribeTransactions) unsubscribeTransactions()
+    }
+  }, [user?.id])
 
   return (
     <div className="min-h-svh bg-brand-bg pb-20 font-sans">
@@ -118,6 +143,7 @@ export default function AdminStats() {
             <h3 className="mb-3.5 text-base font-extrabold text-brand-black">Actions rapides</h3>
             <div className="flex flex-col gap-3">
               {[
+                { icon: <Settings className="size-8 text-brand-black" />, label: "Paramètres financiers", sub: "Commission, abonnement, bonus", path: "/admin/settings", borderColor: "border-gray-200" },
                 { icon: <Users className="size-8 text-brand-yellow" />,  label: "Gérer les utilisateurs",  sub: "Suspendre, réactiver les comptes", path: "/admin/utilisateurs", borderColor: "border-brand-yellow" },
                 { icon: <Bike className="size-8 text-brand-green" />,   label: "Voir toutes les courses", sub: "Historique complet des trajets",    path: "/admin/courses",      borderColor: "border-brand-green"  },
               ].map(({ icon, label, sub, path, borderColor }) => (

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
+import { useAuthStore } from "../../store/authStore"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
 import { BarChart3, Users, Bike, AlertTriangle, ArrowLeft, MapPin, Flag } from "lucide-react"
@@ -23,19 +24,40 @@ const STATUS_CONFIG: Record<string, { label: string; colorClass: string; bgClass
 }
 
 export default function AdminCourses() {
+  const { user }                  = useAuthStore()
   const navigate                  = useNavigate()
   const [trips, setTrips]         = useState<Trip[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter]       = useState<string>("all")
 
   useEffect(() => {
-    pb.collection("trips").getList(1, 100, {
-      sort: "-created",
-      requestKey: null,
-    }).then(r => {
-      setTrips(r.items as unknown as Trip[])
-    }).finally(() => setIsLoading(false))
-  }, [])
+    if (!user?.id) return
+
+    const loadTrips = () => {
+      pb.collection("trips").getList(1, 100, {
+        sort: "-created",
+        requestKey: null,
+      }).then(r => {
+        setTrips(r.items as unknown as Trip[])
+      }).finally(() => setIsLoading(false))
+    }
+
+    loadTrips()
+
+    let unsubscribeTrips: (() => void) | undefined
+
+    const initSubscriptions = async () => {
+      unsubscribeTrips = await pb.collection("trips").subscribe("*", () => {
+        loadTrips()
+      }, { requestKey: null })
+    }
+
+    initSubscriptions()
+
+    return () => {
+      if (unsubscribeTrips) unsubscribeTrips()
+    }
+  }, [user?.id])
 
   const filtered = trips.filter(t => filter === "all" || t.status === filter)
 

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
+import { useAuthStore } from "../../store/authStore"
 import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
-import { BarChart3, Users, Bike, AlertTriangle, ArrowLeft, Phone, Check, Ban } from "lucide-react"
+import { BarChart3, Users, Bike, AlertTriangle, ArrowLeft, Phone, Check, Ban, Search } from "lucide-react"
 import type { User } from "../../types"
 
 const NAV_ITEMS = [
@@ -21,21 +22,43 @@ const ROLE_CONFIG: Record<string, { label: string; colorClass: string; bgClass: 
 }
 
 export default function AdminUsers() {
+  const { user }                  = useAuthStore()
   const navigate                  = useNavigate()
   const [users, setUsers]         = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter]       = useState<"all" | "client" | "conducteur">("all")
+  const [searchQuery, setSearchQuery] = useState("")
   const [suspendingId, setSuspendingId] = useState<string | null>(null)
   const [validatingId, setValidatingId] = useState<string | null>(null)
 
   useEffect(() => {
-    pb.collection("users").getList(1, 100, {
-      sort: "-created",
-      requestKey: null,
-    }).then(r => {
-      setUsers(r.items as unknown as User[])
-    }).finally(() => setIsLoading(false))
-  }, [])
+    if (!user?.id) return
+
+    const loadUsers = () => {
+      pb.collection("users").getList(1, 100, {
+        sort: "-created",
+        requestKey: null,
+      }).then(r => {
+        setUsers(r.items as unknown as User[])
+      }).finally(() => setIsLoading(false))
+    }
+
+    loadUsers()
+
+    let unsubscribeUsers: (() => void) | undefined
+
+    const initSubscriptions = async () => {
+      unsubscribeUsers = await pb.collection("users").subscribe("*", () => {
+        loadUsers()
+      }, { requestKey: null })
+    }
+
+    initSubscriptions()
+
+    return () => {
+      if (unsubscribeUsers) unsubscribeUsers()
+    }
+  }, [user?.id])
 
   const toggleSuspend = async (user: User) => {
     setSuspendingId(user.id)
@@ -65,7 +88,21 @@ export default function AdminUsers() {
     }
   }
 
-  const filtered = users.filter(u => filter === "all" || u.role === filter)
+  // Filtrage combiné (rôle + recherche)
+  const filtered = users.filter(u => {
+    // 1. Filtre par rôle
+    if (filter !== "all" && u.role !== filter) return false
+    
+    // 2. Filtre par recherche (nom ou téléphone)
+    if (searchQuery.trim() !== "") {
+      const query = searchQuery.toLowerCase()
+      const matchName = u.name?.toLowerCase().includes(query) || false
+      const matchPhone = u.phone?.toLowerCase().includes(query) || false
+      if (!matchName && !matchPhone) return false
+    }
+    
+    return true
+  })
 
   return (
     <div className="min-h-svh bg-brand-bg pb-20 font-sans">
@@ -111,6 +148,20 @@ export default function AdminUsers() {
               {label}
             </button>
           ))}
+        </div>
+
+        {/* Barre de recherche */}
+        <div className="mb-6 relative">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+            <Search className="size-4 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Rechercher par nom ou numéro..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-11 w-full rounded-[10px] border-[1.5px] border-gray-200 bg-white pl-10 pr-4 text-[0.92rem] font-medium text-brand-black placeholder-gray-400 outline-none transition-colors focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow"
+          />
         </div>
 
         {isLoading && (
