@@ -8,6 +8,7 @@
 ## AdminStats (src/pages/admin/AdminStats.tsx) ✅ COMPLÉTÉ
 - Commissions totales, trips terminés, clients, conducteurs
 - Limitation MVP : plafond 1000 transactions (agrégation post-MVP)
+- realtime ✅ COMPLÉTÉ
 
 ## AdminUsers (src/pages/admin/AdminUsers.tsx)
 - Filtre : all / client / conducteur
@@ -17,25 +18,26 @@
 - toggleSuspend() : suspend ou réactive
 - validateConducteur() : conducteur_verifie = true → déclenche hook 250 FCFA
 - Limitation MVP : max 100 utilisateurs (pagination post-MVP)
-⚠️ MANQUANT : champ recherche — à implémenter
+- realtime ✅ COMPLÉTÉ
 
 ## AdminCourses (src/pages/admin/AdminCourses.tsx) ✅ COMPLÉTÉ
 - Liste 100 trips, filtre par statut
 - Limitation MVP : pas de pagination, pas d'actions admin
+- realtime ✅ COMPLÉTÉ
 
 ## AdminLitiges (src/pages/admin/AdminLitiges.tsx) ✅ COMPLÉTÉ
 - resoudre() / rejeter()
-⚠️ MANQUANT : filtre par statut, affichage resolved/dismissed
+- filtre statut ✅ COMPLÉTÉ, affichage resolved/dismissed ✅ COMPLÉTÉ, realtime ✅ COMPLÉTÉ
 
-## AdminSettings (à créer)
+## AdminSettings (src/pages/admin/AdminSettings.tsx) ✅ COMPLÉTÉ
 Page de configuration des paramètres financiers :
 - Champ : Commission par course (FCFA) — défaut 25
 - Champ : Prix abonnement hebdomadaire (FCFA) — défaut 500
 - Champ : Bonus bienvenue conducteur (FCFA) — défaut 250
-- Bouton : Sauvegarder → update collection `settings` dans PocketBase
-- Les hooks lisent dynamiquement ces valeurs depuis `settings`
+- Bouton : Sauvegarder → update/create collection `settings` dans PocketBase
+- Les hooks lisent dynamiquement ces valeurs (via `$app.findRecordsByFilter`)
+- Noms champs corrigés ✅ COMPLÉTÉ
 - Route : /admin/settings
-⚠️ À CRÉER : page + collection settings + mise à jour hooks
 
 ## Fonctionnalités post-MVP
 - Recharge wallet conducteur manuelle
@@ -48,3 +50,5 @@ Page de configuration des paramètres financiers :
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v2.0 — ajout recherche utilisateur, ajout AdminSettings
   pour prix configurables
+- [2026-03-14] v2.1 — implémentation de la barre de recherche dans AdminUsers
+- [2026-03-17] v3.0 — AdminLitiges : filtre statut et realtime ajoutés. AdminStats, AdminUsers, AdminCourses enrichis en realtime. AdminSettings : noms champs alignés au backend.

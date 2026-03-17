@@ -20,6 +20,7 @@ const settings = $app.findFirstRecordByFilter("settings", "id != ''")
 const COMMISSION = settings ? settings.get("commission_amount") : 25
 const WELCOME_BONUS = settings ? settings.get("welcome_bonus") : 250
 ```
+- Lecture settings avec vrais noms de champs confirmée ✅
 
 ## Hook 1 — Commission
 Déclencheur : onRecordAfterUpdateSuccess sur trips
@@ -50,6 +51,7 @@ const average = total / notations.length
 conducteur.set("rating", Math.round(average * 10) / 10)
 conducteur.set("totalRating", notations.length)
 ```
+- Hook 3 cronAdd individuel supprimé ✅
 
 ## Hook 4 — Crédit bienvenue (ANTI-DOUBLON OBLIGATOIRE)
 Déclencheur : onRecordAfterUpdateSuccess sur users
@@ -57,11 +59,12 @@ Condition : conducteur_verifie passe à true ET role = "conducteur"
 Montant : lu depuis settings.welcome_bonus (défaut 250)
 
 Anti-doublon OBLIGATOIRE avant tout crédit :
+- Hook 4 anti-doublon : champ reference confirmé ✅
 ```javascript
 try {
   const existing = $app.findFirstRecordByFilter(
     "transactions",
-    `user = "${user.id}" && note = "bienvenue"`
+    `user = "${user.id}" && reference = "bienvenue"`
   )
   if (existing) return // déjà crédité — on arrête
 } catch(e) {
@@ -69,7 +72,8 @@ try {
 }
 ```
 
-Action : walletBalance + WELCOME_BONUS + transaction type="recharge" note="bienvenue"
+Action : walletBalance + WELCOME_BONUS + transaction type="recharge" reference="bienvenue"
+- Hook 4 bonus 250 FCFA confirmé ✅
 
 ## Hook 5 — Expiration courses
 Déclencheur : cronAdd toutes les 2 minutes
@@ -94,3 +98,4 @@ JAMAIS : `flyctl launch`
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v2.0 — lecture dynamique depuis settings, correction bug
   totalRating hook 3, anti-doublon hook 4, ajout hook 6 notifications solde
+- [2026-03-17] v2.1 — Hook 3 cronAdd individuel supprimé. Hook 4 anti-doublon: champ reference et bonus 250 FCFA confirmés. Lecture settings avec vrais noms de champs confirmée.

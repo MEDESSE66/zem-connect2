@@ -14,7 +14,7 @@ Problème : hook vérifie conducteur_verifie = true sur tout update
 Solution : vérifier transaction reference="bienvenue" inexistante avant crédit
 Impact : financier direct — argent crédité en double
 
-## BUG 3 — VITE_PB_URL non configuré Cloudflare Pages 🔴 CRITIQUE
+## BUG 3 — VITE_PB_URL non configuré Cloudflare Pages ✅ COMPLÉTÉ
 Localisation : Cloudflare Pages → Settings → Environment Variables
 Problème : app production pointe sur localhost:8090
 Solution : ajouter VITE_PB_URL = https://zem-connect2-pb.fly.dev
@@ -38,6 +38,18 @@ Solution : import React déplacé ligne 1
 Fichier : index.css + package.json
 Solution : import Google Fonts Inter, --font-sans mis à jour, package Geist désinstallé
 
+## BUG 8 — Noms champs settings incorrects dans hooks ✅ CORRIGÉ
+Problème : Les hooks et le frontend utilisaient `commission`, `bonus_bienvenue`, `prix_abonnement`.
+Solution : Remplacé par `commission_amount`, `welcome_bonus`, `subscription_price`.
+
+## BUG 9 — Champ reference vs note dans transactions ✅ CORRIGÉ
+Problème : Incohérence dans Hook 4 anti-doublon et création de transaction.
+Solution : Utiliser `reference = 'bienvenue'`.
+
+## BUG 10 — Type Litige incorrect ✅ CORRIGÉ
+Problème : Le type Litige TypeScript ne correspondait pas au schéma réel.
+Solution : Remplacé par le bon schéma avec `auteur` et `resolution`.
+
 ## Ordre de correction recommandé
 1. BUG 3 (VITE_PB_URL) — 2 minutes, Cloudflare dashboard
 2. BUG 1 (LandingPage) — 2 lignes de code
@@ -54,3 +66,4 @@ Solution : import Google Fonts Inter, --font-sans mis à jour, package Geist dé
 - [2026-03-14] v3.1 — BUG 4 corrigé (Hook 4 recalcul depuis BD)
 - [2026-03-14] v3.3 — BUG 5 corrigé (DriverAccueil bouton désactivé visuellement)
 - [2026-03-14] v3.4 — BUG 6 corrigé (import React déplacé en haut LandingPage)
+- [2026-03-17] v4.0 — BUG 3 VITE_PB_URL complété. BUG 8 (noms champs settings), BUG 9 (champ reference transactions), BUG 10 (type Litige) corrigés.
