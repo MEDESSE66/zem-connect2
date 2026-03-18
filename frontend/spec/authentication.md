@@ -44,6 +44,8 @@
 
 ## Session
 - checkAuth() appelé au montage de App.tsx
+- checkAuth : refresh token au rechargement ✅ (authRefresh, expire session invalide)
+- login : refresh token après authentification ✅ (authRefresh pour récupérer champs custom)
 - pb.authStore.onChange() écoute déconnexion automatique
 - Restauration session au rechargement : pb.authStore.isValid + pb.authStore.record
 
@@ -61,3 +63,4 @@
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v2.0 — suppression photo étape 3, bonus 250F (pas 200F),
   validation admin maintenue, ajout placeholders
+- [2026-03-18] v2.1 — checkAuth et login utilisent authRefresh pour prévenir la perte de session ✅

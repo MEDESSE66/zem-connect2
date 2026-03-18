@@ -7,7 +7,7 @@ interface AuthState {
   isLoading: boolean
   login: (phone: string, password: string) => Promise<void>
   logout: () => void
-  checkAuth: () => void
+  checkAuth: () => Promise<void>
   register: (phone: string, password: string, name: string, role: UserRole, extraData?: Record<string, unknown>) => Promise<void>
 }
 
@@ -28,9 +28,15 @@ export const useAuthStore = create<AuthState>((set) => {
     user: null,
     isLoading: false,
 
-    checkAuth: () => {
+    checkAuth: async () => {
       if (pb.authStore.isValid && pb.authStore.record) {
-        set({ user: pb.authStore.record as unknown as User })
+        try {
+          const freshUser = await pb.collection("users").authRefresh({ requestKey: null })
+          set({ user: freshUser.record as unknown as User })
+        } catch {
+          pb.authStore.clear()
+          set({ user: null })
+        }
       } else {
         set({ user: null })
       }
@@ -41,7 +47,8 @@ export const useAuthStore = create<AuthState>((set) => {
       try {
         const email = phone.includes("@") ? phone : phoneToEmail(phone)
         await pb.collection("users").authWithPassword(email, password, { requestKey: null })
-        set({ user: pb.authStore.record as unknown as User, isLoading: false })
+        const freshUser = await pb.collection("users").authRefresh({ requestKey: null })
+        set({ user: freshUser.record as unknown as User, isLoading: false })
       } catch (error) {
         set({ isLoading: false })
         throw error
