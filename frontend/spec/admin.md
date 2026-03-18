@@ -39,6 +39,7 @@ Page de configuration des paramètres financiers :
 - Bouton : Sauvegarder → update/create collection `settings` dans PocketBase
 - Les hooks lisent dynamiquement ces valeurs (via `$app.findRecordsByFilter`)
 - Noms champs corrigés ✅ COMPLÉTÉ
+- AdminSettings fallbacks corrigés ✅ (?? au lieu de || pour permettre 0)
 - Route : /admin/settings
 
 ## Fonctionnalités post-MVP
@@ -56,3 +57,4 @@ Page de configuration des paramètres financiers :
 - [2026-03-17] v3.1 — Ajout de la recharge manuelle du wallet conducteur dans AdminUsers. ✅ COMPLÉTÉ
 - [2026-03-17] v3.2 — Pagination AdminUsers et AdminCourses (20 items par page) ✅ COMPLÉTÉ
 - [2026-03-18] v3.3 — Confirmation recherche nom ✅, settings nav ✅, inputMode numeric Login/Inscription ✅
+- [2026-03-18] v3.4 — AdminSettings fallbacks corrigés (?? au lieu de ||) ✅

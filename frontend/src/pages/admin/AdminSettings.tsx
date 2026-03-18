@@ -19,7 +19,7 @@ export default function AdminSettings() {
   
   const [settingsId, setSettingsId] = useState<string | null>(null)
   const [commission, setCommission] = useState(25)
-  const [bonus, setBonus] = useState(200) // Défaut modifié pour correspondre au code (200)
+  const [bonus, setBonus] = useState(250)
   const [abonnement, setAbonnement] = useState(500)
   
   const [isLoading, setIsLoading] = useState(true)
@@ -33,9 +33,9 @@ export default function AdminSettings() {
         if (records.items.length > 0) {
           const s = records.items[0]
           setSettingsId(s.id)
-          setCommission(s.commission_amount || 25)
-          setBonus(s.welcome_bonus || 200)
-          setAbonnement(s.subscription_price || 500)
+          setCommission(s.commission_amount ?? 25)
+          setBonus(s.welcome_bonus ?? 250)
+          setAbonnement(s.subscription_price ?? 500)
         }
       } catch (err) {
         console.error("Collection settings introuvable ou vide. Il faudra la créer via l'interface PB.", err)
