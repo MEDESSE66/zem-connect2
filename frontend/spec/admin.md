@@ -18,6 +18,7 @@
 - toggleSuspend() : suspend ou réactive
 - validateConducteur() : conducteur_verifie = true → déclenche hook 250 FCFA
 - Recherche par nom (matchName u.name) ✅ et par téléphone (matchPhone u.phone) ✅
+- handleRecharge corrigé avec Promise.all ✅
 - Navigation params settings : navigate("/admin/settings") ✅
 - Pagination AdminUsers : non applicable — recherche frontend incompatible, limite 100
 - realtime ✅ COMPLÉTÉ
@@ -58,3 +59,4 @@ Page de configuration des paramètres financiers :
 - [2026-03-17] v3.2 — Pagination AdminUsers et AdminCourses (20 items par page) ✅ COMPLÉTÉ
 - [2026-03-18] v3.3 — Confirmation recherche nom ✅, settings nav ✅, inputMode numeric Login/Inscription ✅
 - [2026-03-18] v3.4 — AdminSettings fallbacks corrigés (?? au lieu de ||) ✅
+- [2026-03-18] v3.5 — handleRecharge corrigé avec Promise.all ✅

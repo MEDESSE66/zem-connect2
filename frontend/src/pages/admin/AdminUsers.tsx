@@ -121,29 +121,33 @@ export default function AdminUsers() {
   const handleRecharge = async () => {
     if (!rechargeTargetId || !rechargeAmount || Number(rechargeAmount) < 100) return
     setIsRecharging(true)
-    
     const amountNum = Number(rechargeAmount)
-
     try {
       const userToUpdate = users.find(u => u.id === rechargeTargetId)
       if (!userToUpdate) return
-      
       const newBalance = (userToUpdate.walletBalance ?? 0) + amountNum
-      await pb.collection("users").update(rechargeTargetId, { walletBalance: newBalance }, { requestKey: null })
 
-      await pb.collection("transactions").create({
-        user: rechargeTargetId,
-        type: "recharge",
-        amount: amountNum,
-        reference: "recharge_admin",
-        status: "completed"
-      }, { requestKey: null })
+      // Les deux opérations en parallèle
+      await Promise.all([
+        pb.collection("users").update(rechargeTargetId, 
+          { walletBalance: newBalance }, 
+          { requestKey: null }
+        ),
+        pb.collection("transactions").create({
+          user: rechargeTargetId,
+          type: "recharge",
+          amount: amountNum,
+          reference: "recharge_admin",
+          status: "completed"
+        }, { requestKey: null })
+      ])
 
       toast.success(`Wallet rechargé — ${amountNum} FCFA crédités`)
       setShowRechargeDialog(false)
+      setRechargeAmount(0)
     } catch (err) {
       console.error("Erreur recharge wallet", err)
-      toast.error("Erreur lors de la recharge manuelle.")
+      toast.error("Erreur lors de la recharge.")
     } finally {
       setIsRecharging(false)
     }
