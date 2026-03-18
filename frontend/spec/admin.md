@@ -17,6 +17,8 @@
   → placeholder : "Rechercher par nom ou numéro..."
 - toggleSuspend() : suspend ou réactive
 - validateConducteur() : conducteur_verifie = true → déclenche hook 250 FCFA
+- Recherche par nom (matchName u.name) ✅ et par téléphone (matchPhone u.phone) ✅
+- Navigation params settings : navigate("/admin/settings") ✅
 - Pagination AdminUsers : non applicable — recherche frontend incompatible, limite 100
 - realtime ✅ COMPLÉTÉ
 
@@ -53,3 +55,4 @@ Page de configuration des paramètres financiers :
 - [2026-03-17] v3.0 — AdminLitiges : filtre statut et realtime ajoutés. AdminStats, AdminUsers, AdminCourses enrichis en realtime. AdminSettings : noms champs alignés au backend.
 - [2026-03-17] v3.1 — Ajout de la recharge manuelle du wallet conducteur dans AdminUsers. ✅ COMPLÉTÉ
 - [2026-03-17] v3.2 — Pagination AdminUsers et AdminCourses (20 items par page) ✅ COMPLÉTÉ
+- [2026-03-18] v3.3 — Confirmation recherche nom ✅, settings nav ✅, inputMode numeric Login/Inscription ✅

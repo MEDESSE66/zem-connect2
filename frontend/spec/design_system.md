@@ -48,3 +48,4 @@
 - États de chargement sur tous les boutons d'action
 - Pas de double-clic possible pendant requête en cours
 - Optimistic UI sur actions critiques (acceptation offre, changement statut)
+- inputMode="numeric" sur tous les champs téléphone et mot de passe ✅ (Login, Inscription)

@@ -88,6 +88,7 @@ export default function Login() {
               value={phone}
               onChange={e => setPhone(e.target.value)}
               onKeyDown={handleKeyDown}
+              inputMode="numeric"
               className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 pl-[90px] text-[0.95rem] text-white"
             />
           </div>
@@ -104,6 +105,7 @@ export default function Login() {
             value={password}
             onChange={e => setPassword(e.target.value)}
             onKeyDown={handleKeyDown}
+            inputMode="numeric"
             className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 text-[0.95rem] text-white"
           />
         </div>

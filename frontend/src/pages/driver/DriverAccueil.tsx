@@ -94,6 +94,12 @@ export default function DriverAccueil() {
     
     // Utiliser le prix modifié ou le prix initial du client
     const proposedPrice = proposedPrices[trip.id] !== undefined ? proposedPrices[trip.id] : trip.clientPrice
+
+    if (proposedPrice < 50) {
+      toast.error("Montant minimum 50 FCFA")
+      return
+    }
+
     const isCounterOffer = proposedPrice !== trip.clientPrice
 
     try {
@@ -286,8 +292,8 @@ export default function DriverAccueil() {
                   <div className="flex items-center gap-2">
                     <input
                       type="number"
-                      min="50"
                       step="50"
+                      inputMode="numeric"
                       placeholder="Montant libre..."
                       value={proposedPrices[trip.id] !== undefined ? proposedPrices[trip.id] : trip.clientPrice}
                       onChange={(e) => setExactPrice(trip.id, parseInt(e.target.value) || 50)}
