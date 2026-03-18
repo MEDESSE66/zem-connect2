@@ -33,6 +33,7 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 ## DriverMaCourse (src/pages/driver/DriverMaCourse.tsx) ✅ COMPLÉTÉ
 - Trip actif en temps réel
 - demarrer() → statut "in_progress" → déclenche hook commission
+- Wallet rafraîchî après démarrage course ✅ (getOne + useAuthStore.setState)
 - terminer() → dialog confirmation natif → statut "completed"
 - Notation client à la fin du trip ✅ COMPLÉTÉ
 
@@ -74,3 +75,4 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - [2026-03-17] v2.4 — affichage note moyenne dans DriverProfil et DriverAccueil ✅ COMPLÉTÉ
 - [2026-03-17] v2.5 — ajout de l'édition du profil inline et historique transactions ✅ COMPLÉTÉ
 - [2026-03-18] v2.6 — wallet temps réel dans DriverAccueil (subscription PocketBase sur l'utilisateur connecté) ✅ COMPLÉTÉ
+- [2026-03-18] v2.7 — wallet rafraîchî après démarrage de course dans DriverMaCourse ✅ COMPLÉTÉ

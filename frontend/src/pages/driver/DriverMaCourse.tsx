@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
 import { Home, Bike, ClipboardList, ArrowLeft, MapPin, Flag, Play, CheckCircle, Clock } from "lucide-react"
-import type { Trip } from "../../types"
+import type { Trip, User } from "../../types"
 
 const NAV_ITEMS = [
   { icon: <Home className="size-[22px]" />,           label: "Accueil",    path: "/driver" },
@@ -86,9 +86,15 @@ export default function DriverMaCourse() {
   }, [user?.id])
 
   const demarrer = async () => {
-    if (!trip) return
+    if (!trip || !user?.id) return
     try {
       await pb.collection("trips").update(trip.id, { status: "in_progress" }, { requestKey: null })
+      // Rafraîchit le wallet depuis PocketBase
+      const freshUser = await pb.collection("users").getOne(
+        user.id,
+        { requestKey: null }
+      )
+      useAuthStore.setState({ user: freshUser as unknown as User })
     } catch {
       toast.error("Erreur lors du démarrage.")
     }
