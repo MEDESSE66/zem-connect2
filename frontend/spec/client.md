@@ -11,7 +11,7 @@
 ## ClientNouvelleCourse (src/pages/client/ClientNouvelleCourse.tsx) ✅ COMPLÉTÉ — GPS manquant
 - Champs : adresse départ, adresse destination, prix proposé (FCFA)
 - Crée un trip en BD avec statut "pending"
-- expiresAt = now + 2 minutes
+- expiresAt = now + 10 minutes
 - Redirection vers /client/mes-courses après création
 - GPS departureLat/Lng ✅ COMPLÉTÉ (partiel — départ uniquement, destination post-MVP)
 - Post-MVP : intégrer API autocomplete adresses
@@ -50,3 +50,4 @@
 - [2026-03-17] v2.2 — affichage note moyenne dans ClientProfil ✅ COMPLÉTÉ
 - [2026-03-17] v2.3 — ajout de l'édition du profil inline (nom, mot de passe) ✅ COMPLÉTÉ
 - [2026-03-17] v2.4 — implémentation de la géolocalisation pour l'adresse de départ dans ClientNouvelleCourse ✅ COMPLÉTÉ
+- [2026-03-18] v2.5 — expiration des courses augmentée à 10 minutes ✅

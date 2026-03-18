@@ -67,7 +67,7 @@ export default function ClientNouvelleCourse() {
     }
     setIsLoading(true)
     try {
-      const expiresAt = new Date(Date.now() + 2 * 60 * 1000).toISOString()
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString()
       await pb.collection("trips").create({
         client: user?.id,
         status: "pending",
@@ -232,7 +232,7 @@ export default function ClientNouvelleCourse() {
 
         {/* Info expiry */}
         <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-[0.8rem] text-gray-400">
-          <Clock className="size-3.5" /> Votre demande expire après 2 minutes sans réponse.
+          <Clock className="size-3.5" /> Votre demande expire après 10 minutes sans réponse.
         </p>
       </motion.div>
 
