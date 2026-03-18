@@ -10,7 +10,9 @@
 - Limitation MVP : plafond 1000 transactions (agrégation post-MVP)
 - realtime ✅ COMPLÉTÉ
 
-## AdminUsers (src/pages/admin/AdminUsers.tsx)
+## AdminUsers (src/pages/admin/AdminUsers.tsx) ✅ COMPLÉTÉ
+- Liste des utilisateurs avec filtres et recherche
+- Cartes cliquables vers le détail utilisateur ✅
 - Filtre : all / client / conducteur
 - Recherche par nom ou numéro de téléphone (champ texte)
   → filtre côté frontend sur données chargées
@@ -60,3 +62,5 @@ Page de configuration des paramètres financiers :
 - [2026-03-18] v3.3 — Confirmation recherche nom ✅, settings nav ✅, inputMode numeric Login/Inscription ✅
 - [2026-03-18] v3.4 — AdminSettings fallbacks corrigés (?? au lieu de ||) ✅
 - [2026-03-18] v3.5 — handleRecharge corrigé avec Promise.all ✅
+- [2026-03-18] v3.6 — Création de AdminUserDetail et navigation depuis AdminUsers ✅
+

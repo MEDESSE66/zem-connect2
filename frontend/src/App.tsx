@@ -21,6 +21,7 @@ import AdminUsers from "./pages/admin/AdminUsers"
 import AdminCourses from "./pages/admin/AdminCourses"
 import AdminLitiges from "./pages/admin/AdminLitiges"
 import AdminSettings from "./pages/admin/AdminSettings"
+import AdminUserDetail from "./pages/admin/AdminUserDetail"
 
 export default function App() {
   const { checkAuth } = useAuthStore()
@@ -99,6 +100,11 @@ export default function App() {
         <Route path="/admin/utilisateurs" element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <AdminUsers />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/utilisateurs/:id" element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminUserDetail />
           </ProtectedRoute>
         } />
         <Route path="/admin/courses" element={

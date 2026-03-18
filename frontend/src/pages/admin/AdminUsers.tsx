@@ -221,32 +221,37 @@ export default function AdminUsers() {
           const rc = ROLE_CONFIG[user.role] || { label: user.role, colorClass: "text-gray-500", bgClass: "bg-gray-100" }
           return (
             <div key={user.id} className={`mb-3.5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ${user.isSuspended ? "opacity-70" : ""}`}>
-              {/* Top row */}
-              <div className="mb-3 flex items-start justify-between">
-                <div>
-                  <p className="text-[0.95rem] font-bold text-brand-black">{user.email}</p>
-                  {user.phone && (
-                    <p className="mt-0.5 flex items-center gap-1 text-[0.82rem] text-gray-400">
-                      <Phone className="size-3" /> {user.phone}
-                    </p>
-                  )}
+              <div 
+                className="cursor-pointer"
+                onClick={() => navigate(`/admin/utilisateurs/${user.id}`)}
+              >
+                {/* Top row */}
+                <div className="mb-3 flex items-start justify-between">
+                  <div>
+                    <p className="text-[0.95rem] font-bold text-brand-black">{user.email}</p>
+                    {user.phone && (
+                      <p className="mt-0.5 flex items-center gap-1 text-[0.82rem] text-gray-400">
+                        <Phone className="size-3" /> {user.phone}
+                      </p>
+                    )}
+                  </div>
+                  <div className={`shrink-0 rounded-full px-3 py-1 text-[0.75rem] font-bold ${rc.bgClass} ${rc.colorClass}`}>
+                    {rc.label}
+                  </div>
                 </div>
-                <div className={`shrink-0 rounded-full px-3 py-1 text-[0.75rem] font-bold ${rc.bgClass} ${rc.colorClass}`}>
-                  {rc.label}
-                </div>
-              </div>
 
-              {/* Infos */}
-              <div className="mb-3.5 flex gap-3 rounded-[10px] bg-brand-bg px-3.5 py-2.5">
-                <div className="flex-1">
-                  <p className="text-[0.72rem] text-gray-400">Wallet</p>
-                  <p className="text-[0.9rem] font-extrabold text-brand-black">{user.walletBalance} FCFA</p>
-                </div>
-                <div className="flex-1">
-                  <p className="text-[0.72rem] text-gray-400">Statut</p>
-                  <p className={`text-[0.9rem] font-bold ${user.isSuspended ? "text-red-500" : "text-brand-green"}`}>
-                    {user.isSuspended ? "Suspendu" : "Actif"}
-                  </p>
+                {/* Infos */}
+                <div className="mb-3.5 flex gap-3 rounded-[10px] bg-brand-bg px-3.5 py-2.5">
+                  <div className="flex-1">
+                    <p className="text-[0.72rem] text-gray-400">Wallet</p>
+                    <p className="text-[0.9rem] font-extrabold text-brand-black">{user.walletBalance} FCFA</p>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[0.72rem] text-gray-400">Statut</p>
+                    <p className={`text-[0.9rem] font-bold ${user.isSuspended ? "text-red-500" : "text-brand-green"}`}>
+                      {user.isSuspended ? "Suspendu" : "Actif"}
+                    </p>
+                  </div>
                 </div>
               </div>
 
