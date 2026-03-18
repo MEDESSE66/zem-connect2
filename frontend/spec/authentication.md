@@ -48,6 +48,7 @@
 - login : refresh token après authentification ✅ (authRefresh pour récupérer champs custom)
 - pb.authStore.onChange() écoute déconnexion automatique
 - Restauration session au rechargement : pb.authStore.isValid + pb.authStore.record
+- isAuthReady dans App.tsx : routes non rendues avant fin de checkAuth() ✅
 
 ## Mot de passe
 - Minimum 8 caractères numériques
@@ -64,3 +65,4 @@
 - [2026-03-14] v2.0 — suppression photo étape 3, bonus 250F (pas 200F),
   validation admin maintenue, ajout placeholders
 - [2026-03-18] v2.1 — checkAuth et login utilisent authRefresh pour prévenir la perte de session ✅
+- [2026-03-18] v2.2 — isAuthReady dans App.tsx (routes bloquées avant fin checkAuth) + nettoyage préfixe +229 dans phoneToEmail ✅

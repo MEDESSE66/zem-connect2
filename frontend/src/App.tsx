@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { Toaster } from "sonner"
 import { useAuthStore } from "./store/authStore"
@@ -24,10 +24,19 @@ import AdminSettings from "./pages/admin/AdminSettings"
 
 export default function App() {
   const { checkAuth } = useAuthStore()
+  const [isAuthReady, setIsAuthReady] = useState(false)
 
   useEffect(() => {
-    checkAuth()
+    checkAuth().finally(() => setIsAuthReady(true))
   }, [])
+
+  if (!isAuthReady) {
+    return (
+      <div className="flex min-h-svh items-center justify-center bg-brand-bg">
+        <div className="text-brand-yellow text-2xl font-black">ZEM</div>
+      </div>
+    )
+  }
 
   return (
     <BrowserRouter>

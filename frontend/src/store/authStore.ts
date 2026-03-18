@@ -13,7 +13,8 @@ interface AuthState {
 
 // Convertit un numéro béninois en faux email PocketBase
 function phoneToEmail(phone: string): string {
-  const cleaned = phone.replace(/\s/g, "")
+  let cleaned = phone.replace(/\s/g, "")
+  cleaned = cleaned.replace(/^(\+229|00229)/, "")
   return `+229${cleaned}@zemconnect.app`
 }
 
