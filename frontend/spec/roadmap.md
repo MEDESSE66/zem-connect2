@@ -55,6 +55,11 @@ Objectif : expansion et monétisation avancée
 - [ ] Application native Flutter (iOS + Android)
 - [ ] API partenaires (hôtels, aéroports)
 
+### Authentification avancée
+- [ ] Séparer connexion admin (email) de connexion utilisateur (téléphone)
+- [ ] OAuth2 Google avec validation numéro de téléphone obligatoire post-inscription
+- [ ] OTP WhatsApp pour validation compte conducteur
+
 ## Principe
 Les specs ne sont jamais "finales".
 Chaque déploiement peut générer de nouvelles décisions.
@@ -64,3 +69,4 @@ Toute modification de comportement → mise à jour de la spec correspondante.
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-17] v2.0 — corrections MVP finalisées (session)
 - [2026-03-17] v2.1 — ajout système de notation mutuelle (conducteur <-> client)
+- [2026-03-18] v2.2 — ajout objectifs Authentification avancée (V3)
