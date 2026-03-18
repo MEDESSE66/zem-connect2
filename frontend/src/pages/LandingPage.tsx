@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom"
 import { motion, useInView } from "motion/react"
 import { useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { MapPin, MessageCircle, CheckCircle, Zap, Shield, Smartphone, Globe, Bike, ChevronDown } from "lucide-react"
+import { MapPin, MessageCircle, CheckCircle, Zap, Shield, Smartphone, Globe, Bike, ChevronDown, Download } from "lucide-react"
+import { useState, useEffect } from "react"
 
 /* ─── animation helpers ─────────────────────────────── */
 const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
@@ -298,6 +299,39 @@ function Footer() {
 /* ─── Page ──────────────────────────────────────────── */
 
 export default function LandingPage() {
+  const [installPrompt, setInstallPrompt] = useState<any>(null)
+  const [isInstalled, setIsInstalled] = useState(false)
+  const [showIosTooltip, setShowIosTooltip] = useState(false)
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent)
+  const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
+
+  useEffect(() => {
+    if (isInStandaloneMode) {
+      setIsInstalled(true)
+      return
+    }
+    const handler = (e: any) => {
+      e.preventDefault()
+      setInstallPrompt(e)
+    }
+    window.addEventListener('beforeinstallprompt', handler)
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  const handleInstall = async () => {
+    if (isIos) {
+      setShowIosTooltip(true)
+      return
+    }
+    if (!installPrompt) return
+    installPrompt.prompt()
+    const result = await installPrompt.userChoice
+    if (result.outcome === 'accepted') {
+      setIsInstalled(true)
+      setInstallPrompt(null)
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -306,6 +340,41 @@ export default function LandingPage() {
         <CommentCaMarche />
         <Avantages />
         <CTAConducteur />
+        
+        {/* PWA Install Section */}
+        {!isInstalled && (
+          <section className="bg-brand-bg px-6 pb-20 -mt-10">
+            <RevealSection className="mx-auto max-w-[480px]">
+              <div className="relative">
+                <button
+                  onClick={handleInstall}
+                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-brand-yellow px-6 py-4 text-base font-extrabold text-brand-black shadow-lg shadow-brand-yellow/30 transition-transform active:scale-95"
+                >
+                  <Download className="size-5" />
+                  Installer l'application ZEM
+                </button>
+
+                {showIosTooltip && (
+                  <div className="absolute bottom-full left-0 right-0 mb-3 rounded-2xl bg-brand-black p-4 text-white shadow-xl">
+                    <p className="mb-2 text-[0.85rem] font-bold">Pour installer ZEM sur iPhone :</p>
+                    <p className="text-[0.82rem] text-white/70">
+                      1. Appuyez sur <span className="font-bold text-brand-yellow">Partager</span> en bas de Safari
+                    </p>
+                    <p className="text-[0.82rem] text-white/70">
+                      2. Choisissez <span className="font-bold text-brand-yellow">"Sur l'écran d'accueil"</span>
+                    </p>
+                    <button
+                      onClick={() => setShowIosTooltip(false)}
+                      className="mt-3 text-[0.78rem] text-white/40 underline"
+                    >
+                      Fermer
+                    </button>
+                  </div>
+                )}
+              </div>
+            </RevealSection>
+          </section>
+        )}
       </main>
       <Footer />
     </>

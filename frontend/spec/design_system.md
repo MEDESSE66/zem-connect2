@@ -49,3 +49,7 @@
 - Pas de double-clic possible pendant requête en cours
 - Optimistic UI sur actions critiques (acceptation offre, changement statut)
 - inputMode="numeric" sur tous les champs téléphone et mot de passe ✅ (Login, Inscription)
+- Bouton installation PWA sur LandingPage ✅
+
+## Changelog
+- [2026-03-18] v3.7 — Implémentation du bouton d'installation PWA avec détection iOS/Android et tooltip explicatif sur la LandingPage.
