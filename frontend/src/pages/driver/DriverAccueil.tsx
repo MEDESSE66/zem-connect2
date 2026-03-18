@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
 import { Home, Bike, ClipboardList, User, MapPin, Flag, LogOut, Hourglass, Clock, AlertTriangle } from "lucide-react"
-import type { Trip } from "../../types"
+import type { Trip, User as UserType } from "../../types"
 
 const NAV_ITEMS = [
   { icon: <Home className="size-[22px]" />,           label: "Accueil",    path: "/driver" },
@@ -56,15 +56,35 @@ export default function DriverAccueil() {
 
     loadTrips()
 
-    pb.collection("trips").subscribe("*", e => {
-      if (e.action === "create" && e.record.status === "pending") {
-        setTrips(prev => [e.record as unknown as Trip, ...prev])
-      } else if (e.action === "update") {
-        setTrips(prev => prev.filter(t => t.id !== e.record.id || e.record.status === "pending"))
-      }
-    })
+    let unsubscribeUser: (() => void) | undefined
+    let unsubscribeTrips: (() => void) | undefined
 
-    return () => { pb.collection("trips").unsubscribe("*") }
+    const initSubscriptions = async () => {
+      unsubscribeTrips = await pb.collection("trips").subscribe("*", e => {
+        if (e.action === "create" && e.record.status === "pending") {
+          setTrips(prev => [e.record as unknown as Trip, ...prev])
+        } else if (e.action === "update") {
+          setTrips(prev => prev.filter(t => t.id !== e.record.id || e.record.status === "pending"))
+        }
+      }, { requestKey: null })
+
+      unsubscribeUser = await pb.collection("users").subscribe(
+        user.id,
+        (e) => {
+          if (e.action === "update") {
+            useAuthStore.setState({ user: e.record as unknown as UserType })
+          }
+        },
+        { requestKey: null }
+      )
+    }
+
+    initSubscriptions()
+
+    return () => {
+      if (unsubscribeTrips) unsubscribeTrips()
+      if (unsubscribeUser) unsubscribeUser()
+    }
   }, [user?.id])
 
   const handleOffre = async (trip: Trip) => {

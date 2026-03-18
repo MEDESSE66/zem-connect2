@@ -10,6 +10,7 @@
   → pas de alert() au clic — le bouton ne répond pas
 - Liste trips "pending" en temps réel si conducteur_verifie = true
 - Anti-double offre : sentOffers empêche de soumettre deux fois
+- Wallet temps réel ✅ COMPLÉTÉ (subscription PocketBase sur users/{id})
 
 ## Notifications solde wallet
 Affichées au chargement de DriverAccueil et à chaque mise à jour du wallet :
@@ -72,3 +73,4 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - [2026-03-17] v2.3 — ajout du système de notation client dans DriverMaCourse ✅ COMPLÉTÉ
 - [2026-03-17] v2.4 — affichage note moyenne dans DriverProfil et DriverAccueil ✅ COMPLÉTÉ
 - [2026-03-17] v2.5 — ajout de l'édition du profil inline et historique transactions ✅ COMPLÉTÉ
+- [2026-03-18] v2.6 — wallet temps réel dans DriverAccueil (subscription PocketBase sur l'utilisateur connecté) ✅ COMPLÉTÉ
