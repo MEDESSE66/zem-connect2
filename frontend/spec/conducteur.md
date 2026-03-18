@@ -3,7 +3,7 @@
 *Version 2.0 — 2026-03-14*
 
 ## DriverAccueil (src/pages/driver/DriverAccueil.tsx)
-- Affiche wallet + rappel commission 25 FCFA
+- Affiche wallet + rappel commission dynamique (chargée depuis settings)
 - Banner "Vérification en attente" si conducteur_verifie = false
 - Bouton "Voir les courses" DÉSACTIVÉ visuellement si !conducteur_verifie
   → style : opacity-50 cursor-not-allowed, disabled=true
@@ -45,7 +45,7 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 
 ## DriverProfil (src/pages/driver/DriverProfil.tsx) ✅ COMPLÉTÉ
 - Badge vérifié / en attente
-- Wallet + info commission
+- Wallet + info commission (dynamique depuis settings)
 - Affichage note moyenne conducteur ✅ COMPLÉTÉ
 - Formulaire d'édition de profil (nom, mot de passe) inline ✅ COMPLÉTÉ
 - Plaque affichée (optionnelle)
@@ -76,3 +76,4 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - [2026-03-17] v2.5 — ajout de l'édition du profil inline et historique transactions ✅ COMPLÉTÉ
 - [2026-03-18] v2.6 — wallet temps réel dans DriverAccueil (subscription PocketBase sur l'utilisateur connecté) ✅ COMPLÉTÉ
 - [2026-03-18] v2.7 — wallet rafraîchî après démarrage de course dans DriverMaCourse ✅ COMPLÉTÉ
+- [2026-03-18] v2.8 — commission affichée dynamiquement depuis settings (DriverAccueil + DriverProfil) ✅ COMPLÉTÉ

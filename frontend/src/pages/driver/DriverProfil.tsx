@@ -22,9 +22,16 @@ export default function DriverProfil() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isSaving, setIsSaving] = useState(false)
+  const [commission, setCommission] = useState(25)
 
   useEffect(() => {
     if (user?.name) setName(user.name)
+
+    // Charger la commission depuis PocketBase settings
+    pb.collection("settings").getList(1, 1, { requestKey: null })
+      .then(r => {
+        if (r.items.length > 0) setCommission(r.items[0].commission_amount || 25)
+      })
   }, [user?.name])
 
   const handleSave = async () => {
@@ -225,7 +232,7 @@ export default function DriverProfil() {
           <div className="mt-3 flex items-center gap-2.5 rounded-[10px] bg-brand-yellow/8 p-3">
             <Info className="size-5 shrink-0 text-brand-yellow" />
             <p className="text-[0.8rem] leading-snug text-gray-500">
-              Commission par course : <strong className="text-brand-black">25 FCFA</strong>
+              Commission par course : <strong className="text-brand-black">{commission} FCFA</strong>
             </p>
           </div>
         </div>

@@ -22,6 +22,7 @@ export default function DriverAccueil() {
   const [isLoading, setIsLoading] = useState(true)
   const [sentOffers, setSentOffers] = useState<Set<string>>(new Set())
   const [proposedPrices, setProposedPrices] = useState<Record<string, number>>({})
+  const [commission, setCommission] = useState(25)
 
   // Fonction pour mettre à jour le prix proposé localement
   const updateProposedPrice = (tripId: string, basePrice: number, delta: number) => {
@@ -55,6 +56,12 @@ export default function DriverAccueil() {
     }
 
     loadTrips()
+
+    // Charger la commission depuis PocketBase settings
+    pb.collection("settings").getList(1, 1, { requestKey: null })
+      .then(r => {
+        if (r.items.length > 0) setCommission(r.items[0].commission_amount || 25)
+      })
 
     let unsubscribeUser: (() => void) | undefined
     let unsubscribeTrips: (() => void) | undefined
@@ -160,7 +167,7 @@ export default function DriverAccueil() {
             </p>
           </div>
           <div className="rounded-[10px] border border-brand-yellow/25 bg-brand-yellow/12 px-3.5 py-2 text-[0.78rem] font-bold text-brand-yellow">
-            Commission : 25 FCFA
+            Commission : {commission} FCFA
           </div>
         </div>
       </div>
@@ -180,33 +187,33 @@ export default function DriverAccueil() {
       )}
 
       {/* Notifications Wallet */}
-      {user?.conducteur_verifie && user?.walletBalance !== undefined && user.walletBalance <= 75 && (
+      {user?.conducteur_verifie && user?.walletBalance !== undefined && user.walletBalance <= (commission * 3) && (
         <div className={`mx-4 mt-4 flex items-start gap-3 rounded-2xl border px-5 py-4 ${
           user.walletBalance === 0 
             ? "border-red-500/25 bg-red-500/8" 
-            : user.walletBalance <= 25 
+            : user.walletBalance <= commission 
               ? "border-brand-orange/25 bg-brand-orange/8" 
               : "border-brand-yellow/25 bg-brand-yellow/8"
         }`}>
           <AlertTriangle className={`mt-0.5 size-6 shrink-0 ${
-            user.walletBalance === 0 ? "text-red-500" : user.walletBalance <= 25 ? "text-brand-orange" : "text-brand-yellow"
+            user.walletBalance === 0 ? "text-red-500" : user.walletBalance <= commission ? "text-brand-orange" : "text-brand-yellow"
           }`} />
           <div>
             <p className={`mb-1 text-[0.95rem] font-extrabold ${
-              user.walletBalance === 0 ? "text-red-500" : user.walletBalance <= 25 ? "text-brand-orange" : "text-brand-yellow"
+              user.walletBalance === 0 ? "text-red-500" : user.walletBalance <= commission ? "text-brand-orange" : "text-brand-yellow"
             }`}>
               {user.walletBalance === 0 
                 ? "Compte bloqué (Solde insuffisant)" 
-                : user.walletBalance <= 25 
+                : user.walletBalance <= commission 
                   ? "Solde minimum atteint" 
                   : "Solde faible"}
             </p>
             <p className="text-[0.83rem] leading-relaxed text-gray-500">
               {user.walletBalance === 0 
                 ? "Rechargez votre wallet pour pouvoir accepter de nouvelles courses." 
-                : user.walletBalance <= 25 
+                : user.walletBalance <= commission 
                   ? "Il vous reste 1 course. Rechargez pour continuer." 
-                  : `Il vous reste ~${Math.floor(user.walletBalance / 25)} courses. Pensez à recharger.`}
+                  : `Il vous reste ~${Math.floor(user.walletBalance / commission)} courses. Pensez à recharger.`}
             </p>
           </div>
         </div>
@@ -316,7 +323,7 @@ export default function DriverAccueil() {
                 </div>
                 <Button
                   onClick={() => !alreadySent && handleOffre(trip)}
-                  disabled={alreadySent || !user?.conducteur_verifie || (user?.walletBalance !== undefined && user.walletBalance < 25)}
+                  disabled={alreadySent || !user?.conducteur_verifie || (user?.walletBalance !== undefined && user.walletBalance < commission)}
                   className={`h-auto rounded-full px-[18px] py-2 text-[13px] font-extrabold ${
                     alreadySent
                       ? "bg-brand-green text-white"
@@ -325,7 +332,7 @@ export default function DriverAccueil() {
                         : "bg-brand-yellow text-brand-black hover:bg-brand-yellow/90 shadow-[0_4px_14px_rgba(245,197,24,0.3)]"
                   }`}
                 >
-                  {alreadySent ? "✓ Offre envoyée" : !user?.conducteur_verifie ? "Compte non vérifié" : (user?.walletBalance !== undefined && user.walletBalance < 25) ? "Solde insuffisant" : "Soumettre offre"}
+                  {alreadySent ? "✓ Offre envoyée" : !user?.conducteur_verifie ? "Compte non vérifié" : (user?.walletBalance !== undefined && user.walletBalance < commission) ? "Solde insuffisant" : "Soumettre offre"}
                 </Button>
               </div>
             </div>
