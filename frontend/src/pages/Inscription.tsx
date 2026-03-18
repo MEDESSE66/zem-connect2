@@ -182,7 +182,7 @@ export default function Inscription() {
                   </Label>
                   <Input
                     type="text"
-                    placeholder="Ex: Koffi Mensah"
+                    placeholder="Ex: KOUCHAMI Mèdessè"
                     value={name}
                     onChange={e => setName(e.target.value)}
                     className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 text-[0.95rem] text-white"
