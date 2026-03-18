@@ -42,7 +42,7 @@ export default function ClientNouvelleCourse() {
         setIsLocating(false)
         toast.success("Position détectée")
       },
-      (error) => {
+      (_error) => {
         setIsLocating(false)
         setLocationError("Position non détectée — saisie manuelle requise")
         toast.warning("Position non détectée — saisie manuelle requise")
