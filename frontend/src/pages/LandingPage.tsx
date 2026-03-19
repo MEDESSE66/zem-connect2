@@ -319,11 +319,10 @@ export default function LandingPage() {
   }, [])
 
   const handleInstall = async () => {
-    if (isIos) {
+    if (isIos || !installPrompt) {
       setShowIosTooltip(true)
       return
     }
-    if (!installPrompt) return
     installPrompt.prompt()
     const result = await installPrompt.userChoice
     if (result.outcome === 'accepted') {
@@ -356,12 +355,14 @@ export default function LandingPage() {
 
                 {showIosTooltip && (
                   <div className="absolute bottom-full left-0 right-0 mb-3 rounded-2xl bg-brand-black p-4 text-white shadow-xl">
-                    <p className="mb-2 text-[0.85rem] font-bold">Pour installer ZEM sur iPhone :</p>
-                    <p className="text-[0.82rem] text-white/70">
-                      1. Appuyez sur <span className="font-bold text-brand-yellow">Partager</span> en bas de Safari
+                    <p className="mb-2 text-[0.85rem] font-bold">
+                      Installer ZEM sur votre téléphone :
+                    </p>
+                    <p className="text-[0.82rem] text-white/70 mb-1">
+                      <span className="font-bold text-brand-yellow">Android Chrome :</span> Menu ⋮ → "Ajouter à l'écran d'accueil"
                     </p>
                     <p className="text-[0.82rem] text-white/70">
-                      2. Choisissez <span className="font-bold text-brand-yellow">"Sur l'écran d'accueil"</span>
+                      <span className="font-bold text-brand-yellow">iPhone Safari :</span> Partager → "Sur l'écran d'accueil"
                     </p>
                     <button
                       onClick={() => setShowIosTooltip(false)}
