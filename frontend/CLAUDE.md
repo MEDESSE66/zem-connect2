@@ -35,6 +35,7 @@ ou création d'interface utilisateur. Sans exception.
 /admin/courses → AdminCourses
 /admin/litiges → AdminLitiges
 /admin/settings → AdminSettings (à créer)
+/admin/utilisateurs/:id → AdminUserDetail (ProtectedRoute: ["admin"])
 * → Navigate /login
 
 ## authStore — fonctions disponibles
@@ -72,3 +73,4 @@ avec changelog daté.
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v2.0 — ajout skill frontend-design, route /admin/settings,
   règles placeholders, règle mise à jour specs
+- [2026-03-18] v2.1 — route AdminUserDetail ajoutée

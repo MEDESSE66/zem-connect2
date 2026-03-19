@@ -35,13 +35,11 @@ Objectif : lancement à Cotonou avec flux core fonctionnel
 ## Phase V2 (post-lancement)
 Objectif : amélioration UX + nouvelles fonctionnalités
 
-- [ ] Géolocalisation GPS (navigator.geolocation)
-- [x] Système de notation (UI — backend déjà prêt)
-- [ ] Recharge wallet MTN/MOOV (FedaPay API)
-- [ ] OTP WhatsApp (360dialog)
-- [ ] OAuth2 Google
-- [ ] Pagination AdminUsers et AdminCourses
-- [ ] Modification profil (nom, mot de passe)
+- [x] PWA complète (manifest, service worker, icônes, bouton installation)
+- [x] AdminUserDetail — vue profil complet admin
+- [x] Commission dynamique depuis settings
+- [x] Expiration courses 10 minutes
+- [x] Modification profil (nom, mot de passe)
 - [ ] Historique transactions conducteur
 
 ## Phase V3 (croissance)
@@ -70,3 +68,4 @@ Toute modification de comportement → mise à jour de la spec correspondante.
 - [2026-03-17] v2.0 — corrections MVP finalisées (session)
 - [2026-03-17] v2.1 — ajout système de notation mutuelle (conducteur <-> client)
 - [2026-03-18] v2.2 — ajout objectifs Authentification avancée (V3)
+- [2026-03-18] v2.3

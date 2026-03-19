@@ -50,6 +50,22 @@ Solution : Utiliser `reference = 'bienvenue'`.
 Problème : Le type Litige TypeScript ne correspondait pas au schéma réel.
 Solution : Remplacé par le bon schéma avec `auteur` et `resolution`.
 
+## BUG 11 — Wallet bonus boucle infinie ✅ CORRIGÉ [2026-03-18]
+Problème : hook 4 se déclenchait sur tout update users → boucle
+Solution : transaction créée AVANT wallet, findFirstRecordByFilter strict
+
+## BUG 12 — Clavier numérique absent ✅ CORRIGÉ [2026-03-18]
+Solution : inputMode="numeric" sur Login, Inscription, DriverAccueil
+
+## BUG 13 — Session perdue au refresh ✅ CORRIGÉ [2026-03-18]
+Solution : isAuthReady gate + authRefresh dans checkAuth async
+
+## BUG 14 — Acceptation offre erreur 400 ✅ CORRIGÉ [2026-03-18]
+Solution : "accepte" ajouté dans trips.status PocketBase schema
+
+## BUG 15 — Recharge wallet message erreur faux ✅ CORRIGÉ [2026-03-18]
+Solution : Promise.all pour atomicité update + create transaction
+
 ## Ordre de correction recommandé
 1. BUG 3 (VITE_PB_URL) — 2 minutes, Cloudflare dashboard
 2. BUG 1 (LandingPage) — 2 lignes de code
@@ -67,3 +83,4 @@ Solution : Remplacé par le bon schéma avec `auteur` et `resolution`.
 - [2026-03-14] v3.3 — BUG 5 corrigé (DriverAccueil bouton désactivé visuellement)
 - [2026-03-14] v3.4 — BUG 6 corrigé (import React déplacé en haut LandingPage)
 - [2026-03-17] v4.0 — BUG 3 VITE_PB_URL complété. BUG 8 (noms champs settings), BUG 9 (champ reference transactions), BUG 10 (type Litige) corrigés.
+- [2026-03-18] v4.1 — bugs session 2026-03-18 ajoutés

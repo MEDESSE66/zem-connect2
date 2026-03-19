@@ -37,6 +37,7 @@ frontend/
 │       ├── LandingPage.tsx
 │       ├── Login.tsx
 │       ├── Inscription.tsx
+│       ├── /admin/utilisateurs/:id → AdminUserDetail (ProtectedRoute: ["admin"])
 │       ├── client/
 │       ├── driver/
 │       └── admin/
@@ -108,3 +109,4 @@ Backend : flyctl deploy --no-cache (manuel depuis backend/)
 
 ## Changelog
 - [2026-03-14] v1.0 — création initiale
+- [2026-03-18] v1.1 — route AdminUserDetail ajoutée

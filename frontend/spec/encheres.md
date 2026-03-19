@@ -22,7 +22,7 @@ Boutons relatifs au prix proposé par le client :
 
 Contraintes :
 - Prix résultant ne peut pas être inférieur à 0 → boutons -50/-100 désactivés si résultat ≤ 0
-- Prix résultant ne peut pas être inférieur à 50 FCFA (minimum acceptable)
+- Validation au submit : si montant < 50 FCFA → toast.error, pas d'envoi
 - isCounterOffer = true si prix différent du clientPrice
 - isCounterOffer = false si conducteur accepte le prix exact du client
 - Un conducteur ne peut soumettre qu'une seule offre par course
@@ -68,3 +68,5 @@ Pour chaque offre reçue :
 
 ## Changelog
 - [2026-03-14] v1.0 — création initiale
+- [2026-03-14] v1.1 — implémentation des boutons rapides dans DriverAccueil et ClientNouvelleCourse
+- [2026-03-18] v1.2 — validation montant au submit

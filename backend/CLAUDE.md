@@ -34,3 +34,6 @@
 ## Variables d'environnement Cloudflare Pages
 VITE_PB_URL = https://zem-connect2-pb.fly.dev
 (À configurer dans Cloudflare Pages → Settings → Environment Variables)
+
+## Changelog
+- [2026-03-18] v1.1 — Hook 4 anti-doublon strict, transaction avant wallet

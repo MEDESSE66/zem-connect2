@@ -69,8 +69,18 @@
 - clientPrice (pas prix_propose)
 - finalPrice (pas prix_final)
 
+## API Rules actuelles
+- users : List/View/Update = auth != "" | Create = vide | Delete = admin
+- trips : tout = auth != "" | Delete = admin
+- offres : tout = auth != "" | Delete = admin
+- transactions : List/View = admin||user | Create/Update/Delete = admin
+- notations : List/View/Create = auth != "" | Update/Delete = admin
+- litiges : List/View/Update/Delete = admin | Create = auth != ""
+- settings : List/View/Create/Update = auth != "" | Delete = superuser
+
 ## Changelog
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v2.0 — ajout collection settings, ajout nombre_zem sur trips,
   ajout champ note sur transactions
 - [2026-03-17] v2.1 — renommage critique : transactions champ note devient reference
+- [2026-03-18] v2.2 — API Rules documentées

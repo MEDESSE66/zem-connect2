@@ -33,3 +33,6 @@ Le client choisit l'offre qui lui convient.
 - Recharge wallet Mobile Money (MTN/Moov)
 - Bouton annulation course côté client
 - VITE_PB_URL non configuré sur Cloudflare Pages
+
+## Changelog
+- [2026-03-18] État mis à jour — MVP stable en production, V2 en cours
