@@ -153,7 +153,7 @@ function Hero() {
       >
         {[
           { val: "2 min",   label: "Délai moyen" },
-          { val: "25 FCFA", label: "Commission fixe" },
+          { val: "Fixe",    label: "Commission par course" },
           { val: "100%",    label: "Conducteurs vérifiés" },
         ].map(({ val, label }) => (
           <div key={label} className="text-center">
@@ -216,7 +216,7 @@ function CommentCaMarche() {
 const AVANTAGES = [
   { icon: <Zap className="size-8" />,        titre: "Prix en temps réel",   desc: "Enchères ouvertes — vous payez le juste prix, jamais plus." },
   { icon: <Shield className="size-8" />,     titre: "Conducteurs vérifiés", desc: "Chaque conducteur est validé par notre équipe avant activation." },
-  { icon: <Smartphone className="size-8" />, titre: "100% Mobile Money",     desc: "MTN & Moov acceptés. Zéro carte bancaire." },
+  { icon: <Smartphone className="size-8" />, titre: "Paiement cash simple",  desc: "Réglez directement le conducteur après chaque course. Simple et sans intermédiaire." },
   { icon: <Globe className="size-8" />,      titre: "Fait pour le Bénin",    desc: "Conçu pour les réalités de Cotonou et des villes béninoises." },
 ]
 
@@ -269,7 +269,7 @@ function CTAConducteur() {
           </h2>
           <p className="mx-auto mb-8 max-w-[500px] text-[1.05rem] leading-relaxed text-white/88">
             Rejoignez la plateforme, recevez des commandes et augmentez vos revenus.
-            Seulement <strong>25 FCFA de commission</strong> par trajet complété.
+            Commission fixe et transparente par trajet complété. Wallet rechargeable.
           </p>
           <Button
             onClick={() => navigate("/inscription")}
@@ -342,9 +342,9 @@ export default function LandingPage() {
         
         {/* PWA Install Section */}
         {!isInstalled && (
-          <section className="bg-brand-bg px-6 pb-20 -mt-10">
-            <RevealSection className="mx-auto max-w-[480px]">
-              <div className="relative">
+          <section className="bg-brand-bg px-6 pb-20">
+            <div className="mx-auto max-w-[480px]">
+              <div className="relative z-50">
                 <button
                   onClick={handleInstall}
                   className="flex w-full items-center justify-center gap-3 rounded-2xl bg-brand-yellow px-6 py-4 text-base font-extrabold text-brand-black shadow-lg shadow-brand-yellow/30 transition-transform active:scale-95"
@@ -352,9 +352,8 @@ export default function LandingPage() {
                   <Download className="size-5" />
                   Installer l'application ZEM
                 </button>
-
                 {showIosTooltip && (
-                  <div className="absolute bottom-full left-0 right-0 mb-3 rounded-2xl bg-brand-black p-4 text-white shadow-xl">
+                  <div className="absolute bottom-full left-0 right-0 mb-3 rounded-2xl bg-brand-black p-4 text-white shadow-xl z-50">
                     <p className="mb-2 text-[0.85rem] font-bold">
                       Installer ZEM sur votre téléphone :
                     </p>
@@ -373,7 +372,7 @@ export default function LandingPage() {
                   </div>
                 )}
               </div>
-            </RevealSection>
+            </div>
           </section>
         )}
       </main>
