@@ -97,6 +97,8 @@ export default function AdminCourses() {
             { key: "accepte",     label: "Acceptées" },
             { key: "in_progress", label: "En cours" },
             { key: "completed",   label: "Terminées" },
+            { key: "cancelled",   label: "Annulées" },
+            { key: "expired",     label: "Expirées" },
           ].map(({ key, label }) => (
             <button
               key={key}

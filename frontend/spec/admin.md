@@ -52,15 +52,6 @@ Page de configuration des paramètres financiers :
 - Simulateur gains conducteur (données réelles)
 
 ## Changelog
-- [2026-03-14] v1.0 — création initiale
-- [2026-03-14] v2.0 — ajout recherche utilisateur, ajout AdminSettings
-  pour prix configurables
-- [2026-03-14] v2.1 — implémentation de la barre de recherche dans AdminUsers
-- [2026-03-17] v3.0 — AdminLitiges : filtre statut et realtime ajoutés. AdminStats, AdminUsers, AdminCourses enrichis en realtime. AdminSettings : noms champs alignés au backend.
-- [2026-03-17] v3.1 — Ajout de la recharge manuelle du wallet conducteur dans AdminUsers. ✅ COMPLÉTÉ
-- [2026-03-17] v3.2 — Pagination AdminUsers et AdminCourses (20 items par page) ✅ COMPLÉTÉ
-- [2026-03-18] v3.3 — Confirmation recherche nom ✅, settings nav ✅, inputMode numeric Login/Inscription ✅
-- [2026-03-18] v3.4 — AdminSettings fallbacks corrigés (?? au lieu de ||) ✅
-- [2026-03-18] v3.5 — handleRecharge corrigé avec Promise.all ✅
 - [2026-03-18] v3.6 — Création de AdminUserDetail et navigation depuis AdminUsers ✅
+- [2026-03-20] v3.7 — Filtres complets (accepte, cancelled, expired) dans AdminCourses et affichage dates ✅
 

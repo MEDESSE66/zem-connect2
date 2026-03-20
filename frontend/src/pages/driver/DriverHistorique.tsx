@@ -13,6 +13,14 @@ const NAV_ITEMS = [
   { icon: <ClipboardList className="size-[22px]" />,  label: "Historique", path: "/driver/historique" },
 ]
 
+const STATUS_CONFIG = {
+  completed:   { label: "Terminée",   colorClass: "text-brand-green",  bgClass: "bg-brand-green/10"  },
+  cancelled:   { label: "Annulée",    colorClass: "text-red-500",      bgClass: "bg-red-500/10"      },
+  expired:     { label: "Expirée",    colorClass: "text-gray-400",     bgClass: "bg-gray-100"        },
+  in_progress: { label: "En cours",   colorClass: "text-blue-500",     bgClass: "bg-blue-500/10"     },
+  accepte:     { label: "Acceptée",   colorClass: "text-brand-orange", bgClass: "bg-brand-orange/10" },
+}
+
 export default function DriverHistorique() {
   const { user }                  = useAuthStore()
   const navigate                  = useNavigate()
@@ -150,19 +158,16 @@ export default function DriverHistorique() {
           </div>
         )}
 
-        {trips.map(trip => (
-          <div key={trip.id} className="mb-3.5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-            {/* Badge statut */}
-            <div className={`mb-3.5 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[0.78rem] font-bold ${
-              trip.status === "completed"
-                ? "bg-brand-green/10 text-brand-green"
-                : "bg-red-500/8 text-red-500"
-            }`}>
-              {trip.status === "completed"
-                ? <><Check className="size-3" /> Terminée</>
-                : <><X className="size-3" /> Annulée</>
-              }
-            </div>
+        {trips.map(trip => {
+          const sc = STATUS_CONFIG[trip.status as keyof typeof STATUS_CONFIG] || { label: trip.status, colorClass: "text-gray-500", bgClass: "bg-gray-100" }
+          return (
+            <div key={trip.id} className="mb-3.5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              {/* Badge statut */}
+              <div className={`mb-3.5 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[0.78rem] font-bold ${sc.bgClass} ${sc.colorClass}`}>
+                {trip.status === "completed" && <Check className="size-3" />}
+                {trip.status === "cancelled" && <X className="size-3" />}
+                {sc.label}
+              </div>
 
             {/* Trajet */}
             <div className="mb-3.5 flex flex-col gap-2">
@@ -200,7 +205,8 @@ export default function DriverHistorique() {
               </div>
             )}
           </div>
-        ))}
+          )
+        })}
           </>
         )}
 

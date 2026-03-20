@@ -15,12 +15,12 @@ const NAV_ITEMS = [
 ]
 
 const STATUS_CONFIG: Record<string, { label: string; colorClass: string; bgClass: string }> = {
-  pending:     { label: "En attente",  colorClass: "text-brand-orange",  bgClass: "bg-brand-orange/10"     },
-  accepte:     { label: "Acceptée",    colorClass: "text-brand-green",   bgClass: "bg-brand-green/10"      },
-  in_progress: { label: "En cours",    colorClass: "text-blue-500",      bgClass: "bg-blue-500/10"         },
-  completed:   { label: "Terminée",    colorClass: "text-gray-500",      bgClass: "bg-gray-100"            },
-  cancelled:   { label: "Annulée",     colorClass: "text-red-500",       bgClass: "bg-red-500/10"          },
-  expired:     { label: "Expirée",     colorClass: "text-gray-400",      bgClass: "bg-gray-50"             },
+  completed:   { label: "Terminée",   colorClass: "text-brand-green",  bgClass: "bg-brand-green/10"  },
+  cancelled:   { label: "Annulée",    colorClass: "text-red-500",      bgClass: "bg-red-500/10"      },
+  expired:     { label: "Expirée",    colorClass: "text-gray-400",     bgClass: "bg-gray-100"        },
+  in_progress: { label: "En cours",   colorClass: "text-blue-500",     bgClass: "bg-blue-500/10"     },
+  accepte:     { label: "Acceptée",   colorClass: "text-brand-orange", bgClass: "bg-brand-orange/10" },
+  pending:     { label: "En attente", colorClass: "text-brand-orange", bgClass: "bg-brand-orange/10" },
 }
 
 export default function ClientMesCourses() {
@@ -78,7 +78,7 @@ export default function ClientMesCourses() {
     const loadTrips = async () => {
       try {
         const records = await pb.collection("trips").getList(1, 50, {
-          filter: `client = "${user.id}"`,
+          filter: `client = "${user.id}" && (status != "pending" || expiresAt > "${new Date().toISOString()}")`,
           sort: "-created",
           requestKey: null,
         })
@@ -221,8 +221,16 @@ export default function ClientMesCourses() {
           return (
             <div key={trip.id} className="mb-4 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
               {/* Status badge */}
-              <div className={`mb-3.5 inline-flex items-center rounded-full px-3 py-1 text-[0.78rem] font-bold ${sc.bgClass} ${sc.colorClass}`}>
-                {sc.label}
+              <div className="mb-3.5 flex items-center justify-between">
+                <div className={`inline-flex items-center rounded-full px-3 py-1 text-[0.78rem] font-bold ${sc.bgClass} ${sc.colorClass}`}>
+                  {sc.label}
+                </div>
+                <p className="text-[0.72rem] text-gray-400">
+                  {new Date(trip.created).toLocaleDateString("fr-FR", {
+                    day: "2-digit", month: "short",
+                    hour: "2-digit", minute: "2-digit"
+                  })}
+                </p>
               </div>
 
               {/* Trajet */}
