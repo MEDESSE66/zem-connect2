@@ -82,3 +82,4 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - Commission dynamique dans DriverHistorique ✅
 - Affichage simplifié : Reçu du client + Commission wallet ✅
 - [2026-03-20] v3.3 — refonte notation et fin de course dans DriverMaCourse (sync wallet + trigger immédiat) ✅
+- [2026-03-20] v3.4 — remplacement window.confirm par un dialog React personnalisé ✅

@@ -28,6 +28,7 @@ export default function DriverMaCourse() {
   const [ratingScore, setRatingScore]           = useState(0)
   const [ratingComment, setRatingComment]       = useState("")
   const [isRating, setIsRating]                 = useState(false)
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
 
   const checkAndShowRating = async (t: Trip) => {
     if (!t.client) return
@@ -100,9 +101,13 @@ export default function DriverMaCourse() {
     }
   }
 
+  const handleTerminerClick = () => {
+    setShowConfirmDialog(true)
+  }
+
   const terminer = async () => {
+    setShowConfirmDialog(false)
     if (!trip) return
-    if (!window.confirm("Confirmer la fin de cette course ?")) return
     try {
       await pb.collection("trips").update(
         trip.id, 
@@ -248,7 +253,7 @@ export default function DriverMaCourse() {
 
             {trip.status === "in_progress" && (
               <Button
-                onClick={terminer}
+                onClick={handleTerminerClick}
                 className="h-[52px] w-full rounded-[14px] bg-brand-green text-base font-extrabold text-white shadow-[0_4px_20px_var(--brand-green)40] hover:bg-brand-green/90"
               >
                 <CheckCircle className="mr-2 size-5" /> Terminer la course
@@ -259,6 +264,35 @@ export default function DriverMaCourse() {
       </motion.div>
 
       <BottomNav items={NAV_ITEMS} />
+
+      {/* Dialog de confirmation de fin de course */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-sm rounded-[24px] bg-white p-6 shadow-xl">
+            <h3 className="mb-2 text-center text-lg font-extrabold text-brand-black">
+              Terminer la course ?
+            </h3>
+            <p className="mb-6 text-center text-[0.88rem] text-gray-500">
+              Confirmez la fin de cette course.
+            </p>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowConfirmDialog(false)}
+                className="flex-1 rounded-xl font-bold"
+              >
+                Annuler
+              </Button>
+              <Button
+                onClick={terminer}
+                className="flex-1 rounded-xl bg-brand-green font-extrabold text-white"
+              >
+                Confirmer
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Dialog de notation */}
       {showRatingDialog && (
