@@ -83,4 +83,6 @@ Solution : Promise.all pour atomicité update + create transaction
 - [2026-03-14] v3.3 — BUG 5 corrigé (DriverAccueil bouton désactivé visuellement)
 - [2026-03-14] v3.4 — BUG 6 corrigé (import React déplacé en haut LandingPage)
 - [2026-03-17] v4.0 — BUG 3 VITE_PB_URL complété. BUG 8 (noms champs settings), BUG 9 (champ reference transactions), BUG 10 (type Litige) corrigés.
+- [2026-03-20] v4.3 — FIX CRITICAL : CRON $app obligatoire (e.app réservé aux hooks) ✅
 - [2026-03-18] v4.1 — bugs session 2026-03-18 ajoutés
+- [2026-03-20] v4.2 — commission déduite à l'acceptation ('accepte') au lieu du démarrage ('in_progress') ✅
