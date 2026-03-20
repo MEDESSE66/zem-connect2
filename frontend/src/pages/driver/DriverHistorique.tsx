@@ -27,6 +27,7 @@ export default function DriverHistorique() {
   const [trips, setTrips]         = useState<Trip[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalGagne, setTotalGagne] = useState(0)
+  const [commission, setCommission] = useState(25)
 
   const [activeTab, setActiveTab] = useState<"courses" | "transactions">("courses")
   const [transactions, setTransactions] = useState<any[]>([])
@@ -34,6 +35,13 @@ export default function DriverHistorique() {
 
   useEffect(() => {
     if (!user?.id) return
+
+    pb.collection("settings").getList(1, 1, { requestKey: null })
+      .then(r => {
+        if (r.items.length > 0)
+          setCommission(r.items[0].commission_amount ?? 25)
+      })
+
     pb.collection("trips").getList(1, 50, {
       filter: `conducteur = "${user.id}" && (status = "completed" || status = "cancelled")`,
       sort: "-created",
@@ -191,16 +199,14 @@ export default function DriverHistorique() {
             {(trip.finalPrice || trip.clientPrice) && (
               <div className="flex gap-3 rounded-[10px] bg-brand-bg px-3.5 py-3">
                 <div className="flex-1">
-                  <p className="text-[0.75rem] text-gray-400">Prix course</p>
-                  <p className="font-extrabold text-brand-black">{trip.finalPrice || trip.clientPrice} FCFA</p>
-                </div>
-                <div className="flex-1">
-                  <p className="text-[0.75rem] text-gray-400">Commission ZEM (déduite du wallet)</p>
-                  <p className="font-extrabold text-brand-orange">-25 FCFA</p>
-                </div>
-                <div className="flex-1">
                   <p className="text-[0.75rem] text-gray-400">Reçu du client</p>
-                  <p className="font-extrabold text-brand-green">{trip.finalPrice || trip.clientPrice} FCFA</p>
+                  <p className="font-extrabold text-brand-black">
+                    {trip.finalPrice || trip.clientPrice} FCFA
+                  </p>
+                </div>
+                <div className="flex-1">
+                  <p className="text-[0.75rem] text-gray-400">Commission wallet</p>
+                  <p className="font-extrabold text-brand-orange">-{commission} FCFA</p>
                 </div>
               </div>
             )}

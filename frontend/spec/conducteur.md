@@ -79,4 +79,6 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - [2026-03-18] v2.8 — commission affichée dynamiquement depuis settings (DriverAccueil + DriverProfil) ✅ COMPLÉTÉ
 - [2026-03-20] v2.9 — ajout du filtre expiresAt > @now pour voir les courses pending ✅ COMPLÉTÉ
 - [2026-03-20] v3.0 — badges statut colorés dans l'historique des courses ✅ COMPLÉTÉ
-- [2026-03-20] v3.1 — correction calcul revenus (brut au lieu de net après commission) ✅
+- Commission dynamique dans DriverHistorique ✅
+- Affichage simplifié : Reçu du client + Commission wallet ✅
+- [2026-03-20] v3.2 — commission dynamique et affichage simplifié dans l'historique ✅
