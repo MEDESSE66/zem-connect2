@@ -54,3 +54,5 @@
 - [2026-03-20] v2.6 — ajout du filtre expiresAt > @now pour les courses pending ✅
 - [2026-03-20] v2.7 — ajout des badges statut colorés et dates de création ✅
 - [2026-03-20] v2.8 — checkAndShowRating déplacée au scope composant dans ClientMesCourses ✅
+- [2026-03-20] v2.9 — Intégration carte Leaflet avec marqueur draggable départ ✅
+- [2026-03-20] v3.0 — Fix filtre loadTrips — suppression condition expiresAt incompatible avec PocketBase ✅

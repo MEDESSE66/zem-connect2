@@ -78,7 +78,7 @@ export default function ClientMesCourses() {
     const loadTrips = async () => {
       try {
         const records = await pb.collection("trips").getList(1, 50, {
-          filter: `client = "${user.id}" && (status != "pending" || expiresAt > "${new Date().toISOString()}")`,
+          filter: `client = "${user.id}"`,
           sort: "-created",
           requestKey: null,
         })
