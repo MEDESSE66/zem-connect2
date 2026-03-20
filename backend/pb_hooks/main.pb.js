@@ -1,37 +1,48 @@
-// HOOK 1 — Déduction commission 25 FCFA
+// HOOK 1 — Déduction commission au démarrage de course
 onRecordAfterUpdateSuccess((e) => {
     e.next()
     const record = e.record
     if (record.collection().name !== "trips") return
     if (record.get("status") !== "in_progress") return
 
+    let commission = 25
+    try {
+        const settings = $app.findRecordsByFilter("settings", "1=1", "", 1, 0)
+        if (settings.length > 0) commission = settings[0].get("commission_amount") || 25
+    } catch {}
+
     const conducteurId = record.get("conducteur")
     if (!conducteurId) return
 
     const conducteur = $app.findRecordById("users", conducteurId)
     const currentBalance = conducteur.get("walletBalance")
+    if (currentBalance < commission) return
 
-    if (currentBalance < 25) return
-
-    conducteur.set("walletBalance", currentBalance - 25)
+    conducteur.set("walletBalance", currentBalance - commission)
     $app.save(conducteur)
 
     const transactionsCollection = $app.findCollectionByNameOrId("transactions")
     const transaction = new Record(transactionsCollection)
     transaction.set("user", conducteurId)
     transaction.set("type", "commission")
-    transaction.set("amount", 25)
+    transaction.set("amount", commission)
     transaction.set("trip", record.id)
     transaction.set("status", "completed")
     $app.save(transaction)
 })
 
-// HOOK 2 — Remboursement 25 FCFA annulation client
+// HOOK 2 — Remboursement commission si course annulée après acceptation
 onRecordAfterUpdateSuccess((e) => {
     e.next()
     const record = e.record
     if (record.collection().name !== "trips") return
     if (record.get("status") !== "cancelled") return
+
+    let commission = 25
+    try {
+        const settings = $app.findRecordsByFilter("settings", "1=1", "", 1, 0)
+        if (settings.length > 0) commission = settings[0].get("commission_amount") || 25
+    } catch {}
 
     const conducteurId = record.get("conducteur")
     if (!conducteurId) return
@@ -39,51 +50,20 @@ onRecordAfterUpdateSuccess((e) => {
     const conducteur = $app.findRecordById("users", conducteurId)
     const currentBalance = conducteur.get("walletBalance")
 
-    conducteur.set("walletBalance", currentBalance + 25)
+    conducteur.set("walletBalance", currentBalance + commission)
     $app.save(conducteur)
 
     const transactionsCollection = $app.findCollectionByNameOrId("transactions")
     const transaction = new Record(transactionsCollection)
     transaction.set("user", conducteurId)
     transaction.set("type", "refund")
-    transaction.set("amount", 25)
+    transaction.set("amount", commission)
     transaction.set("trip", record.id)
     transaction.set("status", "completed")
     $app.save(transaction)
 })
 
-// HOOK 3 — Expiration automatique des courses
-onRecordAfterCreateSuccess((e) => {
-    e.next()
-    const record = e.record
-    if (record.collection().name !== "trips") return
-
-    const tripId = record.id
-    const expiresAt = record.get("expiresAt")
-    if (!expiresAt) return
-
-    cronAdd(`expire_trip_${tripId}`, "* * * * *", () => {
-        try {
-            const trip = $app.findRecordById("trips", tripId)
-            if (trip.get("status") !== "pending") {
-                cronRemove(`expire_trip_${tripId}`)
-                return
-            }
-
-            const now = new Date()
-            const expiry = new Date(expiresAt)
-
-            if (now >= expiry) {
-                trip.set("status", "expired")
-                $app.save(trip)
-                cronRemove(`expire_trip_${tripId}`)
-            }
-        } catch {
-            cronRemove(`expire_trip_${tripId}`)
-        }
-    })
-})
-// HOOK 4 — Calcul note moyenne conducteur
+// HOOK 3 — Calcul note moyenne conducteur
 onRecordAfterCreateSuccess((e) => {
     e.next()
     const record = e.record
@@ -92,43 +72,50 @@ onRecordAfterCreateSuccess((e) => {
     const targetId = record.get("target")
     if (!targetId) return
 
+    const allNotations = $app.findRecordsByFilter(
+        "notations",
+        "target = {:targetId}",
+        "-created",
+        1000,
+        0,
+        { targetId: targetId }
+    )
+
+    const total = allNotations.length
+    if (total === 0) return
+
+    let sum = 0
+    for (const n of allNotations) {
+        sum += parseFloat(n.get("score")) || 0
+    }
+    const avgRating = Math.round((sum / total) * 10) / 10
+
     const target = $app.findRecordById("users", targetId)
-
-    const currentRating = parseFloat(target.get("rating")) || 0
-    const currentTotal = parseInt(target.get("totalRating")) || 0
-    const newScore = parseFloat(record.get("score"))
-
-    console.log("currentRating:", currentRating)
-    console.log("currentTotal:", currentTotal)
-    console.log("newScore:", newScore)
-
-    const newTotal = currentTotal + 1
-    const newRating = ((currentRating * currentTotal) + newScore) / newTotal
-
-    console.log("newTotal:", newTotal)
-    console.log("newRating:", newRating)
-
-    target.set("rating", Math.round(newRating * 10) / 10)
-    target.set("totalRating", newTotal)
+    target.set("rating", avgRating)
+    target.set("totalRating", total)
     $app.save(target)
 })
-// CRON GLOBAL — Expiration des courses toutes les minutes
+
+// CRON GLOBAL — Expiration des courses pending toutes les minutes
 cronAdd("expire_pending_trips", "* * * * *", () => {
-    const now = new Date().toISOString()
-    const trips = $app.findRecordsByFilter(
-        "trips",
-        "status = 'pending' && expiresAt != '' && expiresAt <= {:now}",
-        "-created",
-        100,
-        0,
-        { now: now }
-    )
-    for (const trip of trips) {
-        trip.set("status", "expired")
-        $app.save(trip)
+    try {
+        const trips = $app.findRecordsByFilter(
+            "trips",
+            "status = 'pending' && expiresAt != '' && expiresAt <= @now",
+            "-created",
+            100,
+            0
+        )
+        for (const trip of trips) {
+            trip.set("status", "expired")
+            $app.save(trip)
+        }
+    } catch(e) {
+        console.error("Erreur CRON expiration:", e)
     }
 })
-// HOOK 5 — Wallet bienvenue 200 FCFA après validation admin
+
+// HOOK 4 — Crédit bienvenue à la validation admin (anti-doublon strict)
 onRecordAfterUpdateSuccess((e) => {
     e.next()
     const record = e.record
@@ -136,17 +123,40 @@ onRecordAfterUpdateSuccess((e) => {
     if (record.get("role") !== "conducteur") return
     if (!record.get("conducteur_verifie")) return
 
-    const currentBalance = parseFloat(record.get("walletBalance")) || 0
-    if (currentBalance >= 200) return
+    // Vérification stricte anti-doublon
+    let alreadyCredited = false
+    try {
+        const existing = $app.findFirstRecordByFilter(
+            "transactions",
+            `user = "${record.id}" && reference = "bienvenue"`
+        )
+        if (existing) alreadyCredited = true
+    } catch(e) {
+        // Non trouvé = normal, on continue
+        alreadyCredited = false
+    }
+    if (alreadyCredited) return
 
-    record.set("walletBalance", currentBalance + 200)
-    $app.save(record)
+    // Créer la transaction IMMÉDIATEMENT avant de modifier le wallet
+    // pour bloquer tout re-déclenchement
+    let bonus = 250
+    try {
+        const settings = $app.findRecordsByFilter("settings", "1=1", "", 1, 0)
+        if (settings.length > 0) bonus = settings[0].get("welcome_bonus") || 250
+    } catch {}
 
     const transactionsCollection = $app.findCollectionByNameOrId("transactions")
     const transaction = new Record(transactionsCollection)
     transaction.set("user", record.id)
     transaction.set("type", "recharge")
-    transaction.set("amount", 200)
+    transaction.set("amount", bonus)
+    transaction.set("reference", "bienvenue")
     transaction.set("status", "completed")
     $app.save(transaction)
+
+    // Modifier le wallet APRÈS avoir créé la transaction
+    const freshUser = $app.findRecordById("users", record.id)
+    const currentBalance = parseFloat(freshUser.get("walletBalance")) || 0
+    freshUser.set("walletBalance", currentBalance + bonus)
+    $app.save(freshUser)
 })

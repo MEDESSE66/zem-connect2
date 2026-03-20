@@ -43,7 +43,7 @@ export default function DriverAccueil() {
     const loadTrips = async () => {
       try {
         const records = await pb.collection("trips").getList(1, 50, {
-          filter: `status = "pending"`,
+          filter: `status = "pending" && expiresAt > "${new Date().toISOString()}"`,
           sort: "-created",
           requestKey: null,
         })

@@ -96,7 +96,8 @@ JAMAIS : `flyctl launch`
 
 ## Changelog
 - [2026-03-14] v1.0 — création initiale
-- [2026-03-14] v2.0 — lecture dynamique depuis settings, correction bug
-  totalRating hook 3, anti-doublon hook 4, ajout hook 6 notifications solde
+- [2026-03-20] v1.1 — ajout du filtre expiresAt > @now pour les courses pending ✅
+- [2026-03-14] v2.0 — lecture dynamique depuis settings, correction bug totalRating hook 3, anti-doublon hook 4, ajout hook 6 notifications solde
 - [2026-03-17] v2.1 — Hook 3 cronAdd individuel supprimé. Hook 4 anti-doublon: champ reference et bonus 250 FCFA confirmés. Lecture settings avec vrais noms de champs confirmée.
 - [2026-03-18] v2.2 — Hook 5 expiration des courses augmentée à 10 minutes ✅
+- [2026-03-20] v2.3 — CRON utilise désormais la syntaxe native @now ✅
