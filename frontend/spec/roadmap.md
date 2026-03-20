@@ -48,6 +48,20 @@ Objectif : expansion et monétisation avancée
 - [ ] Multi-zem (nombre_zem = 1 ou 2)
 - [ ] Abonnement premium conducteur (500 FCFA/semaine)
 - [ ] Simulateur gains conducteur (données réelles)
+
+### Statistiques conducteur
+- [ ] Tableau de bord revenus : total gagné par jour/semaine/mois
+- [ ] Comparaison revenus avant/après ZEM Connect
+- [ ] Nombre de courses par période
+- [ ] Revenu moyen par course
+- [ ] Disponible en version premium (abonnement 500 FCFA/semaine)
+
+### Types de conducteurs étendus
+- [ ] Conducteur solo (actuel — 1 moto)
+- [ ] Conducteur avec flotte (plusieurs motos, gestion équipe)
+- [ ] Taxi-moto partenaire (conducteur indépendant affilié)
+- [ ] Conducteur premium (abonné — commission fixe remplacée par abonnement)
+- [ ] Champ supplémentaire sur users : conducteur_type (solo|flotte|partenaire)
 - [ ] Notifications push PWA
 - [ ] Expansion vers Porto-Novo, Parakou
 - [ ] Application native Flutter (iOS + Android)
@@ -69,3 +83,4 @@ Toute modification de comportement → mise à jour de la spec correspondante.
 - [2026-03-17] v2.1 — ajout système de notation mutuelle (conducteur <-> client)
 - [2026-03-18] v2.2 — ajout objectifs Authentification avancée (V3)
 - [2026-03-18] v2.3
+- [2026-03-20] v2.4 — ajout PRD, mise à jour roadmap (stats et types conducteurs) ✅
