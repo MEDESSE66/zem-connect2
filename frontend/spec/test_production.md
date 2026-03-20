@@ -42,12 +42,11 @@
 - [ ] Client voit l'offre en temps réel dans ClientMesCourses
 
 ### BLOC 5 — Acceptation et démarrage
-- [ ] Client accepte offre → statut trip "accepte"
+- [ ] Client accepte offre → statut trip "accepte" → commission 25 FCFA déduite IMMÉDIATEMENT
+- [ ] Transaction "commission" créée dans PocketBase avant mise à jour wallet
 - [ ] Conducteur voit la course dans DriverMaCourse
 - [ ] Bouton "Démarrer" visible si statut "accepte"
-- [ ] Démarrer → statut "in_progress"
-- [ ] Commission 25 FCFA déduite du wallet conducteur
-- [ ] Transaction "commission" créée dans PocketBase
+- [ ] Démarrer → statut "in_progress" (commission déjà prélevée — aucune déduction supplémentaire)
 
 ### BLOC 6 — Fin de course
 - [ ] Conducteur → bouton "Terminer" → dialog confirmation
@@ -84,7 +83,7 @@
 ### BLOC 10 — Edge cases
 - [ ] Conducteur avec wallet = 0 : ne peut pas démarrer de course
 - [ ] Conducteur non vérifié : boutons désactivés visuellement
-- [ ] Course expirée après 2 minutes si aucune offre
+- [ ] Course expirée après 10 minutes si aucune offre
 - [ ] Utilisateur suspendu : ne peut plus se connecter
 
 ## Résultats
@@ -107,3 +106,5 @@
 
 ## Changelog
 - [2026-03-17] v1.0 — création initiale
+- [2026-03-20] v1.1 — BLOC 5 mis à jour : commission à l'acceptation, pas au démarrage
+- [2026-03-20] v1.2 — BLOC 10 expiration corrigée à 10 minutes

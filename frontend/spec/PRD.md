@@ -42,9 +42,10 @@ le wallet du conducteur à chaque course complétée.
 2. Conducteurs voient la course en temps réel (expiration 10 minutes)
 3. Conducteur soumet offre — prix accepté ou contre-offre
 4. Client accepte l'offre de son choix
-5. Conducteur démarre → commission déduite du wallet automatiquement
-6. Course terminée → notation mutuelle client ↔ conducteur
-7. Historique et transactions mis à jour en temps réel
+5. Client accepte offre → commission 25 FCFA déduite du wallet conducteur automatiquement (anti-fraude)
+6. Conducteur se dirige vers le client et démarre → trips.status = "in_progress"
+7. Course terminée → notation mutuelle client ↔ conducteur
+8. Historique et transactions mis à jour en temps réel
 
 ## 5. STACK TECHNIQUE
 - Frontend : React 19 + TypeScript + Vite + Zustand + shadcn/ui + Tailwind v4
@@ -130,3 +131,4 @@ MVP complet en production. 15+ pages implémentées. Flux core validé.
 
 ## Changelog
 - [2026-03-20] v1.0 — création initiale, fusion overview.md + roadmap.md
+- [2026-03-20] v1.1 — flux core mis à jour : commission à l'acceptation (anti-fraude)

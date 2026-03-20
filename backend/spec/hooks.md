@@ -24,7 +24,8 @@ const WELCOME_BONUS = settings ? settings.get("welcome_bonus") : 250
 
 ## Hook 1 — Commission
 Déclencheur : onRecordAfterUpdateSuccess sur trips
-Condition : status passe à "in_progress"
+Condition : status passe à "accepte" (au moment où le client choisit l'offre)
+Raison : anti-fraude — le conducteur ne peut plus contourner la commission en ignorant le bouton Démarrer
 Montant : lu depuis settings.commission_amount (défaut 25)
 Action : walletBalance conducteur - COMMISSION + transaction type="commission"
 
@@ -76,7 +77,7 @@ Action : walletBalance + WELCOME_BONUS + transaction type="recharge" reference="
 - Hook 4 bonus 250 FCFA confirmé ✅
 
 ## Hook 5 — Expiration courses
-Déclencheur : cronAdd toutes les 2 minutes
+Déclencheur : cronAdd toutes les minutes ("* * * * *")
 Action : trips status="pending" créés > 10 minutes → status="expired"
 Utilise $app (correct dans cron — pas de contexte e)
 
@@ -88,6 +89,8 @@ Action : créer une notification in-app selon seuil :
 - walletBalance ≤ 25 : type="danger" message="Solde minimum atteint"
 - walletBalance = 0 : type="blocked" message="Compte bloqué"
 Note : nécessite collection `notifications` (à créer)
+⚠️ NON IMPLÉMENTÉ — collection `notifications` non créée
+Statut : post-MVP
 
 ## Déploiement
 Commande : `flyctl deploy --no-cache` (depuis backend/)
@@ -101,3 +104,6 @@ JAMAIS : `flyctl launch`
 - [2026-03-17] v2.1 — Hook 3 cronAdd individuel supprimé. Hook 4 anti-doublon: champ reference et bonus 250 FCFA confirmés. Lecture settings avec vrais noms de champs confirmée.
 - [2026-03-18] v2.2 — Hook 5 expiration des courses augmentée à 10 minutes ✅
 - [2026-03-20] v2.3 — CRON utilise désormais la syntaxe native @now ✅
+- [2026-03-20] v2.4 — Hook 1 trigger déplacé in_progress → accepte (anti-fraude) ✅
+- [2026-03-20] v2.5 — Hook 2 conducteur identifié via offres.status=accepted ✅
+- [2026-03-20] v2.6 — Hook 5 fréquence corrigée (1 min), Hook 6 marqué non implémenté

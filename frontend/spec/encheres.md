@@ -58,7 +58,7 @@ Pour chaque offre reçue :
 2. Conducteur voit la course → utilise boutons rapides ou champ libre
 3. Client voit toutes les offres en temps réel
 4. Client choisit une offre → course acceptée
-5. Commission 25 FCFA déduite au démarrage
+5. Commission 25 FCFA déduite automatiquement à l'acceptation (trips.status = "accepte")
 
 ## Post-MVP — Multi-zem
 - nombre_zem : 1 ou 2 (champ sur trips)
@@ -70,3 +70,4 @@ Pour chaque offre reçue :
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-14] v1.1 — implémentation des boutons rapides dans DriverAccueil et ClientNouvelleCourse
 - [2026-03-18] v1.2 — validation montant au submit
+- [2026-03-20] v1.3 — flux mis à jour : commission déduite à l'acceptation

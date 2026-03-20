@@ -55,8 +55,8 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - Wallet = 0 à l'inscription
 - 250 FCFA crédités à validation admin (hook backend)
 - Minimum 25 FCFA pour voir les courses
-- Commission 25 FCFA déduite quand trip → "in_progress"
-- Remboursement 25 FCFA si trip annulé après acceptation
+- Commission 25 FCFA déduite quand trip → "accepte" (à l'acceptation de l'offre)
+- Remboursement 25 FCFA si trip annulé après acceptation (conducteur identifié via offres)
 - Recharge self-service MTN/MOOV (post-MVP — spec/recharge.md)
 
 ## Règles statut conducteur
@@ -83,3 +83,4 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - Affichage simplifié : Reçu du client + Commission wallet ✅
 - [2026-03-20] v3.3 — refonte notation et fin de course dans DriverMaCourse (sync wallet + trigger immédiat) ✅
 - [2026-03-20] v3.4 — remplacement window.confirm par un dialog React personnalisé ✅
+- [2026-03-20] v3.5 — règles wallet mises à jour : commission déduite à "accepte" ✅

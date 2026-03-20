@@ -20,7 +20,7 @@
 - clientPrice (number) — prix proposé par client
 - finalPrice (number) — prix accepté final
 - status : pending | accepte | in_progress | completed | cancelled | expired
-- expiresAt (datetime) — now + 2 minutes à la création
+- expiresAt (datetime) — now + 10 minutes à la création
 - nombre_zem (number, default 1) — post-MVP : 1 ou 2
 
 ## offres
@@ -39,6 +39,7 @@
 - reference (text, optionnel)
   → valeur "bienvenue" pour le crédit de bienvenue (anti-doublon hook)
   → valeur "recharge_admin" pour les recharges manuelles admin
+  → valeur "remboursement" pour les remboursements après annulation
 
 ## notations
 - id, auteur (relation users), target (relation users)
@@ -84,3 +85,4 @@
   ajout champ note sur transactions
 - [2026-03-17] v2.1 — renommage critique : transactions champ note devient reference
 - [2026-03-18] v2.2 — API Rules documentées
+- [2026-03-20] v2.3 — expiresAt corrigé à 10 minutes, ajout reference "remboursement"

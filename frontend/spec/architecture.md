@@ -73,10 +73,12 @@ Conducteur soumet offre (offres collection)
 Client voit l'offre (ClientMesCourses)
     ↓
 Client accepte → trips.status = "accepte"
+    ↓ Hook 1 (IMMÉDIAT)
+Commission 25 FCFA déduite du wallet conducteur
+    ↓
+Conducteur se dirige vers le client
     ↓
 Conducteur démarre → trips.status = "in_progress"
-    ↓ Hook 1
-Commission 25 FCFA déduite du wallet
     ↓
 Conducteur termine → trips.status = "completed"
 ```
@@ -110,3 +112,4 @@ Backend : flyctl deploy --no-cache (manuel depuis backend/)
 ## Changelog
 - [2026-03-14] v1.0 — création initiale
 - [2026-03-18] v1.1 — route AdminUserDetail ajoutée
+- [2026-03-20] v1.2 — flux mis à jour : commission déduite à "accepte" (pas in_progress)
