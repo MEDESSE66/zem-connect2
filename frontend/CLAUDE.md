@@ -65,7 +65,7 @@ avec changelog daté.
 
 ## Lire avant de modifier
 - spec/bugs_critiques.md → corrections prioritaires
-- spec/[domaine].md → comportement attendu
+- spec/PRD.md → comportement attendu (Source de vérité)
 - spec/design_system.md → cohérence visuelle
 - spec/encheres.md → logique boutons prix
 

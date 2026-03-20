@@ -43,7 +43,7 @@ export default function DriverHistorique() {
       setTrips(tripList)
       const total = tripList
         .filter(t => t.status === "completed")
-        .reduce((acc, t) => acc + ((t.finalPrice ?? 0) - 25), 0)
+        .reduce((acc, t) => acc + (t.finalPrice || t.clientPrice || 0), 0)
       setTotalGagne(total)
     }).catch(err => {
       console.error(err)
@@ -188,19 +188,19 @@ export default function DriverHistorique() {
             </div>
 
             {/* Prix */}
-            {trip.finalPrice && (
+            {(trip.finalPrice || trip.clientPrice) && (
               <div className="flex gap-3 rounded-[10px] bg-brand-bg px-3.5 py-3">
                 <div className="flex-1">
                   <p className="text-[0.75rem] text-gray-400">Prix course</p>
-                  <p className="font-extrabold text-brand-black">{trip.finalPrice} FCFA</p>
+                  <p className="font-extrabold text-brand-black">{trip.finalPrice || trip.clientPrice} FCFA</p>
                 </div>
                 <div className="flex-1">
-                  <p className="text-[0.75rem] text-gray-400">Commission</p>
+                  <p className="text-[0.75rem] text-gray-400">Commission ZEM (déduite du wallet)</p>
                   <p className="font-extrabold text-brand-orange">-25 FCFA</p>
                 </div>
                 <div className="flex-1">
-                  <p className="text-[0.75rem] text-gray-400">Gagné</p>
-                  <p className="font-extrabold text-brand-green">{trip.finalPrice - 25} FCFA</p>
+                  <p className="text-[0.75rem] text-gray-400">Reçu du client</p>
+                  <p className="font-extrabold text-brand-green">{trip.finalPrice || trip.clientPrice} FCFA</p>
                 </div>
               </div>
             )}

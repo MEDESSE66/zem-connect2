@@ -27,6 +27,7 @@ Contexte terrain : réseau 2G/3G, utilisateurs peu alphabétisés, WhatsApp univ
 - Ne jamais relancer `flyctl launch` — écrase fly.toml
 - Toujours `flyctl deploy --no-cache` pour le backend
 - Lire les fichiers spec/ concernés avant toute modification de page
+- Source de vérité produit : spec/PRD.md
 
 ## Règle mise à jour specs — OBLIGATOIRE
 Après chaque modification de fichier de code, mettre à jour la spec correspondante :
