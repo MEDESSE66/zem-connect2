@@ -53,3 +53,4 @@
 - [2026-03-18] v2.5 — expiration des courses augmentée à 10 minutes ✅
 - [2026-03-20] v2.6 — ajout du filtre expiresAt > @now pour les courses pending ✅
 - [2026-03-20] v2.7 — ajout des badges statut colorés et dates de création ✅
+- [2026-03-20] v2.8 — checkAndShowRating déplacée au scope composant dans ClientMesCourses ✅
