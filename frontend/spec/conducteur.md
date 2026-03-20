@@ -81,4 +81,4 @@ Affichage : toast in-app + badge rouge sur l'icône wallet
 - [2026-03-20] v3.0 — badges statut colorés dans l'historique des courses ✅ COMPLÉTÉ
 - Commission dynamique dans DriverHistorique ✅
 - Affichage simplifié : Reçu du client + Commission wallet ✅
-- [2026-03-20] v3.2 — commission dynamique et affichage simplifié dans l'historique ✅
+- [2026-03-20] v3.3 — refonte notation et fin de course dans DriverMaCourse (sync wallet + trigger immédiat) ✅

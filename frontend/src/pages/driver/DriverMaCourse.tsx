@@ -29,27 +29,27 @@ export default function DriverMaCourse() {
   const [ratingComment, setRatingComment]       = useState("")
   const [isRating, setIsRating]                 = useState(false)
 
+  const checkAndShowRating = async (t: Trip) => {
+    if (!t.client) return
+    try {
+      const records = await pb.collection("notations").getList(1, 1, {
+        filter: `auteur = "${user?.id}" && trip = "${t.id}"`,
+        requestKey: null,
+      })
+      if (records.items.length === 0) {
+        setRatingTripId(t.id)
+        setRatingTargetId(t.client)
+        setRatingScore(0)
+        setRatingComment("")
+        setShowRatingDialog(true)
+      }
+    } catch (err) {
+      console.error("Erreur vérification notation", err)
+    }
+  }
+
   useEffect(() => {
     if (!user?.id) return
-
-    const checkAndShowRating = async (t: Trip) => {
-      if (!t.client) return
-      try {
-        const records = await pb.collection("notations").getList(1, 1, {
-          filter: `auteur = "${user.id}" && trip = "${t.id}"`,
-          requestKey: null,
-        })
-        if (records.items.length === 0) {
-          setRatingTripId(t.id)
-          setRatingTargetId(t.client)
-          setRatingScore(0)
-          setRatingComment("")
-          setShowRatingDialog(true)
-        }
-      } catch (err) {
-        console.error("Erreur vérification notation", err)
-      }
-    }
 
     const loadTrip = async () => {
       try {
@@ -104,7 +104,17 @@ export default function DriverMaCourse() {
     if (!trip) return
     if (!window.confirm("Confirmer la fin de cette course ?")) return
     try {
-      await pb.collection("trips").update(trip.id, { status: "completed" }, { requestKey: null })
+      await pb.collection("trips").update(
+        trip.id, 
+        { status: "completed" }, 
+        { requestKey: null }
+      )
+      const freshUser = await pb.collection("users").getOne(
+        user!.id, 
+        { requestKey: null }
+      )
+      useAuthStore.setState({ user: freshUser as unknown as User })
+      await checkAndShowRating(trip)
       setTrip(null)
     } catch {
       toast.error("Erreur lors de la fin de course.")
