@@ -319,16 +319,30 @@ export default function LandingPage() {
   }, [])
 
   const handleInstall = async () => {
-    if (isIos || !installPrompt) {
-      setShowIosTooltip(true)
+    if (isIos) {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "ZEM Connect",
+            text: "Commandez votre zémidjan au meilleur prix",
+            url: window.location.href,
+          })
+        } catch {}
+      } else {
+        setShowIosTooltip(true)
+      }
       return
     }
-    installPrompt.prompt()
-    const result = await installPrompt.userChoice
-    if (result.outcome === 'accepted') {
-      setIsInstalled(true)
-      setInstallPrompt(null)
+    if (installPrompt) {
+      installPrompt.prompt()
+      const result = await installPrompt.userChoice
+      if (result.outcome === 'accepted') {
+        setIsInstalled(true)
+        setInstallPrompt(null)
+      }
+      return
     }
+    setShowIosTooltip(true)
   }
 
   return (
@@ -353,21 +367,23 @@ export default function LandingPage() {
                   Installer l'application ZEM
                 </button>
                 {showIosTooltip && (
-                  <div className="absolute bottom-full left-0 right-0 mb-3 rounded-2xl bg-brand-black p-4 text-white shadow-xl z-50">
-                    <p className="mb-2 text-[0.85rem] font-bold">
+                  <div className="fixed bottom-24 left-4 right-4 z-[100] rounded-2xl bg-brand-black p-5 text-white shadow-2xl">
+                    <p className="mb-3 text-[0.9rem] font-bold">
                       Installer ZEM sur votre téléphone :
                     </p>
-                    <p className="text-[0.82rem] text-white/70 mb-1">
-                      <span className="font-bold text-brand-yellow">Android Chrome :</span> Menu ⋮ → "Ajouter à l'écran d'accueil"
+                    <p className="text-[0.82rem] text-white/70 mb-2">
+                      <span className="font-bold text-brand-yellow">Android Chrome :</span>{" "}
+                      Menu ⋮ en haut à droite → "Ajouter à l'écran d'accueil"
                     </p>
-                    <p className="text-[0.82rem] text-white/70">
-                      <span className="font-bold text-brand-yellow">iPhone Safari :</span> Partager → "Sur l'écran d'accueil"
+                    <p className="text-[0.82rem] text-white/70 mb-4">
+                      <span className="font-bold text-brand-yellow">iPhone Safari :</span>{" "}
+                      Bouton Partager ↑ en bas → "Sur l'écran d'accueil"
                     </p>
                     <button
                       onClick={() => setShowIosTooltip(false)}
-                      className="mt-3 text-[0.78rem] text-white/40 underline"
+                      className="w-full rounded-xl bg-white/10 py-2 text-[0.82rem] font-bold text-white"
                     >
-                      Fermer
+                      Compris
                     </button>
                   </div>
                 )}

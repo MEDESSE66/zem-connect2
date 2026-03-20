@@ -188,6 +188,7 @@ export default function DriverProfil() {
               placeholder="Nouveau mot de passe (8 chiffres min)"
               value={password}
               onChange={e => setPassword(e.target.value)}
+              inputMode="numeric"
               className="w-full rounded-[10px] border border-gray-200 bg-gray-50 px-3 py-2 text-[0.9rem] font-semibold text-brand-black outline-none focus:border-brand-orange"
             />
           </div>
@@ -199,6 +200,7 @@ export default function DriverProfil() {
               placeholder="Confirmer le mot de passe"
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
+              inputMode="numeric"
               className="w-full rounded-[10px] border border-gray-200 bg-gray-50 px-3 py-2 text-[0.9rem] font-semibold text-brand-black outline-none focus:border-brand-orange"
             />
           </div>

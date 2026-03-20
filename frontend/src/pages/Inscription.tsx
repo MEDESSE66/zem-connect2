@@ -213,6 +213,7 @@ export default function Inscription() {
                     placeholder="••••••••"
                     value={confirm}
                     onChange={e => setConfirm(e.target.value)}
+                    inputMode="numeric"
                     className="dark-input h-12 rounded-[10px] border-white/12 bg-white/7 text-[0.95rem] text-white"
                   />
                 </div>
