@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { pb } from "../../lib/pocketbase"
 import { toast } from "sonner"
@@ -59,47 +59,47 @@ export default function ClientMesCourses() {
     }
   }
 
+  const loadOffres = useCallback(async (tripId: string) => {
+    try {
+      const records = await pb.collection("offres").getList(1, 50, {
+        filter: `trip = "${tripId}" && status = "pending"`,
+        sort: "-created",
+        requestKey: null,
+      })
+      setOffres(prev => ({ ...prev, [tripId]: records.items as unknown as Offre[] }))
+    } catch (err) {
+      console.error("Erreur chargement offres", err)
+    }
+  }, []) // No dependencies required for this basic fetch
+
+  const loadTrips = useCallback(async () => {
+    try {
+      const records = await pb.collection("trips").getList(1, 50, {
+        filter: `client = "${user?.id}"`,
+        sort: "-created",
+        requestKey: null,
+      })
+      const tripList = records.items as unknown as Trip[]
+      setTrips(tripList)
+      for (const trip of tripList) {
+        if (trip.status === "pending") loadOffres(trip.id)
+        if (trip.status === "completed") checkAndShowRating(trip)
+      }
+    } catch (err) {
+      console.error("Erreur chargement courses", err)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [user?.id, loadOffres]) // loadOffres is now a stable dependency
+
   useEffect(() => {
     if (!user?.id) return
-
-    const loadOffres = async (tripId: string) => {
-      try {
-        const records = await pb.collection("offres").getList(1, 50, {
-          filter: `trip = "${tripId}" && status = "pending"`,
-          sort: "-created",
-          requestKey: null,
-        })
-        setOffres(prev => ({ ...prev, [tripId]: records.items as unknown as Offre[] }))
-      } catch (err) {
-        console.error("Erreur chargement offres", err)
-      }
-    }
-
-    const loadTrips = async () => {
-      try {
-        const records = await pb.collection("trips").getList(1, 50, {
-          filter: `client = "${user.id}"`,
-          sort: "-created",
-          requestKey: null,
-        })
-        const tripList = records.items as unknown as Trip[]
-        setTrips(tripList)
-        for (const trip of tripList) {
-          if (trip.status === "pending") loadOffres(trip.id)
-          if (trip.status === "completed") checkAndShowRating(trip)
-        }
-      } catch (err) {
-        console.error("Erreur chargement courses", err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
 
     loadTrips()
 
     pb.collection("trips").subscribe("*", e => {
       if (e.record.client !== user.id) return
-      if (e.action === "create") setTrips(prev => [e.record as unknown as Trip, ...prev])
+      if (e.action === "create") loadTrips()
       else if (e.action === "update") {
         setTrips(prev => prev.map(t => t.id === e.record.id ? e.record as unknown as Trip : t))
         if (e.record.status === "completed") {
@@ -121,7 +121,7 @@ export default function ClientMesCourses() {
       pb.collection("trips").unsubscribe("*")
       pb.collection("offres").unsubscribe("*")
     }
-  }, [user?.id])
+  }, [user?.id, loadTrips])
 
   const acceptOffre = async (offre: Offre) => {
     setIsAccepting(offre.id)
