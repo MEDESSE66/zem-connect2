@@ -9,52 +9,11 @@ import { Label } from "@/components/ui/label"
 import BottomNav from "../../components/BottomNav"
 import { motion } from "motion/react"
 import { Home, Bike, ArrowLeft, MapPin, Flag, Coins, ArrowDown, Clock } from "lucide-react"
-import "../../lib/leaflet-fix"
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet"
-import L from "leaflet"
-import { useRef, useMemo } from "react"
 
 const NAV_ITEMS = [
   { icon: <Home className="size-[22px]" />, label: "Accueil", path: "/client" },
   { icon: <Bike className="size-[22px]" />, label: "Courses", path: "/client/mes-courses" },
 ]
-
-// Composant pour recentrer la carte quand le GPS change
-function MapRecenter({ center }: { center: [number, number] }) {
-  const map = useMapEvents({})
-  useEffect(() => {
-    if (center[0] !== 0 && center[1] !== 0) {
-      map.setView(center, map.getZoom())
-    }
-  }, [center, map])
-  return null
-}
-
-// Composant pour le marqueur draggable
-function DraggableMarker({ position, setPosition }: { position: [number, number], setPosition: (pos: [number, number]) => void }) {
-  const markerRef = useRef<L.Marker>(null)
-  const eventHandlers = useMemo(
-    () => ({
-      dragend() {
-        const marker = markerRef.current
-        if (marker != null) {
-          const newPos = marker.getLatLng()
-          setPosition([newPos.lat, newPos.lng])
-        }
-      },
-    }),
-    [setPosition]
-  )
-
-  return (
-    <Marker
-      draggable={true}
-      eventHandlers={eventHandlers}
-      position={position}
-      ref={markerRef}
-    />
-  )
-}
 
 export default function ClientNouvelleCourse() {
   const { user }                                    = useAuthStore()
@@ -143,28 +102,6 @@ export default function ClientNouvelleCourse() {
         <div>
           <p className="text-[0.8rem] text-white/50">Client</p>
           <p className="text-[1.05rem] font-extrabold text-white">Nouvelle course</p>
-        </div>
-      </div>
-
-      {/* Carte Leaflet */}
-      <div className="px-6 pt-4">
-        <div className="h-[220px] w-full overflow-hidden rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
-          <MapContainer
-            center={[departureLat || 6.3703, departureLng || 2.3912]}
-            zoom={15}
-            className="h-full w-full"
-            zoomControl={false}
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <DraggableMarker 
-              position={[departureLat || 6.3703, departureLng || 2.3912]} 
-              setPosition={(pos) => {
-                setDepartureLat(pos[0])
-                setDepartureLng(pos[1])
-              }} 
-            />
-            <MapRecenter center={[departureLat || 6.3703, departureLng || 2.3912]} />
-          </MapContainer>
         </div>
       </div>
 

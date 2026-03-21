@@ -20,8 +20,6 @@
 - Liste toutes les courses du client
 - Pour chaque course "pending" : charge et affiche les offres reçues
 - Realtime subscriptions : trips + offres
-- loadTrips extrait avec useCallback ✅
-- Rappelé sur événement create subscription ✅
 - acceptOffre() : update offre (est_choisi=true) + trip (statut="accepte", conducteur=id)
 - annulerCourse() : update trip (statut="cancelled") disponible si pending ou accepte
 
@@ -56,6 +54,3 @@
 - [2026-03-20] v2.6 — ajout du filtre expiresAt > @now pour les courses pending ✅
 - [2026-03-20] v2.7 — ajout des badges statut colorés et dates de création ✅
 - [2026-03-20] v2.8 — checkAndShowRating déplacée au scope composant dans ClientMesCourses ✅
-- [2026-03-20] v2.9 — Intégration carte Leaflet avec marqueur draggable départ ✅
-- [2026-03-20] v3.0 — Fix filtre loadTrips — suppression condition expiresAt incompatible avec PocketBase ✅
-- [2026-03-21] v3.1 — Refactor loadTrips (useCallback + subscription refresh) ✅
